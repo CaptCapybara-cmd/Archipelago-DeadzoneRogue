@@ -51,3 +51,5 @@ result to your host.
    talking to it.
 3. Received items are granted within a second or two of arriving. Normally-free content you haven't received
    yet is locked.
+4. The mod posts to the in-game chat, prefixed `[Archipelago]`: when it loads, when your save slot connects, and
+   for every item you send or receive. Press **F10** in game for a status line (mod version, save slot, open zones).

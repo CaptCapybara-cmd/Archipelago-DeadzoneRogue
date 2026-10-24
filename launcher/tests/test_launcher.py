@@ -112,6 +112,17 @@ class TestInstaller(TempDirTest):
         with self.assertRaises(RuntimeError):
             installer.latest_ue4ss_asset({"assets": [asset("UE4SS_v3.0.1-1.zip", digest="")]})
 
+    def test_mod_runtime_from_heartbeat(self) -> None:
+        self.assertFalse(installer.mod_runtime(self.win64)["running"])  # no heartbeat yet
+        self.write("Win64", "APBridge", "heartbeat.txt",
+                   text="1000\nversion 0.5.0\nsession s-1\nslot 2\nbound true\n")
+        live = installer.mod_runtime(self.win64, now=1005)
+        self.assertTrue(live["running"])
+        self.assertEqual((live["version"], live["slot"], live["bound"]), ("0.5.0", "2", "true"))
+        self.assertFalse(installer.mod_runtime(self.win64, now=1100)["running"])  # stale: game closed
+        self.write("Win64", "APBridge", "heartbeat.txt", text="1000")  # older mods write only the time
+        self.assertTrue(installer.mod_runtime(self.win64, now=1001)["running"])
+
     def test_install_apworld(self) -> None:
         target = installer.install_apworld(os.path.join(self.tmp, "Archipelago"), progress=lambda m: None)
         self.assertTrue(target.endswith(os.path.join("custom_worlds", "deadzone_rogue.apworld")))

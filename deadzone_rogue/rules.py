@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from .locations import MISSIONS_BY_KEY
+from .locations import MISSIONS_BY_KEY, is_zone_entry
 
 if TYPE_CHECKING:
     from . import DeadzoneRogueWorld
@@ -10,9 +10,13 @@ if TYPE_CHECKING:
 
 def can_unlock(state: CollectionState, world: "DeadzoneRogueWorld", mission: dict) -> bool:
     """The mission is selectable: its zone is open and every prerequisite mission can be completed (the game
-    requires them, on any difficulty)."""
-    if world.options.zone_gating and mission["zone"] > 1 and not state.has(f"Zone {mission['zone']} Access", world.player):
-        return False
+    requires them, on any difficulty). With zone gating, a zone's entry mission needs only its Zone Access: the
+    mod opens it whatever the story order."""
+    if world.options.zone_gating and mission["zone"] > 1:
+        if not state.has(f"Zone {mission['zone']} Access", world.player):
+            return False
+        if is_zone_entry(mission):
+            return True
     return all(can_unlock(state, world, MISSIONS_BY_KEY[p]) for p in mission["prereqs"])
 
 

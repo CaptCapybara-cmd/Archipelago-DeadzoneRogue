@@ -1,9 +1,10 @@
 """Deadzone Rogue client: connects to the Archipelago server and talks to the APClient Lua mod through files
 (see bridge.py)."""
 import asyncio
+import copy
 import os
 import time
-from typing import Any, Dict, Optional, Set
+from typing import Any, Dict, List, Optional, Set, Tuple
 
 import Utils
 from CommonClient import (ClientCommandProcessor, CommonContext, get_base_parser, gui_enabled, handle_url_arg, logger,
@@ -54,6 +55,7 @@ class DeadzoneRogueContext(CommonContext):
         self.started_at = time.time()
         self.goal_sent = False
         self.session = ""
+        self.notes: List[Tuple[int, str]] = []  # (id, text) for in-game chat; ids are millisecond timestamps
         self.completed_missions: Set[str] = set()  # rebuilt from this session's outbox, which is read from the start
         self.set_game_dir(game_dir)
 
@@ -69,7 +71,7 @@ class DeadzoneRogueContext(CommonContext):
     def game_status(self) -> str:
         try:
             with open(os.path.join(self.bridge_dir, "heartbeat.txt")) as f:
-                age = time.time() - float(f.read().strip() or 0)
+                age = time.time() - float(f.readline().strip() or 0)  # line 1: unix time; the rest is for the launcher
         except (OSError, ValueError):
             return "Game: no heartbeat yet (is the APClient mod enabled and the game running?)"
         if age > HEARTBEAT_TIMEOUT:
@@ -91,6 +93,22 @@ class DeadzoneRogueContext(CommonContext):
         elif cmd == "ReceivedItems":
             self.write_inbox()
 
+    MAX_NOTES = 30
+
+    def add_note(self, text: str) -> None:
+        note_id = max(int(time.time() * 1000), (self.notes[-1][0] + 1) if self.notes else 0)
+        self.notes = (self.notes + [(note_id, text[:150])])[-self.MAX_NOTES:]
+        self.write_inbox()
+
+    def on_print_json(self, args: dict) -> None:
+        super().on_print_json(args)
+        # Item messages that involve this player are repeated in the game's chat.
+        if args.get("type") in ("ItemSend", "ItemCheat") and self.slot is not None:
+            item = args.get("item")
+            sender = item.get("player") if isinstance(item, dict) else getattr(item, "player", None)
+            if args.get("receiving") == self.slot or sender == self.slot:
+                self.add_note(self.rawjsontotextparser(copy.deepcopy(args["data"])))
+
     def on_deathlink(self, data: Dict[str, Any]) -> None:
         super().on_deathlink(data)
         # Receiving deaths is the next step for the mod (death_link_mode); for now it is only logged.
@@ -107,7 +125,7 @@ class DeadzoneRogueContext(CommonContext):
         grants = bridge.grant_lines(self.data, self.slot_data, received)
         text = bridge.render_inbox(self.inbox_rev, session, self.slot_data,
                                    bridge.lock_paths(self.data, self.slot_data), grants,
-                                   bridge.gating_lines(self.data, self.slot_data, received))
+                                   bridge.gating_lines(self.data, self.slot_data, received), self.notes)
         bridge.write_atomic(os.path.join(self.bridge_dir, "inbox.txt"), text)
 
     async def poll_game(self) -> None:
@@ -131,6 +149,7 @@ class DeadzoneRogueContext(CommonContext):
             await self.send_msgs([{"cmd": "StatusUpdate", "status": ClientStatus.CLIENT_GOAL}])
             self.goal_sent = True
             logger.info("Goal complete!")
+            self.add_note("Goal complete! Every goal mission is done.")
         if deaths and "DeathLink" in self.tags:
             await self.send_death(f"{self.player_names.get(self.slot, 'A Deadzone Rogue player')} died on the station.")
 

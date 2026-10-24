@@ -1,9 +1,10 @@
--- APClient v0.5.0: the in-game half of the Deadzone Rogue Archipelago client.
+-- APClient v0.5.1: the in-game half of the Deadzone Rogue Archipelago client.
 -- Talks to the Python client through files in Win64/APBridge (format: deadzone_rogue/bridge.py):
 --   inbox.txt -> what to lock and grant     outbox_<session>.txt <- missions completed, save-wide totals, deaths
 -- Received items and save-wide totals (sectors, kills, Scrap) are tracked per AP session and per game save slot in
 -- APBridge/state_<session>_slot<n>.txt.
 local BRIDGE = "APBridge/"
+local MOD_VERSION = "0.5.1"
 local POLL_MS = 1000
 local ENSURE_EVERY_S = 30       -- re-check one-time unlocks against the save this often
 local GRANTS_PER_TICK = 25      -- spread big batches over a few ticks to avoid hitches
@@ -40,6 +41,39 @@ local function nonDefault(className)
     end
 end
 
+-- On-screen messages, shown through the game's own text chat (the client RPC the server uses to deliver chat).
+-- Only the in-game ValPlayerController has it (the main menu's controller doesn't), so messages sent before the
+-- player is in the hub or a run wait in a queue.
+local pendingNotes = {}
+
+local function chatController()
+    local valController = StaticFindObject("/Script/Valhalla.ValPlayerController")
+    if valController == nil or not valController:IsValid() then return nil end
+    for _, pc in ipairs(FindAllOf("PlayerController") or {}) do
+        if pc:IsValid() and pc:IsLocalController() and pc:IsA(valController) then return pc end
+    end
+end
+
+local function flushNotes()
+    if #pendingNotes == 0 then return end
+    local pc = chatController()
+    if pc == nil then return end
+    for _, message in ipairs(pendingNotes) do
+        local ok, err = pcall(function()
+            if not pc.bTextChatEnabled then pc.bTextChatEnabled = true end -- solo play keeps the chat box off
+            pc:ClientReceiveTextChatMessage(pc.PlayerState, "[Archipelago] " .. message)
+        end)
+        log("chat: " .. message .. (ok and "" or ("  (not shown: " .. tostring(err) .. ")")))
+    end
+    pendingNotes = {}
+end
+
+local function notify(message)
+    pendingNotes[#pendingNotes + 1] = message
+    if #pendingNotes > 20 then table.remove(pendingNotes, 1) end
+    flushNotes()
+end
+
 -- Assets are cached so the lock flag set on them survives (an unreferenced asset can be reloaded with defaults).
 local assets = {}
 local function asset(path)
@@ -53,10 +87,10 @@ end
 -- Inbox ---------------------------------------------------------------------------------------------------------
 
 local inbox = { rev = nil, session = nil, goal = nil, locks = {}, byIndex = {}, maxIndex = -1,
-                zones = nil, missionZones = {} }
+                zones = nil, missionZones = {}, zoneEntries = {}, notes = {} }
 
 local function parseInbox(text)
-    local new = { locks = {}, byIndex = {}, maxIndex = -1, zones = nil, missionZones = {} }
+    local new = { locks = {}, byIndex = {}, maxIndex = -1, zones = nil, missionZones = {}, zoneEntries = {}, notes = {} }
     for line in text:gmatch("[^\n]+") do
         local kind, rest = line:match("^(%S+)%s*(.*)$")
         if kind == "rev" then new.rev = rest
@@ -66,9 +100,13 @@ local function parseInbox(text)
         elseif kind == "missionzone" then
             local key, z = rest:match("^(%S+) (%d+)$")
             if key then new.missionZones[key] = tonumber(z) end
+        elseif kind == "zoneentry" then new.zoneEntries[rest] = true
         elseif kind == "session" then new.session = rest
         elseif kind == "goal" then new.goal = rest
         elseif kind == "lock" then new.locks[#new.locks + 1] = rest
+        elseif kind == "note" then
+            local id, text = rest:match("^(%d+) (.+)$")
+            if id then new.notes[#new.notes + 1] = { id = tonumber(id), text = text } end
         elseif kind == "grant" then
             local index, mode, amount, path = rest:match("^(%d+) (%S+) (%d+) (%S+)$")
             if index then
@@ -85,19 +123,20 @@ end
 -- Per-session, per-save-slot progress -----------------------------------------------------------------------------
 
 -- sectors / kills / scrap are save-wide running totals across every run on this session's save slot
-local state = { key = nil, applied = -1, sectors = 0, kills = 0, scrap = 0 }
+local state = { key = nil, applied = -1, sectors = 0, kills = 0, scrap = 0, lastNote = 0 }
 local totalsDirty = false -- totals changed since they were last written to the outbox
 
 local function stateFile() return BRIDGE .. "state_" .. state.key .. ".txt" end
 
 local function loadState(key)
-    state.key, state.applied, state.sectors, state.kills, state.scrap = key, -1, 0, 0, 0
+    state.key, state.applied, state.sectors, state.kills, state.scrap, state.lastNote = key, -1, 0, 0, 0, 0
     local text = readFile(stateFile())
     if text then
         state.applied = tonumber(text:match("applied (%-?%d+)")) or -1
         state.sectors = tonumber(text:match("sectors (%d+)") or text:match("rooms (%d+)")) or 0 -- "rooms" before 0.5.0
         state.kills = tonumber(text:match("kills (%d+)")) or 0
         state.scrap = tonumber(text:match("scrap (%d+)")) or 0
+        state.lastNote = tonumber(text:match("lastnote (%d+)")) or 0
     end
     log(string.format("session %s: %d items applied before; %d sectors cleared, %d kills, %d Scrap gathered",
         key, state.applied + 1, state.sectors, state.kills, state.scrap))
@@ -106,8 +145,8 @@ end
 local function saveState()
     local f = io.open(stateFile(), "w")
     if f then
-        f:write(string.format("applied %d\nsectors %d\nkills %d\nscrap %d\n",
-            state.applied, state.sectors, state.kills, state.scrap))
+        f:write(string.format("applied %d\nsectors %d\nkills %d\nscrap %d\nlastnote %d\n",
+            state.applied, state.sectors, state.kills, state.scrap, state.lastNote))
         f:close()
     end
 end
@@ -273,13 +312,34 @@ end
 
 local lastFlush = 0
 
+local lastSlotSeen = nil -- for the heartbeat
+local MAX_BACKLOG_NOTES = 5 -- after a long time away, only the latest few messages are posted
+
+-- Item messages from the client (received / sent), posted to chat once each.
+function showNewNotes()
+    local fresh = {}
+    for _, note in ipairs(inbox.notes) do
+        if note.id > state.lastNote then fresh[#fresh + 1] = note end
+    end
+    if #fresh == 0 then return end
+    for i = math.max(1, #fresh - MAX_BACKLOG_NOTES + 1), #fresh do notify(fresh[i].text) end
+    state.lastNote = fresh[#fresh].id
+    saveState()
+end
+
 local function tick()
     local now = os.time()
     if now - lastBeat >= 5 then
+        -- line 1 is the time (all the client needs); the rest is for the launcher's status display
         local f = io.open(BRIDGE .. "heartbeat.txt", "w")
-        if f then f:write(tostring(now)); f:close() end
+        if f then
+            f:write(string.format("%d\nversion %s\nsession %s\nslot %s\nbound %s\n", now, MOD_VERSION,
+                inbox.session or "-", lastSlotSeen or "-", tostring(onBoundSlot)))
+            f:close()
+        end
         lastBeat = now
     end
+    flushNotes()
 
     local text = readFile(BRIDGE .. "inbox.txt")
     if text then
@@ -296,6 +356,7 @@ local function tick()
 
     local slot = activeSaveSlot()
     if slot == nil then return end
+    lastSlotSeen = slot
     if slot ~= boundSlot(inbox.session, slot) then
         if onBoundSlot or warnedSlot ~= slot then
             restoreLocks()
@@ -305,12 +366,17 @@ local function tick()
         onBoundSlot = false
         return
     end
-    if not onBoundSlot then onBoundSlot = true; locksDirty = true end
+    if not onBoundSlot then
+        onBoundSlot = true
+        locksDirty = true
+        notify("connected: save slot " .. slot .. " is your Archipelago save")
+    end
     if locksDirty then applyLocks(); locksDirty = false end -- cheap after the first time: assets are cached
 
     local key = inbox.session .. "_slot" .. slot
     if key ~= state.key then loadState(key); lastEnsure = 0 end
     refreshLocalPawn()
+    showNewNotes()
     if now - lastFlush >= 5 then lastFlush = now; flushTotals() end
 
     local inv = inventory()
@@ -418,14 +484,34 @@ local function describeOptions(component)
     return lines
 end
 
+-- A zone's entry mission opens with its Zone Access even when the game's story order would keep it shut:
+-- the option, its tiers and each tier's lowest difficulty (the game opens the next ones as they're beaten).
+local function forceOpen(opt)
+    local changed = 0
+    if not opt.bAvailable then opt.bAvailable = true; changed = changed + 1 end
+    opt.TierOptions:ForEach(function(_, t)
+        local tier = t:get()
+        if not tier.bAvailable then tier.bAvailable = true; changed = changed + 1 end
+        local lowest = nil
+        tier.DifficultyOptions:ForEach(function(_, d)
+            local dd = d:get()
+            if lowest == nil or dd.Difficulty < lowest.Difficulty then lowest = dd end
+        end)
+        if lowest ~= nil and not lowest.bAvailable then lowest.bAvailable = true; changed = changed + 1 end
+    end)
+    return changed
+end
+
 -- Returns how many options were changed.
 local function applyGating(component)
     if inbox.zones == nil then return 0 end
     local changed = 0
     component.r_MissionOptions:ForEach(function(_, o)
         local opt = o:get()
-        local zone = inbox.missionZones[missionKey(opt)]
+        local key = missionKey(opt)
+        local zone = inbox.missionZones[key]
         local zoneOpen = inbox.zones == nil or zone == nil or inbox.zones[zone]
+        if zoneOpen and inbox.zoneEntries[key] then changed = changed + forceOpen(opt) end
         if not zoneOpen and opt.bAvailable then opt.bAvailable = false; changed = changed + 1 end
         opt.TierOptions:ForEach(function(_, t)
             local tier = t:get()
@@ -478,4 +564,15 @@ hook("/Script/Valhalla.ValMissionComponent:OnMissionReady", function(self, missi
     if onBoundSlot then applyLocks() end
 end)
 
+RegisterKeyBind(Key.F10, function() ExecuteInGameThread(function()
+    local zones = {}
+    for z = 1, 4 do if inbox.zones == nil or inbox.zones[z] then zones[#zones + 1] = tostring(z) end end
+    notify(string.format("status: v%s, %s, zones open: %s", MOD_VERSION,
+        inbox.session == nil and "no client connected yet"
+            or (onBoundSlot and ("save slot " .. tostring(lastSlotSeen) .. " is your Archipelago save")
+                or "this save slot isn't your Archipelago save"),
+        table.concat(zones, " ")))
+end) end)
+
 log("loaded (bridge folder: " .. BRIDGE .. ")")
+notify("APClient v" .. MOD_VERSION .. " loaded") -- shown once the player is in the hub or a run

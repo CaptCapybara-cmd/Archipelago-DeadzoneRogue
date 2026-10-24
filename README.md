@@ -4,8 +4,8 @@ An Archipelago integration has two halves:
 
 | Half | What it does | Status |
 |---|---|---|
-| **APWorld** (`deadzone_rogue/`, Python) | Tells the generator what items and locations exist and what the logic is | v0.5.0: built from the game's real data, passes AP's tests, generates seeds |
-| **Client** (Python, in the apworld) + **APClient** (Lua mod) | Talks to the AP server: sends checks, grants received items, locks unreceived content, reports the goal | v0.5.0: mission and save-wide objective checks, grants, locking and zone gating work live, protected by save-slot binding. Reward suppression and DeathLink effects not done yet |
+| **APWorld** (`deadzone_rogue/`, Python) | Tells the generator what items and locations exist and what the logic is | v0.5.1: built from the game's real data, passes AP's tests, generates seeds |
+| **Client** (Python, in the apworld) + **APClient** (Lua mod) | Talks to the AP server: sends checks, grants received items, locks unreceived content, reports the goal | v0.5.1: mission and save-wide objective checks, grants, locking and zone gating work live, protected by save-slot binding. Reward suppression and DeathLink effects not done yet |
 
 ## Files
 
@@ -43,7 +43,7 @@ An Archipelago integration has two halves:
 - Item / Mastery (Tech upgrade) / Superior Item (SuperItem upgrade) **packs**: random groups per seed, with
   `*_pack_size` options (0 = off). The pack contents go to the client in slot data.
 - Unlocks: the Fate rerolls, Fabricator restocks (two progressive chains), Tier 10 Tech Upgrades, Epic Beginnings.
-- Optional `Zone N Access` items (zone gating). Difficulties are never gated; each is just a separate check. Logic also follows the game's own mission prerequisites.
+- Optional `Zone N Access` items (zone gating). Difficulties are never gated; each is just a separate check. Zone Access opens that zone's first story mission even when the earlier story isn't done; after that, logic follows the game's own mission prerequisites.
 - If there are more items than checks, the lowest-priority items are left out (they stay as in the base game):
   synergies, then packs, unlocks, augments, weapons, perks.
 

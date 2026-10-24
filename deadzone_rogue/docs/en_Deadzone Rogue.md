@@ -11,7 +11,7 @@ sends checks out to other players instead. What you receive:
 - **Item Packs, Mastery Packs and Superior Item Packs**: the run items, Tech upgrades and SuperItem upgrades,
   dealt out in random packs (pack size is an option).
 - **Unlocks**: the "Fate" rerolls, Fabricator restocks, Tier 10 Tech Upgrades and Epic Beginnings.
-- **Zone Access** (optional), which unlocks zones 2–4. Difficulties are never locked; each one is just a separate check.
+- **Zone Access** (optional), which unlocks zones 2–4. A zone's first story mission opens as soon as its access arrives, even if earlier zones' story missions aren't done. Difficulties are never locked; each one is just a separate check.
 
 ## What counts as a location check?
 
@@ -35,4 +35,4 @@ When another player dies, your current run isn't ended by default. Instead you l
 
 ## What does another world's item look like in Deadzone Rogue?
 
-A notification appears on screen naming the item and the player it was sent to.
+A line in the in-game chat, prefixed `[Archipelago]`, names the item and the player it was sent to.

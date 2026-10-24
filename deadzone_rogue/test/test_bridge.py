@@ -69,8 +69,17 @@ class TestBridge(unittest.TestCase):
         self.assertIn("zones 1 3", lines)
         # zone 4 has no access item with a zone 3 goal, so it is never gated
         self.assertIn("zones 1 4", bridge.gating_lines(self.data, dict(gated, goal_zone=3), []))
+        entries = [line for line in bridge.gating_lines(self.data, gated, []) if line.startswith("zoneentry")]
+        self.assertEqual(len(entries), 3)  # Keep it Together, Get Out of My Head, Prelude
+        self.assertIn("zoneentry BA906212-4BCC84E3-B8A43895-0AA008D7", entries)
+        self.assertEqual(len([line for line in bridge.gating_lines(self.data, dict(gated, goal_zone=3), [])
+                              if line.startswith("zoneentry")]), 2)
         ungated = bridge.gating_lines(self.data, self.slot_data, [])
         self.assertFalse([line for line in ungated if line.startswith("zones")])
+
+    def test_notes_are_one_line_each(self) -> None:
+        text = bridge.render_inbox(1, "s", self.slot_data, [], [], notes=[(5, "Alice sent\nPlasma  to Ethan")])
+        self.assertIn("note 5 Alice sent Plasma to Ethan\n", text)
 
     def test_inbox_format(self) -> None:
         text = bridge.render_inbox(3, "seed-Ethan", self.slot_data, ["/Game/A.A"], [(0, "once", 1, "/Game/B.B")])

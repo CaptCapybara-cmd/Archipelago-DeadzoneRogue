@@ -48,6 +48,27 @@ def status(win64: str) -> Dict[str, object]:
     }
 
 
+HEARTBEAT_FRESH_S = 15  # the mod rewrites its heartbeat every 5 s while the game runs
+
+
+def mod_runtime(win64: str, now: Optional[float] = None) -> Dict[str, object]:
+    """Whether APClient is running in the game right now, from the heartbeat it writes every few seconds.
+    Line 1 is the unix time; newer mods add 'version', 'session', 'slot' and 'bound' lines."""
+    import time
+    info: Dict[str, object] = {"running": False, "age": None}
+    try:
+        with open(os.path.join(win64, "APBridge", "heartbeat.txt"), encoding="utf-8") as f:
+            lines = f.read().splitlines()
+        info["age"] = (now or time.time()) - float(lines[0])
+    except (OSError, ValueError, IndexError):
+        return info
+    for line in lines[1:]:
+        key, _, value = line.partition(" ")
+        info[key] = value
+    info["running"] = info["age"] < HEARTBEAT_FRESH_S
+    return info
+
+
 def _same_file(a: str, b: str) -> bool:
     with open(a, "rb") as fa, open(b, "rb") as fb:
         return fa.read().replace(b"\r\n", b"\n") == fb.read().replace(b"\r\n", b"\n")

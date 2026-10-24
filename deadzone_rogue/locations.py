@@ -59,6 +59,13 @@ location_name_to_id: Dict[str, int] = _build_table()
 MISSIONS_BY_KEY = {m["key"]: m for m in MISSIONS}
 
 
+def is_zone_entry(mission: dict) -> bool:
+    """The story mission that starts a zone (Keep it Together, Get Out of My Head, Prelude). With zone gating,
+    its Zone Access item opens it directly, even when the earlier zones' story missions aren't done."""
+    return (mission["zone"] > 1 and mission["story"]
+            and all(MISSIONS_BY_KEY[p]["zone"] < mission["zone"] for p in mission["prereqs"]))
+
+
 def mission_locations(mission: dict) -> List[str]:
     return [mission_location(mission, d) for d in mission["difficulties"]]
 

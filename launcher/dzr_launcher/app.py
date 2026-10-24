@@ -89,8 +89,8 @@ class LauncherApp:
         self.events: "queue.Queue[Callable[[], None]]" = queue.Queue()
         self.busy = False
         root.title(f"Deadzone Rogue – Archipelago Launcher v{VERSION}")
-        root.geometry("900x760")
-        root.minsize(760, 600)
+        root.geometry("920x900")
+        root.minsize(760, 640)
 
         self.build_header()
         notebook = ttk.Notebook(root)
@@ -108,6 +108,7 @@ class LauncherApp:
         notebook.select(int(os.environ.get("DZR_TAB", "0")))  # dev aid: open a given tab (for screenshots)
         self.refresh_status()
         root.after(100, self.pump_events)
+        root.after(500, self.refresh_live)
 
     def build_header(self) -> None:
         header = ttk.Frame(self.root, style="Header.TFrame", padding=(20, 14))
@@ -177,6 +178,10 @@ class LauncherApp:
         ttk.Button(buttons, text="Install / update mod", style="Accent.TButton", command=self.install_mod).pack(side="left")
         ttk.Button(buttons, text="Reinstall UE4SS", command=lambda: self.install_mod(True)).pack(side="left", padx=(8, 0))
         ttk.Button(buttons, text="Uninstall…", command=self.uninstall_mod).pack(side="right")
+
+        live = card(tab, "In game", "Whether the APClient mod is running in Deadzone: Rogue right now. "
+                                    "Updates every few seconds.")
+        self.live_status = StatusList(live)
 
         ap = card(tab, "Archipelago", "Adds the Deadzone Rogue world to your Archipelago install.")
         self.ap_var = tk.StringVar(value=self.settings.get("archipelago_dir") or locate.find_archipelago() or "")
@@ -254,6 +259,30 @@ class LauncherApp:
         self.update_ready_check(win64, ap)
         self.settings.update(game_dir=win64 or self.settings.get("game_dir", ""), archipelago_dir=ap)
         save_settings(self.settings)
+
+    def live_items(self, win64: str):
+        if not win64:
+            return [("bad", "Game folder not set")]
+        info = installer.mod_runtime(win64)
+        if info["running"]:
+            items = [("ok", f"APClient v{info.get('version', '?')} is running in the game")]
+            session, slot = info.get("session", "-"), info.get("slot", "-")
+            if session in (None, "-"):
+                items.append(("warn", "No Archipelago session yet: start the client and connect"))
+            elif info.get("bound") == "true":
+                items.append(("ok", f"Connected session is active on save slot {slot}"))
+            else:
+                items.append(("warn", f"Save slot {slot} isn't this session's slot; the mod is idle on it"))
+            return items
+        if info["age"] is None:
+            return [("warn", "APClient hasn't run yet. Install the mod, then start the game")]
+        return [("warn", "Game not running (or the mod didn't load). Start the game to check")]
+
+    def refresh_live(self) -> None:
+        try:
+            self.live_status.show(self.live_items(self.game_dir()))
+        finally:
+            self.root.after(3000, self.refresh_live)
 
     def update_ready_check(self, win64: str, ap: str) -> None:
         s = installer.status(win64) if win64 else {}

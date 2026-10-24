@@ -15,12 +15,12 @@ class TestDefault(DeadzoneRogueTestBase):
         self.collect_by_name(["Zone 2 Access"])
         self.assertTrue(self.can_reach_location("Keep it Together (Adventure)"))
 
-    def test_zone_4_needs_zone_3_for_prerequisite(self) -> None:
-        # Prelude (zone 4) requires Get Out of My Head (zone 3) to be completed first.
+    def test_zone_access_opens_the_entry_mission_out_of_story_order(self) -> None:
+        # Prelude normally needs Get Out of My Head (zone 3); with gating the mod opens it on Zone 4 Access alone.
         self.collect_by_name(["Zone 4 Access"])
-        self.assertFalse(self.can_reach_location("Prelude (Adventure)"))
-        self.collect_by_name(["Zone 2 Access", "Zone 3 Access"])
         self.assertTrue(self.can_reach_location("Prelude (Adventure)"))
+        self.assertTrue(self.can_reach_location("Distress Call (Adventure)"))
+        self.assertFalse(self.can_reach_location("Get Out of My Head (Adventure)"))
 
     def test_starting_kit_and_free_content_shuffled(self) -> None:
         kit = [item.name for item in self.multiworld.precollected_items[self.player]]

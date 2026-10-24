@@ -7,8 +7,10 @@ Folder: <game>/Valhalla/Binaries/Win64/APBridge/
                    session <id>
                    goal <zone>
                    zones <open zones...> / missionzone <mission guid> <zone>   (zone gating)
+                   zoneentry <mission guid>                       (opened by its zone's access, story order aside)
                    lock <asset object path>                       (one per asset the mod must lock)
                    grant <index> <once|add> <amount> <asset path>  (index = position in ReceivedItems)
+                   note <id> <text>                               (in-game chat message; ids only ever increase)
   outbox_<session>.txt   appended by the mod, tailed by the client (one file per AP session):
                    mission <mission key> <difficulty>
                    sectors|kills|scrap <save-wide total so far>
@@ -23,7 +25,7 @@ import pkgutil
 import re
 from typing import Dict, Iterable, List, Optional, Sequence, Set, Tuple
 
-from .locations import objective_location_id
+from .locations import MISSIONS_BY_KEY, is_zone_entry, objective_location_id
 
 BRIDGE_DIR = "APBridge"
 DEFAULT_GAME_DIR = r"C:\Program Files (x86)\Steam\steamapps\common\Deadzone Rogue\Valhalla\Binaries\Win64"
@@ -98,15 +100,20 @@ def gating_lines(data: dict, slot_data: dict, received_ids: Sequence[int]) -> Li
         goal_zone = slot_data.get("goal_zone", 4)
         zones = [z for z in (1, 2, 3, 4) if z == 1 or z > goal_zone or f"Zone {z} Access" in names]
         lines.append("zones " + " ".join(map(str, zones)))
+        # zones past the goal have no access item and keep the game's own order
+        lines += [f"zoneentry {m['guid']}" for m in data["missions"] if m["zone"] <= goal_zone
+                  and m["key"] in MISSIONS_BY_KEY and is_zone_entry(MISSIONS_BY_KEY[m["key"]])]
     return lines
 
 
 def render_inbox(rev: int, session: str, slot_data: dict, locks: Iterable[str],
-                 grants: Iterable[Tuple[int, str, int, str]], gating: Iterable[str] = ()) -> str:
+                 grants: Iterable[Tuple[int, str, int, str]], gating: Iterable[str] = (),
+                 notes: Iterable[Tuple[int, str]] = ()) -> str:
     out = ["version 1", f"rev {rev}", f"session {session}", f"goal {slot_data.get('goal_zone', '')}"]
     out += list(gating)
     out += [f"lock {path}" for path in locks]
     out += [f"grant {index} {mode} {amount} {path}" for index, mode, amount, path in grants]
+    out += [f"note {note_id} {' '.join(text.split())}" for note_id, text in notes]
     return "\n".join(out) + "\n"
 
 
