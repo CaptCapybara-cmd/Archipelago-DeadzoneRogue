@@ -11,7 +11,7 @@ An Archipelago integration has two halves:
 
 | Path | What it is |
 |---|---|
-| [deadzone_rogue.apworld](deadzone_rogue.apworld) | The built world. Players install it into Archipelago |
+| [Releases](https://github.com/CaptCapybara-cmd/Archipelago-DeadzoneRogue/releases) | `deadzone_rogue.apworld` (world + client), `APClient-<version>.zip` (in-game mod + UE4SS crash fix) and the template YAML. Install steps: [setup guide](deadzone_rogue/docs/setup_en.md) |
 | [Deadzone Rogue.yaml](Deadzone%20Rogue.yaml) | Template player options, to fill in and give to the host |
 | `deadzone_rogue/` | World source. `game_data.py` is generated; don't edit it by hand |
 | `tools/gen_data.py` | Rebuilds `game_data.py` and `client/ap_data.json` from `dumps/APCatalog.tsv` |
@@ -64,3 +64,7 @@ An Archipelago integration has two halves:
   `bRequireOwnership` locks, and per-session/per-save-slot state.
 - Install steps for players: `deadzone_rogue/docs/setup_en.md`. What's done and what's left:
   [HOOKS.md](HOOKS.md#client-to-do).
+
+## License
+
+MIT, see [LICENSE](LICENSE). Deadzone: Rogue belongs to Prophecy Games; this project ships no game files.

@@ -6,21 +6,25 @@
 - [Archipelago](https://github.com/ArchipelagoMW/Archipelago/releases) 0.6.6 or newer
 - [UE4SS](https://github.com/UE4SS-RE/RE-UE4SS/releases) experimental build (the `UE4SS_v3.0.1-…zip` from
   "experimental-latest"). The 3.0.1 stable release doesn't support the game's Unreal version.
-- From this project: `deadzone_rogue.apworld`, `VTableLayout.ini` and the `APClient` mod folder
+- From this project's [releases](https://github.com/CaptCapybara-cmd/Archipelago-DeadzoneRogue/releases):
+  `deadzone_rogue.apworld` and `APClient-<version>.zip`
 
 ## Installing
 
-1. **UE4SS:** extract the zip into `Steam\steamapps\common\Deadzone Rogue\Valhalla\Binaries\Win64`, so that
+1. **UE4SS:** extract the UE4SS zip into `Steam\steamapps\common\Deadzone Rogue\Valhalla\Binaries\Win64`, so that
    `dwmapi.dll` and the `ue4ss` folder sit next to `DeadzoneSteam-Win64-Shipping.exe`.
-2. **Crash fix:** copy `VTableLayout.ini` into that `ue4ss` folder. Without it, UE4SS crashes this game on startup.
-3. **Mod:** copy the `APClient` folder into `ue4ss\Mods`, and add the line `APClient : 1` to `ue4ss\Mods\mods.txt`
-   above `Keybinds : 1`.
-4. **World:** double-click `deadzone_rogue.apworld`, or put it in Archipelago's `custom_worlds` folder.
+2. **APClient:** extract `APClient-<version>.zip` into the same `Win64` folder. It adds
+   `ue4ss\VTableLayout.ini` (without it, UE4SS crashes this game on startup) and the `ue4ss\Mods\APClient` mod,
+   which is enabled automatically by its `enabled.txt`.
+3. **World:** double-click `deadzone_rogue.apworld`, or put it in Archipelago's `custom_worlds` folder.
 
 ## Save slots
 
 Archipelago changes your unlocks. Start a **new save slot** in the game's save menu for each multiworld, and keep
-your normal progress in another slot. The mod tracks received items separately for each slot.
+your normal progress in another slot.
+
+The first save slot you play while the client is connected becomes that multiworld's slot. On every other slot
+the mod does nothing: no items, no locks, no checks. That keeps your normal saves safe even with the client running.
 
 ## Creating a YAML
 
