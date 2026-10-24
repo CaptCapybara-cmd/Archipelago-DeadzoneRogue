@@ -202,6 +202,7 @@ local originalFlags = {} -- path -> bRequireOwnership before we touched it
 local PRICE_GROUPS = { tech = "Mission.Zone.1", superior = "Mission.Zone.2" }
 local UNAFFORDABLE = 999999
 local originalPrices = {} -- group name -> level -> { shards, values }
+local pricesBlocked = {} -- group name -> true once blocked (the price config only exists once the hub has loaded)
 
 local function forEachPriceGroup(fn)
     for _, cfg in ipairs(FindAllOf("ValPlayerUpgradeConfig") or {}) do
@@ -231,7 +232,8 @@ local function blockUpgradePurchases()
             p.ShardCost = UNAFFORDABLE
             p.BasePrice.CurrencyData:ForEach(function(_, c) c:get().Value = UNAFFORDABLE end)
         end)
-        log("upgrades can't be bought: " .. blocked[tag] .. " (" .. name .. ")")
+        if not pricesBlocked[name] then log("upgrades can't be bought: " .. blocked[tag] .. " (" .. name .. ")") end
+        pricesBlocked[name] = true
     end)
 end
 
@@ -249,7 +251,7 @@ local function restoreUpgradePrices()
             end
         end)
     end)
-    originalPrices = {}
+    originalPrices, pricesBlocked = {}, {}
     log("upgrade prices back to normal")
 end
 
@@ -492,6 +494,11 @@ local function tick()
     if now - lastEnsure >= ENSURE_EVERY_S then
         lastEnsure = now
         ensureUnlocks(inv)
+    end
+    -- the upgrade price config loads with the hub, after the mod starts: keep trying until it's blocked
+    if next(inbox.noBuy) ~= nil and next(pricesBlocked) == nil then
+        local ok, err = pcall(blockUpgradePurchases)
+        if not ok then log("upgrade purchase block failed: " .. tostring(err)) end
     end
     applyNewGrants(inv)
 end
