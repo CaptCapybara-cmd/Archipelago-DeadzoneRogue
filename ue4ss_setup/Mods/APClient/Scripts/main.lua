@@ -204,12 +204,18 @@ local UNAFFORDABLE = 999999
 local originalPrices = {} -- group name -> level -> { shards, values }
 local pricesBlocked = {} -- group name -> true once blocked (the price config only exists once the hub has loaded)
 
+-- Only the config the upgrade component holds, and only once it says it's ready: walking a config the hub is
+-- still building crashed the game natively (pcall can't catch that). Returns false when it isn't ready yet.
 local function forEachPriceGroup(fn)
-    for _, cfg in ipairs(FindAllOf("ValPlayerUpgradeConfig") or {}) do
-        if not str(cfg:GetFName()):find("Default__") then
-            cfg.GroupConfigsByType:ForEach(function(tag, group) fn(str(tag:get().TagName), group:get()) end)
-        end
-    end
+    local comp = nonDefault("ValPlayerUpgradeComponent")
+    if comp == nil or not comp:IsValid() or not comp.bComponentReady then return false end
+    local cfg = comp.UpgradeConfig
+    if cfg == nil or not cfg:IsValid() then return false end
+    cfg.GroupConfigsByType:ForEach(function(tag, group)
+        local g = group:get()
+        if g ~= nil and g:IsValid() then fn(str(tag:get().TagName), g) end
+    end)
+    return true
 end
 
 local function blockUpgradePurchases()
@@ -414,6 +420,7 @@ local function refreshLocalPawn()
 end
 
 local lastFlush = 0
+local lastPriceTry, PRICE_RETRY_S = os.time(), 5 -- first try a few seconds after load
 
 local lastSlotSeen = nil -- for the heartbeat
 local MAX_BACKLOG_NOTES = 5 -- after a long time away, only the latest few messages are posted
@@ -495,8 +502,10 @@ local function tick()
         lastEnsure = now
         ensureUnlocks(inv)
     end
-    -- the upgrade price config loads with the hub, after the mod starts: keep trying until it's blocked
-    if next(inbox.noBuy) ~= nil and next(pricesBlocked) == nil then
+    -- the upgrade price config loads with the hub, after the mod starts: keep trying (every few seconds) until
+    -- it's blocked
+    if next(inbox.noBuy) ~= nil and next(pricesBlocked) == nil and now - lastPriceTry >= PRICE_RETRY_S then
+        lastPriceTry = now
         local ok, err = pcall(blockUpgradePurchases)
         if not ok then log("upgrade purchase block failed: " .. tostring(err)) end
     end
