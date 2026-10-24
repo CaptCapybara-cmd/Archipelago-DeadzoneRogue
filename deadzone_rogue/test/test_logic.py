@@ -65,9 +65,50 @@ class TestZone3Goal(DeadzoneRogueTestBase):
 
 class TestAllDifficulties(DeadzoneRogueTestBase):
     options = {"mission_difficulties": ["Adventure", "Normal", "Hard", "Difficulty 4", "Difficulty 5"],
-               "room_clear_checks": 200, "include_synergy_components": True, "item_pack_size": 1}
+               "include_endless_missions": True, "sectors_cleared_total": 500, "sectors_cleared_interval": 5,
+               "enemies_killed_total": 10000, "enemies_killed_interval": 100, "scrap_gathered_total": 100000,
+               "scrap_gathered_interval": 1000, "include_synergy_components": True, "item_pack_size": 1}
+
+    def test_endless_have_checks_but_not_goal(self) -> None:
+        names = {loc.name for loc in self.multiworld.get_locations(self.player)}
+        self.assertIn("Gauntlet (Normal)", names)
+        self.assertIn("Ultra Nightmare (Difficulty 5)", names)
+        self.assertIn("Scrap Gathered: 100000", names)
+        goal = {m["key"] for m in self.multiworld.worlds[self.player].goal_missions}
+        self.assertNotIn("Mission_Challenge_Mission13", goal)  # Gauntlet is endless
+        self.assertIn("Mission_Challenge_Mission28", goal)  # Ultra Nightmare counts: Difficulty 5 has checks
+        self.assertEqual(len(goal), 29)  # 32 missions minus the 3 endless ones
 
 
 class TestSmallestSeed(DeadzoneRogueTestBase):
     options = {"goal": "zone_3", "mission_difficulties": ["Hard"], "include_challenge_missions": False,
-               "room_clear_checks": 0}
+               "sectors_cleared_total": 0, "enemies_killed_total": 0, "scrap_gathered_total": 0}
+
+
+class TestGoalAndObjectives(DeadzoneRogueTestBase):
+    options = {"goal": "zone_3", "enemies_killed_total": 1000, "enemies_killed_interval": 250}
+
+    def test_goal_missions(self) -> None:
+        goal = {m["name"] for m in self.multiworld.worlds[self.player].goal_missions}
+        self.assertIn("Get Out of My Head", goal)
+        self.assertIn("Close Quarters", goal)
+        self.assertNotIn("Prelude", goal)  # zone 4
+        self.assertNotIn("Gauntlet", goal)  # endless
+        self.assertNotIn("Ultra Nightmare", goal)  # only on Difficulty 5, which has no checks here
+
+    def test_goal_needs_all_zones(self) -> None:
+        self.assertFalse(self.can_reach_location("Goal: All Missions Through Zone 3"))
+        self.collect_by_name(["Zone 2 Access"])
+        self.assertFalse(self.can_reach_location("Goal: All Missions Through Zone 3"))
+        self.collect_by_name(["Zone 3 Access"])
+        self.assertTrue(self.can_reach_location("Goal: All Missions Through Zone 3"))
+
+    def test_objective_milestones(self) -> None:
+        names = {loc.name for loc in self.multiworld.get_locations(self.player)}
+        # interval 250 rounds down to 200: 200, 400, 600, 800, 1000
+        self.assertEqual(sorted(n for n in names if n.startswith("Enemies Killed")),
+                         sorted(f"Enemies Killed: {a}" for a in (200, 400, 600, 800, 1000)))
+        self.assertIn("Sectors Cleared: 150", names)  # defaults: total 150, interval 10
+        self.assertNotIn("Sectors Cleared: 160", names)
+        self.assertIn("Scrap Gathered: 20000", names)  # defaults: total 20000, interval 2000
+        self.assertNotIn("Gauntlet (Normal)", names)  # endless missions are off by default

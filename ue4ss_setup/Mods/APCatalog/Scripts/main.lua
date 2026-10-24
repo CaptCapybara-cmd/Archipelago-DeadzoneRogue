@@ -127,8 +127,14 @@ local function describeMission(obj)
             milestones[#milestones + 1] = tostring(k:get()) .. "(" .. n .. ")"
         end)
     end)
+    local class = "?"
+    pcall(function()
+        local c = obj.MissionClass
+        if c and c:IsValid() then class = str(c:GetFName()) end
+    end)
     return "tiers=" .. table.concat(tiers, " ") .. "\tprereqs=" .. table.concat(prereqs, ",")
         .. "\tmilestones=" .. table.concat(milestones, ",") .. "\tmap=" .. str(obj.MapAbsolutePath)
+        .. "\tclass=" .. class
 end
 
 local function run()

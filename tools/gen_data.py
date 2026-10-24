@@ -73,6 +73,7 @@ def mission_table(rows):
         prereqs = [p for p in row["extra"].get("prereqs", "").split(",") if p]
         missions.append({"key": row["asset"], "name": row["display"], "guid": row["item_id"],
                          "difficulties": diffs, "prereqs": prereqs,
+                         "endless": "Endless" in row["extra"].get("class", ""),
                          "story": "_Story" in row["asset"] or "_Introduction" in row["asset"]})
     by_key = {m["key"]: m for m in missions}
 
@@ -176,7 +177,7 @@ def write_python(missions, items, pools, path):
         f.write("MISSIONS = [\n")
         for m in missions:
             f.write(f"    {{'key': {m['key']!r}, 'name': {m['name']!r}, 'zone': {m['zone']}, 'story': {m['story']}, "
-                    f"'difficulties': {m['difficulties']}, 'prereqs': {m['prereqs']}}},\n")
+                    f"'endless': {m['endless']}, 'difficulties': {m['difficulties']}, 'prereqs': {m['prereqs']}}},\n")
         f.write("]\n\nITEMS = [\n")
         for it in items:
             f.write(f"    {{'id': {it['id']}, 'name': {it['name']!r}, 'category': {it['category']!r}, "
@@ -199,7 +200,7 @@ def main():
     with open(os.path.join(ROOT, "deadzone_rogue", "ap_data.json"), "w", encoding="utf-8") as f:
         json.dump({"item_base": ITEM_BASE, "location_base": LOCATION_BASE,
                    "group_pools": {name: {e["key"]: e["path"] for e in entries} for name, entries in pools.items()},
-                   "missions": [{k: m[k] for k in ("key", "name", "guid", "zone", "difficulties")} for m in missions],
+                   "missions": [{k: m[k] for k in ("key", "name", "guid", "zone", "difficulties", "endless")} for m in missions],
                    "items": {str(i["id"]): {"name": i["name"], "category": i["category"], "grants": i["grants"],
                                             "lock": i["lock"], "default_locked": i["default_locked"],
                                             "mode": i.get("mode", "once"), "amount": i.get("amount", 1)}

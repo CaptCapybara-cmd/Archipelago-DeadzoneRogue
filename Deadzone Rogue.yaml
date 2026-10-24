@@ -34,7 +34,7 @@ game: Deadzone Rogue
 requires:
   version: 0.6.9 # Version of Archipelago required for this yaml to work as expected.
   game:
-    Deadzone Rogue: 0.4.0 # Version of the world required for this yaml to work as expected.
+    Deadzone Rogue: 0.5.0 # Version of the world required for this yaml to work as expected.
 
 Deadzone Rogue:
   ################
@@ -76,24 +76,18 @@ Deadzone Rogue:
   mission_difficulties:
     # Which difficulties give a check for completing each mission. Every mission completed on each listed
     # difficulty is a separate check (e.g. "Who am I? (Normal)").
-    ['Adventure', 'Hard', 'Normal']
+    ['Normal', 'Hard', 'Adventure']
 
   include_challenge_missions:
     # Challenge missions (Close Quarters, Headhunter, Ultra Nightmare, ...) have checks.
     'false': 0
     'true': 50
 
-  room_clear_checks:
-    # Total rooms cleared across all runs that give checks, one check every 5 rooms. 0 disables them.
-    #
-    # You can define additional values between the minimum and maximum values.
-    # Minimum value is 0
-    # Maximum value is 200
-    100: 50
-    random: 0
-    random-low: 0 # random value weighted towards lower values
-    random-high: 0 # random value weighted towards higher values
-    random-range-0-200: 0 # random value between 0 and 200
+  include_endless_missions:
+    # The endless-wave missions (Gauntlet, Crossfire, Last Stand) have checks too. Off by default: an endless run
+    # may never register as "completed". They never count towards the goal.
+    'false': 50
+    'true': 0
 
   vanilla_mission_rewards:
     # Keep the game's own mission rewards (first-time and milestone unlocks). Off: those unlocks only come from
@@ -101,12 +95,89 @@ Deadzone Rogue:
     'false': 50
     'true': 0
 
+  ########################
+  # Save-wide Objectives #
+  ########################
+  sectors_cleared_total:
+    # Sectors cleared (across all runs) at which the last Sectors Cleared check is reached. 0: no sector checks.
+    #
+    # You can define additional values between the minimum and maximum values.
+    # Minimum value is 0
+    # Maximum value is 500
+    150: 50
+    random: 0
+    random-low: 0 # random value weighted towards lower values
+    random-high: 0 # random value weighted towards higher values
+    random-range-0-500: 0 # random value between 0 and 500
+
+  sectors_cleared_interval:
+    # A Sectors Cleared check every this many sectors (rounded down to a multiple of 5).
+    #
+    # You can define additional values between the minimum and maximum values.
+    # Minimum value is 5
+    # Maximum value is 50
+    10: 50
+    random: 0
+    random-low: 0 # random value weighted towards lower values
+    random-high: 0 # random value weighted towards higher values
+    random-range-5-50: 0 # random value between 5 and 50
+
+  enemies_killed_total:
+    # Enemies you've killed (across all runs) at which the last Enemies Killed check is reached. 0: no kill checks.
+    #
+    # You can define additional values between the minimum and maximum values.
+    # Minimum value is 0
+    # Maximum value is 10000
+    3000: 50
+    random: 0
+    random-low: 0 # random value weighted towards lower values
+    random-high: 0 # random value weighted towards higher values
+    random-range-0-10000: 0 # random value between 0 and 10000
+
+  enemies_killed_interval:
+    # An Enemies Killed check every this many kills (rounded down to a multiple of 100).
+    #
+    # You can define additional values between the minimum and maximum values.
+    # Minimum value is 100
+    # Maximum value is 2000
+    300: 50
+    random: 0
+    random-low: 0 # random value weighted towards lower values
+    random-high: 0 # random value weighted towards higher values
+    random-range-100-2000: 0 # random value between 100 and 2000
+
+  scrap_gathered_total:
+    # Scrap picked up (across all runs; spending doesn't count against it) at which the last Scrap Gathered check
+    # is reached. 0: no Scrap checks.
+    #
+    # You can define additional values between the minimum and maximum values.
+    # Minimum value is 0
+    # Maximum value is 100000
+    20000: 50
+    random: 0
+    random-low: 0 # random value weighted towards lower values
+    random-high: 0 # random value weighted towards higher values
+    random-range-0-100000: 0 # random value between 0 and 100000
+
+  scrap_gathered_interval:
+    # A Scrap Gathered check every this much Scrap (rounded down to a multiple of 1000).
+    #
+    # You can define additional values between the minimum and maximum values.
+    # Minimum value is 1000
+    # Maximum value is 10000
+    2000: 50
+    random: 0
+    random-low: 0 # random value weighted towards lower values
+    random-high: 0 # random value weighted towards higher values
+    random-range-1000-10000: 0 # random value between 1000 and 10000
+
   ###############
   # Progression #
   ###############
   goal:
-    # Which story mission you must complete (on any difficulty) to finish.
-    # zone_3: Get Out of My Head. zone_4: Getting Answers (the final story mission).
+    # Complete every story and challenge mission in zones 1 up to this zone (on any difficulty) to finish.
+    # Endless-wave missions (Gauntlet, Crossfire, Last Stand) never count, and a challenge that only exists on one
+    # difficulty counts only if that difficulty is in mission_difficulties.
     zone_3: 0
     zone_4: 50
 

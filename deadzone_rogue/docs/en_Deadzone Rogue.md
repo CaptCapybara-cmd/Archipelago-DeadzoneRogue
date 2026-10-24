@@ -17,12 +17,15 @@ sends checks out to other players instead. What you receive:
 
 - Completing each mission on each difficulty you enable, as separate checks, for example
   "Who am I? (Adventure)", "Who am I? (Normal)", "Who am I? (Hard)". Story and challenge missions both count.
-- Optionally, every 5 rooms cleared across all your runs ("Rooms Cleared: 5", "Rooms Cleared: 10", ...).
+- Save-wide objectives, counted across every run on your Archipelago save: sectors cleared, enemies killed and
+  Scrap gathered, for example "Sectors Cleared: 10", "Enemies Killed: 300", "Scrap Gathered: 2000". The totals
+  and intervals are options.
 
 ## What is the goal?
 
-Complete "Getting Answers" (the final story mission) or, for a shorter game, "Get Out of My Head". Either one
-counts on any difficulty.
+Complete every story and challenge mission in zones 1 through 4 (or through 3, for a shorter game), on
+any difficulty. The endless-wave missions (Gauntlet, Crossfire, Last Stand) don't count. Type `/goal` in the client
+to see what's left.
 
 ## DeathLink
 

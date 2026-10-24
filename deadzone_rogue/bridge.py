@@ -5,12 +5,13 @@ Folder: <game>/Valhalla/Binaries/Win64/APBridge/
                    version 1
                    rev <n>
                    session <id>
-                   goal <mission key>
+                   goal <zone>
+                   zones <open zones...> / missionzone <mission guid> <zone>   (zone gating)
                    lock <asset object path>                       (one per asset the mod must lock)
                    grant <index> <once|add> <amount> <asset path>  (index = position in ReceivedItems)
-  outbox.txt     appended by the mod, tailed by the client:
+  outbox_<session>.txt   appended by the mod, tailed by the client (one file per AP session):
                    mission <mission key> <difficulty>
-                   rooms <total rooms cleared this session>
+                   sectors|kills|scrap <save-wide total so far>
                    death <unix time>
   heartbeat.txt  unix time, rewritten by the mod every few seconds.
 
@@ -21,6 +22,8 @@ import os
 import pkgutil
 import re
 from typing import Dict, Iterable, List, Optional, Sequence, Set, Tuple
+
+from .locations import objective_location_id
 
 BRIDGE_DIR = "APBridge"
 DEFAULT_GAME_DIR = r"C:\Program Files (x86)\Steam\steamapps\common\Deadzone Rogue\Valhalla\Binaries\Win64"
@@ -41,9 +44,11 @@ def mission_location(data: dict, key: str, difficulty: int) -> Optional[int]:
     return None
 
 
-def room_locations(data: dict, total_rooms: int, step: int, max_rooms: int) -> List[int]:
-    """Room checks are 'Rooms Cleared: 5, 10, ...' up to the seed's room_clear_checks."""
-    return [data["location_base"] + 1000 + n for n in range(1, min(total_rooms, max_rooms) // step + 1)]
+def objective_locations(key: str, amount_so_far: int, interval: int, total: int) -> List[int]:
+    """Every milestone of an objective ("Enemies Killed: 300", ...) reached by a save-wide running total."""
+    if interval <= 0:
+        return []
+    return [objective_location_id(key, a) for a in range(interval, min(amount_so_far, total) + 1, interval)]
 
 
 def lock_paths(data: dict, slot_data: dict) -> List[str]:
@@ -90,7 +95,7 @@ def gating_lines(data: dict, slot_data: dict, received_ids: Sequence[int]) -> Li
     # keyed by MissionId GUID: the mod reads it inline from the mission option (MissionData may not be loaded yet)
     lines = [f"missionzone {m['guid']} {m['zone']}" for m in data["missions"]]
     if slot_data.get("zone_gating"):
-        goal_zone = next((m["zone"] for m in data["missions"] if m["key"] == slot_data.get("goal_mission")), 4)
+        goal_zone = slot_data.get("goal_zone", 4)
         zones = [z for z in (1, 2, 3, 4) if z == 1 or z > goal_zone or f"Zone {z} Access" in names]
         lines.append("zones " + " ".join(map(str, zones)))
     return lines
@@ -98,7 +103,7 @@ def gating_lines(data: dict, slot_data: dict, received_ids: Sequence[int]) -> Li
 
 def render_inbox(rev: int, session: str, slot_data: dict, locks: Iterable[str],
                  grants: Iterable[Tuple[int, str, int, str]], gating: Iterable[str] = ()) -> str:
-    out = ["version 1", f"rev {rev}", f"session {session}", f"goal {slot_data.get('goal_mission', '')}"]
+    out = ["version 1", f"rev {rev}", f"session {session}", f"goal {slot_data.get('goal_zone', '')}"]
     out += list(gating)
     out += [f"lock {path}" for path in locks]
     out += [f"grant {index} {mode} {amount} {path}" for index, mode, amount, path in grants]
@@ -122,23 +127,30 @@ def parse_outbox(text: str) -> List[Tuple[str, List[str]]]:
 
 
 def checks_from_events(data: dict, slot_data: dict, events: Iterable[Tuple[str, List[str]]],
-                       since: float) -> Tuple[Set[int], bool, int]:
-    """Location ids to send, whether the goal was completed, and how many new deaths (after `since`) occurred."""
+                       since: float) -> Tuple[Set[int], Set[str], int]:
+    """Location ids to send, missions completed (any difficulty, for the goal), and how many new deaths
+    (after `since`) occurred."""
     locations: Set[int] = set()
-    goal = False
+    completed: Set[str] = set()
     deaths = 0
+    objectives = slot_data.get("objectives", {})
     for kind, args in events:
         if kind == "mission" and len(args) == 2:
             key, difficulty = args[0], int(args[1])
+            completed.add(key)
             if difficulty in slot_data.get("difficulties", []):
                 loc = mission_location(data, key, difficulty)
                 if loc is not None:
                     locations.add(loc)
-            if key == slot_data.get("goal_mission"):
-                goal = True
-        elif kind == "rooms" and args:
-            locations.update(room_locations(data, int(args[0]), slot_data.get("room_check_step", 5),
-                                            slot_data.get("room_clear_checks", 0)))
+        elif kind in ("sectors", "rooms", "kills", "scrap") and args:
+            key = "sectors" if kind == "rooms" else kind  # "rooms" from mod versions before 0.5.0
+            interval, total = objectives.get(key, (0, 0))
+            locations.update(objective_locations(key, int(args[0]), interval, total))
         elif kind == "death" and args and float(args[0]) > since:
             deaths += 1
-    return locations, goal, deaths
+    return locations, completed, deaths
+
+
+def goal_complete(slot_data: dict, completed: Set[str]) -> bool:
+    goal = slot_data.get("goal_missions", [])
+    return bool(goal) and all(key in completed for key in goal)

@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Dict, List, NamedTuple
 
 from BaseClasses import Location
 
@@ -6,9 +6,23 @@ from .game_data import LOCATION_BASE, MISSIONS
 
 # Game difficulty index (EValGameDifficulty) -> name used in checks and in the mission_difficulties option.
 DIFFICULTY_NAMES = {1: "Adventure", 2: "Normal", 3: "Hard", 4: "Difficulty 4", 5: "Difficulty 5"}
-# Cumulative room clears across all runs ("Rooms Cleared: 5", "... 10", ...). Fixed max so ids are stable.
-ROOM_CHECK_STEP = 5
-MAX_ROOM_CHECKS = 40
+
+
+class Objective(NamedTuple):
+    """A save-wide running total with milestone checks ("Enemies Killed: 500", ...). Milestones are multiples of
+    `unit`; the table holds MAX_MILESTONES of them so location ids never change, and options pick a subset."""
+    label: str
+    unit: int
+    id_offset: int
+
+
+MAX_MILESTONES = 100
+OBJECTIVES = {
+    # sectors (the game's name for cleared rooms/encounters) keep the ids of the former "Rooms Cleared" checks
+    "sectors": Objective("Sectors Cleared", 5, 1000),
+    "kills": Objective("Enemies Killed", 100, 2000),
+    "scrap": Objective("Scrap Gathered", 1000, 3000),
+}
 
 
 class DeadzoneRogueLocation(Location):
@@ -19,8 +33,13 @@ def mission_location(mission: dict, difficulty: int) -> str:
     return f"{mission['name']} ({DIFFICULTY_NAMES[difficulty]})"
 
 
-def room_location(index: int) -> str:
-    return f"Rooms Cleared: {index * ROOM_CHECK_STEP}"
+def objective_location(key: str, amount: int) -> str:
+    return f"{OBJECTIVES[key].label}: {amount}"
+
+
+def objective_location_id(key: str, amount: int) -> int:
+    objective = OBJECTIVES[key]
+    return LOCATION_BASE + objective.id_offset + amount // objective.unit
 
 
 def _build_table() -> Dict[str, int]:
@@ -28,8 +47,10 @@ def _build_table() -> Dict[str, int]:
     for i, mission in enumerate(MISSIONS):
         for d in mission["difficulties"]:
             table[mission_location(mission, d)] = LOCATION_BASE + i * 10 + d
-    for n in range(1, MAX_ROOM_CHECKS + 1):
-        table[room_location(n)] = LOCATION_BASE + 1000 + n
+    for key, objective in OBJECTIVES.items():
+        for n in range(1, MAX_MILESTONES + 1):
+            amount = n * objective.unit
+            table[objective_location(key, amount)] = objective_location_id(key, amount)
     return table
 
 
@@ -46,5 +67,5 @@ location_name_groups = {
     **{f"Zone {z}": {loc for m in MISSIONS if m["zone"] == z for loc in mission_locations(m)} for z in (1, 2, 3, 4)},
     "Story Missions": {loc for m in MISSIONS if m["story"] for loc in mission_locations(m)},
     "Challenge Missions": {loc for m in MISSIONS if not m["story"] for loc in mission_locations(m)},
-    "Room Clears": {room_location(n) for n in range(1, MAX_ROOM_CHECKS + 1)},
+    **{o.label: {objective_location(k, n * o.unit) for n in range(1, MAX_MILESTONES + 1)} for k, o in OBJECTIVES.items()},
 }

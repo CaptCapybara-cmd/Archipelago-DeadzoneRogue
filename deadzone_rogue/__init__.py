@@ -7,12 +7,11 @@ from worlds.LauncherComponents import Component, Type, components, launch as lau
 
 from .game_data import GROUP_POOLS, MISSIONS
 from .items import FILLER_ITEMS, PACK_POOLS, DeadzoneRogueItem, item_name_groups, item_name_to_id, item_table
-from .locations import (DIFFICULTY_NAMES, ROOM_CHECK_STEP, DeadzoneRogueLocation, MISSIONS_BY_KEY,
-                        location_name_groups, location_name_to_id, mission_location, room_location)
+from .locations import (DIFFICULTY_NAMES, OBJECTIVES, DeadzoneRogueLocation, location_name_groups,
+                        location_name_to_id, mission_location, objective_location)
 from .options import DeadzoneRogueOptions, option_groups
 from .rules import set_rules
 
-GOAL_MISSIONS = {3: "Mission_Zone3_Story", 4: "Mission_Zone4_Story2"}
 # When there are more items than checks, useful items are dropped from these categories first (in order).
 TRIM_ORDER = ["synergy_component", "item_group", "superior_group", "mastery_group", "unlock",
               "augment", "weapon", "perk"]
@@ -56,8 +55,9 @@ class DeadzoneRogueWorld(World):
     item_name_groups = item_name_groups
     location_name_groups = location_name_groups
 
-    goal_mission: dict
-    missions: List[dict]
+    goal_missions: List[dict]  # every one must be completed (any difficulty) for the goal
+    missions: List[dict]  # missions with checks
+    milestones: Dict[str, Tuple[int, int]]  # objective -> (interval, total); total 0 = off
     difficulties: List[int]  # enabled difficulty indexes, easiest first
     mission_checks: List[Tuple[dict, int, Location]]
     victory_location: Location
@@ -72,11 +72,20 @@ class DeadzoneRogueWorld(World):
         self.difficulties = sorted(d for d, name in DIFFICULTY_NAMES.items() if name in enabled)
 
         goal_zone = opts.goal.value
-        self.goal_mission = MISSIONS_BY_KEY[GOAL_MISSIONS[goal_zone]]
-        self.missions = [m for m in MISSIONS
-                         if m["zone"] <= goal_zone
-                         and (m["story"] or opts.include_challenge_missions)
-                         and any(d in self.difficulties for d in m["difficulties"])]
+        # a mission that only exists on difficulties without checks (e.g. Ultra Nightmare) is left out entirely
+        playable = [m for m in MISSIONS
+                    if m["zone"] <= goal_zone
+                    and (m["story"] or opts.include_challenge_missions)
+                    and any(d in self.difficulties for d in m["difficulties"])]
+        self.missions = [m for m in playable if not m["endless"] or opts.include_endless_missions]
+        self.goal_missions = [m for m in playable if not m["endless"]]
+        self.milestones = {}
+        for key, (total, interval) in {"sectors": (opts.sectors_cleared_total, opts.sectors_cleared_interval),
+                                        "kills": (opts.enemies_killed_total, opts.enemies_killed_interval),
+                                        "scrap": (opts.scrap_gathered_total, opts.scrap_gathered_interval)}.items():
+            unit = OBJECTIVES[key].unit
+            step = max(unit, interval.value // unit * unit)
+            self.milestones[key] = (step, total.value // step * step)
         self.starting_kit = self.pick_starting_kit()
         self.packs = self.make_packs()
 
@@ -136,13 +145,15 @@ class DeadzoneRogueWorld(World):
                 location = DeadzoneRogueLocation(self.player, name, location_name_to_id[name], station)
                 station.locations.append(location)
                 self.mission_checks.append((mission, d, location))
-        for n in range(1, self.options.room_clear_checks.value // ROOM_CHECK_STEP + 1):
-            name = room_location(n)
-            station.locations.append(DeadzoneRogueLocation(self.player, name, location_name_to_id[name], station))
+        for key, (step, total) in self.milestones.items():
+            for amount in range(step, total + 1, step):
+                name = objective_location(key, amount)
+                station.locations.append(DeadzoneRogueLocation(self.player, name, location_name_to_id[name], station))
 
-        # Goal event: completing the goal mission on any difficulty. The client reports it with
+        # Goal event: every goal mission completed on any difficulty. The client reports it with
         # StatusUpdate(CLIENT_GOAL); the server never sees the event itself.
-        self.victory_location = DeadzoneRogueLocation(self.player, f"Goal: {self.goal_mission['name']}", None, station)
+        self.victory_location = DeadzoneRogueLocation(
+            self.player, f"Goal: All Missions Through Zone {self.options.goal.value}", None, station)
         self.victory_location.place_locked_item(
             DeadzoneRogueItem("Victory", ItemClassification.progression, None, self.player))
         station.locations.append(self.victory_location)
@@ -186,7 +197,7 @@ class DeadzoneRogueWorld(World):
                 self.packs.pop(n, None)  # a dropped pack's contents stay as in the base game
         if len(names) > slots:
             raise OptionError(f"{self.player_name}: {len(names)} items but only {slots} checks. "
-                              f"Add mission difficulties or room clear checks, or enable challenge missions.")
+                              f"Add mission difficulties or objective checks, or enable challenge missions.")
         names += [self.get_filler_item_name() for _ in range(slots - len(names))]
         self.multiworld.itempool += [self.create_item(n) for n in names]
 
@@ -197,11 +208,12 @@ class DeadzoneRogueWorld(World):
         # Everything the client mod needs about this seed; item/location meanings come from client/ap_data.json.
         opts = self.options
         return {
-            "goal_mission": self.goal_mission["key"],
+            "goal_zone": opts.goal.value,
+            "goal_missions": [m["key"] for m in self.goal_missions],
             "difficulties": self.difficulties,
             "zone_gating": bool(opts.zone_gating),
-            "room_check_step": ROOM_CHECK_STEP,
-            "room_clear_checks": opts.room_clear_checks.value,
+            # objective -> [interval, total]: a check at every interval up to total
+            "objectives": {key: list(value) for key, value in self.milestones.items()},
             "vanilla_mission_rewards": bool(opts.vanilla_mission_rewards),
             # categories the client must lock at start (their normally-free entries are shuffled)
             "lock_free": [c for c in ("weapon", "perk", "augment") if self.shuffled(c)],

@@ -25,5 +25,5 @@ def can_play(state: CollectionState, world: "DeadzoneRogueWorld", mission: dict,
 def set_rules(world: "DeadzoneRogueWorld") -> None:
     for mission, difficulty, location in world.mission_checks:
         location.access_rule = lambda state, m=mission, d=difficulty: can_play(state, world, m, d)
-    world.victory_location.access_rule = lambda state: can_unlock(state, world, world.goal_mission)
+    world.victory_location.access_rule = lambda state: all(can_unlock(state, world, m) for m in world.goal_missions)
     world.multiworld.completion_condition[world.player] = lambda state: state.has("Victory", world.player)

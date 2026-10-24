@@ -3,12 +3,13 @@ from dataclasses import dataclass
 from Options import (Choice, DeathLink, DefaultOnToggle, OptionGroup, OptionSet, PerGameCommonOptions, Range,
                      Toggle)
 
-from .locations import DIFFICULTY_NAMES, MAX_ROOM_CHECKS, ROOM_CHECK_STEP
+from .locations import DIFFICULTY_NAMES, MAX_MILESTONES, OBJECTIVES
 
 
 class Goal(Choice):
-    """Which story mission you must complete (on any difficulty) to finish.
-    zone_3: Get Out of My Head. zone_4: Getting Answers (the final story mission)."""
+    """Complete every story and challenge mission in zones 1 up to this zone (on any difficulty) to finish.
+    Endless-wave missions (Gauntlet, Crossfire, Last Stand) never count, and a challenge that only exists on one
+    difficulty counts only if that difficulty is in mission_difficulties."""
     display_name = "Goal"
     option_zone_3 = 3
     option_zone_4 = 4
@@ -33,12 +34,61 @@ class IncludeChallengeMissions(DefaultOnToggle):
     display_name = "Include Challenge Missions"
 
 
-class RoomClearChecks(Range):
-    """Total rooms cleared across all runs that give checks, one check every 5 rooms. 0 disables them."""
-    display_name = "Room Clear Checks"
+class IncludeEndlessMissions(Toggle):
+    """The endless-wave missions (Gauntlet, Crossfire, Last Stand) have checks too. Off by default: an endless run
+    may never register as "completed". They never count towards the goal."""
+    display_name = "Include Endless Missions"
+
+
+# Save-wide objectives: running totals across every run on your Archipelago save, with a check at every interval
+# ("Enemies Killed: 300", "Enemies Killed: 600", ...). Total 0 turns an objective off.
+class SectorsClearedTotal(Range):
+    """Sectors cleared (across all runs) at which the last Sectors Cleared check is reached. 0: no sector checks."""
+    display_name = "Sectors Cleared Total"
     range_start = 0
-    range_end = MAX_ROOM_CHECKS * ROOM_CHECK_STEP
-    default = 100
+    range_end = MAX_MILESTONES * OBJECTIVES["sectors"].unit
+    default = 150
+
+
+class SectorsClearedInterval(Range):
+    """A Sectors Cleared check every this many sectors (rounded down to a multiple of 5)."""
+    display_name = "Sectors Cleared Interval"
+    range_start = OBJECTIVES["sectors"].unit
+    range_end = 50
+    default = 10
+
+
+class EnemiesKilledTotal(Range):
+    """Enemies you've killed (across all runs) at which the last Enemies Killed check is reached. 0: no kill checks."""
+    display_name = "Enemies Killed Total"
+    range_start = 0
+    range_end = MAX_MILESTONES * OBJECTIVES["kills"].unit
+    default = 3000
+
+
+class EnemiesKilledInterval(Range):
+    """An Enemies Killed check every this many kills (rounded down to a multiple of 100)."""
+    display_name = "Enemies Killed Interval"
+    range_start = OBJECTIVES["kills"].unit
+    range_end = 2000
+    default = 300
+
+
+class ScrapGatheredTotal(Range):
+    """Scrap picked up (across all runs; spending doesn't count against it) at which the last Scrap Gathered check
+    is reached. 0: no Scrap checks."""
+    display_name = "Scrap Gathered Total"
+    range_start = 0
+    range_end = MAX_MILESTONES * OBJECTIVES["scrap"].unit
+    default = 20000
+
+
+class ScrapGatheredInterval(Range):
+    """A Scrap Gathered check every this much Scrap (rounded down to a multiple of 1000)."""
+    display_name = "Scrap Gathered Interval"
+    range_start = OBJECTIVES["scrap"].unit
+    range_end = 10000
+    default = 2000
 
 
 class VanillaMissionRewards(Toggle):
@@ -141,7 +191,13 @@ class DeadzoneRogueOptions(PerGameCommonOptions):
     mission_difficulties: MissionDifficulties
     zone_gating: ZoneGating
     include_challenge_missions: IncludeChallengeMissions
-    room_clear_checks: RoomClearChecks
+    include_endless_missions: IncludeEndlessMissions
+    sectors_cleared_total: SectorsClearedTotal
+    sectors_cleared_interval: SectorsClearedInterval
+    enemies_killed_total: EnemiesKilledTotal
+    enemies_killed_interval: EnemiesKilledInterval
+    scrap_gathered_total: ScrapGatheredTotal
+    scrap_gathered_interval: ScrapGatheredInterval
     vanilla_mission_rewards: VanillaMissionRewards
     weapon_shuffle: WeaponShuffle
     perk_shuffle: PerkShuffle
@@ -157,7 +213,9 @@ class DeadzoneRogueOptions(PerGameCommonOptions):
 
 
 option_groups = [
-    OptionGroup("Checks", [MissionDifficulties, IncludeChallengeMissions, RoomClearChecks, VanillaMissionRewards]),
+    OptionGroup("Checks", [MissionDifficulties, IncludeChallengeMissions, IncludeEndlessMissions, VanillaMissionRewards]),
+    OptionGroup("Save-wide Objectives", [SectorsClearedTotal, SectorsClearedInterval, EnemiesKilledTotal,
+                                         EnemiesKilledInterval, ScrapGatheredTotal, ScrapGatheredInterval]),
     OptionGroup("Progression", [Goal, ZoneGating]),
     OptionGroup("Unlocks", [WeaponShuffle, PerkShuffle, AugmentShuffle, StartingKitWeapons, StartingKitPerks,
                             ItemPackSize, MasteryPackSize, SuperiorItemPackSize, IncludeSynergyComponents]),

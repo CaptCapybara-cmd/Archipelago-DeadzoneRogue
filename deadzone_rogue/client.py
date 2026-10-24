@@ -3,7 +3,7 @@
 import asyncio
 import os
 import time
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Set
 
 import Utils
 from CommonClient import (ClientCommandProcessor, CommonContext, get_base_parser, gui_enabled, handle_url_arg, logger,
@@ -21,6 +21,16 @@ class DeadzoneRogueCommandProcessor(ClientCommandProcessor):
         """Show whether the game (APClient mod) is talking to this client."""
         if isinstance(self.ctx, DeadzoneRogueContext):
             logger.info(self.ctx.game_status())
+
+    def _cmd_goal(self) -> None:
+        """Show which missions are still needed for the goal."""
+        if isinstance(self.ctx, DeadzoneRogueContext):
+            names = {m["key"]: m["name"] for m in self.ctx.data["missions"]}
+            needed = [k for k in self.ctx.slot_data.get("goal_missions", []) if k not in self.ctx.completed_missions]
+            total = len(self.ctx.slot_data.get("goal_missions", []))
+            logger.info(f"Goal: {total - len(needed)}/{total} missions completed.")
+            if needed:
+                logger.info("Still needed: " + ", ".join(names.get(k, k) for k in needed))
 
     def _cmd_gamedir(self, path: str = "") -> None:
         """Show or set the game's Win64 folder (where DeadzoneSteam-Win64-Shipping.exe is)."""
@@ -43,6 +53,8 @@ class DeadzoneRogueContext(CommonContext):
         self.outbox_offset = 0
         self.started_at = time.time()
         self.goal_sent = False
+        self.session = ""
+        self.completed_missions: Set[str] = set()  # rebuilt from this session's outbox, which is read from the start
         self.set_game_dir(game_dir)
 
     def set_game_dir(self, game_dir: str) -> None:
@@ -89,6 +101,8 @@ class DeadzoneRogueContext(CommonContext):
             return
         self.inbox_rev += 1
         session = bridge.session_id(self.server_seed_name or self.seed_name or "seed", self.auth or "slot")
+        if session != self.session:  # new AP session: read its outbox from the start
+            self.session, self.outbox_offset, self.completed_missions = session, 0, set()
         received = [item.item for item in self.items_received]
         grants = bridge.grant_lines(self.data, self.slot_data, received)
         text = bridge.render_inbox(self.inbox_rev, session, self.slot_data,
@@ -97,8 +111,8 @@ class DeadzoneRogueContext(CommonContext):
         bridge.write_atomic(os.path.join(self.bridge_dir, "inbox.txt"), text)
 
     async def poll_game(self) -> None:
-        path = os.path.join(self.bridge_dir, "outbox.txt")
-        if not self.slot_data or not os.path.exists(path):
+        path = os.path.join(self.bridge_dir, f"outbox_{self.session}.txt")
+        if not self.slot_data or not self.session or not os.path.exists(path):
             return
         with open(path, encoding="utf-8") as f:
             f.seek(self.outbox_offset)
@@ -107,11 +121,13 @@ class DeadzoneRogueContext(CommonContext):
         if not text:
             return
         events = bridge.parse_outbox(text)
-        locations, goal, deaths = bridge.checks_from_events(self.data, self.slot_data, events, self.started_at)
+        locations, completed, deaths = bridge.checks_from_events(self.data, self.slot_data, events, self.started_at)
+        self.completed_missions |= completed
         new = locations - self.checked_locations
         if new:
             await self.check_locations(new)
-        if goal and not self.goal_sent and not self.finished_game:
+        if (bridge.goal_complete(self.slot_data, self.completed_missions)
+                and not self.goal_sent and not self.finished_game):
             await self.send_msgs([{"cmd": "StatusUpdate", "status": ClientStatus.CLIENT_GOAL}])
             self.goal_sent = True
             logger.info("Goal complete!")

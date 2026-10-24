@@ -4,8 +4,8 @@ An Archipelago integration has two halves:
 
 | Half | What it does | Status |
 |---|---|---|
-| **APWorld** (`deadzone_rogue/`, Python) | Tells the generator what items and locations exist and what the logic is | v0.4.0: built from the game's real data, passes AP's tests, generates seeds |
-| **Client** (Python, in the apworld) + **APClient** (Lua mod) | Talks to the AP server: sends checks, grants received items, locks unreceived content, reports the goal | v0.4.0: mission/room checks, grants, locking and zone gating work live, protected by save-slot binding. Reward suppression, DeathLink effects and objective checks not done yet |
+| **APWorld** (`deadzone_rogue/`, Python) | Tells the generator what items and locations exist and what the logic is | v0.5.0: built from the game's real data, passes AP's tests, generates seeds |
+| **Client** (Python, in the apworld) + **APClient** (Lua mod) | Talks to the AP server: sends checks, grants received items, locks unreceived content, reports the goal | v0.5.0: mission and save-wide objective checks, grants, locking and zone gating work live, protected by save-slot binding. Reward suppression and DeathLink effects not done yet |
 
 ## Files
 
@@ -31,7 +31,10 @@ An Archipelago integration has two halves:
 **Checks**
 - Each mission × each difficulty in `mission_difficulties` (Adventure/Normal/Hard by default, up to 5 levels).
   There are 32 missions: 6 story and 26 challenge, across 4 zones.
-- `room_clear_checks`: one check every 5 rooms cleared, cumulative across runs.
+- Save-wide objectives, counted across every run on your Archipelago save: **Sectors Cleared**, **Enemies Killed**
+  (your own kills) and **Scrap Gathered** (pickups; spending doesn't count). Each has a total and an interval
+  option, for example a check every 300 kills up to 3000. Total 0 turns one off.
+- Endless-wave missions (Gauntlet, Crossfire, Last Stand) only have checks with `include_endless_missions`.
 
 **Items**
 - Weapons, perk families and augments as individual items. `*_shuffle` is `none` / `locked_only` / `all`; `all` also
@@ -43,7 +46,9 @@ An Archipelago integration has two halves:
 - If there are more items than checks, the lowest-priority items are left out (they stay as in the base game):
   synergies, then packs, unlocks, augments, weapons, perks.
 
-**Goal:** complete "Getting Answers" (or "Get Out of My Head" with `goal: zone_3`) on any difficulty.
+**Goal:** complete every story and challenge mission in zones 1 through the chosen zone (`goal: zone_3` or `zone_4`),
+on any difficulty. Endless-wave missions never count. A challenge that only exists on one difficulty counts only if
+that difficulty has checks. `/goal` in the client lists what's left.
 
 **DeathLink:** `death_link_mode` = lose_perk (default) / lose_item / lose_scrap / take_damage / push_back_room / kill.
 
@@ -51,7 +56,8 @@ An Archipelago integration has two halves:
 
 1. Clone https://github.com/ArchipelagoMW/Archipelago and copy `deadzone_rogue/` into `worlds/`.
 2. `pip install -r requirements.txt`
-3. If the game updates: rerun the APCatalog mod, copy the new `APCatalog.tsv` into `dumps/`, then run `python tools/gen_data.py`.
+3. If the game updates: rerun the APCatalog mod **with APClient disabled** (its locks would otherwise be recorded as
+   the game's defaults), copy the new `APCatalog.tsv` into `dumps/`, then run `python tools/gen_data.py`.
    **Check the item ids it prints. Ids must never change once seeds exist.**
 4. Tests: `python -m pytest worlds/deadzone_rogue test/general`
 5. Build: `python Launcher.py "Build APWorlds" -- "Deadzone Rogue"`

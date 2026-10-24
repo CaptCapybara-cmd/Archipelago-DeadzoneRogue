@@ -194,7 +194,8 @@
     3,
     4,
     5
-   ]
+   ],
+   "endless": false
   },
   {
    "key": "Mission_Challenge_Mission04",
@@ -207,7 +208,8 @@
     3,
     4,
     5
-   ]
+   ],
+   "endless": false
   },
   {
    "key": "Mission_Challenge_Mission05",
@@ -220,7 +222,8 @@
     3,
     4,
     5
-   ]
+   ],
+   "endless": false
   },
   {
    "key": "Mission_Challenge_Mission10",
@@ -233,7 +236,8 @@
     3,
     4,
     5
-   ]
+   ],
+   "endless": false
   },
   {
    "key": "Mission_Challenge_Mission16",
@@ -242,7 +246,8 @@
    "zone": 1,
    "difficulties": [
     2
-   ]
+   ],
+   "endless": true
   },
   {
    "key": "Mission_Zone2_Story",
@@ -255,7 +260,8 @@
     3,
     4,
     5
-   ]
+   ],
+   "endless": false
   },
   {
    "key": "Mission_Challenge_Mission06",
@@ -268,7 +274,8 @@
     3,
     4,
     5
-   ]
+   ],
+   "endless": false
   },
   {
    "key": "Mission_Challenge_Mission07",
@@ -281,7 +288,8 @@
     3,
     4,
     5
-   ]
+   ],
+   "endless": false
   },
   {
    "key": "Mission_Challenge_Mission08",
@@ -294,7 +302,8 @@
     3,
     4,
     5
-   ]
+   ],
+   "endless": false
   },
   {
    "key": "Mission_Challenge_Mission09",
@@ -307,7 +316,8 @@
     3,
     4,
     5
-   ]
+   ],
+   "endless": false
   },
   {
    "key": "Mission_Challenge_Mission11",
@@ -320,7 +330,8 @@
     3,
     4,
     5
-   ]
+   ],
+   "endless": false
   },
   {
    "key": "Mission_Challenge_Mission13",
@@ -329,7 +340,8 @@
    "zone": 2,
    "difficulties": [
     2
-   ]
+   ],
+   "endless": true
   },
   {
    "key": "Mission_Challenge_Mission17",
@@ -342,7 +354,8 @@
     3,
     4,
     5
-   ]
+   ],
+   "endless": false
   },
   {
    "key": "Mission_Zone3_Story",
@@ -355,7 +368,8 @@
     3,
     4,
     5
-   ]
+   ],
+   "endless": false
   },
   {
    "key": "Mission_Challenge_Mission12",
@@ -368,7 +382,8 @@
     3,
     4,
     5
-   ]
+   ],
+   "endless": false
   },
   {
    "key": "Mission_Challenge_Mission14",
@@ -381,7 +396,8 @@
     3,
     4,
     5
-   ]
+   ],
+   "endless": false
   },
   {
    "key": "Mission_Challenge_Mission15",
@@ -390,7 +406,8 @@
    "zone": 3,
    "difficulties": [
     4
-   ]
+   ],
+   "endless": true
   },
   {
    "key": "Mission_Challenge_Mission18",
@@ -403,7 +420,8 @@
     3,
     4,
     5
-   ]
+   ],
+   "endless": false
   },
   {
    "key": "Mission_Challenge_Mission19",
@@ -416,7 +434,8 @@
     3,
     4,
     5
-   ]
+   ],
+   "endless": false
   },
   {
    "key": "Mission_Challenge_Mission20",
@@ -429,7 +448,8 @@
     3,
     4,
     5
-   ]
+   ],
+   "endless": false
   },
   {
    "key": "Mission_Challenge_Mission21",
@@ -442,7 +462,8 @@
     3,
     4,
     5
-   ]
+   ],
+   "endless": false
   },
   {
    "key": "Mission_Challenge_Mission22",
@@ -455,7 +476,8 @@
     3,
     4,
     5
-   ]
+   ],
+   "endless": false
   },
   {
    "key": "Mission_Zone4_Introduction",
@@ -464,7 +486,8 @@
    "zone": 4,
    "difficulties": [
     1
-   ]
+   ],
+   "endless": false
   },
   {
    "key": "Mission_Zone4_Story1",
@@ -477,7 +500,8 @@
     3,
     4,
     5
-   ]
+   ],
+   "endless": false
   },
   {
    "key": "Mission_Zone4_Story2",
@@ -490,7 +514,8 @@
     3,
     4,
     5
-   ]
+   ],
+   "endless": false
   },
   {
    "key": "Mission_Challenge_Mission23",
@@ -503,7 +528,8 @@
     3,
     4,
     5
-   ]
+   ],
+   "endless": false
   },
   {
    "key": "Mission_Challenge_Mission24",
@@ -516,7 +542,8 @@
     3,
     4,
     5
-   ]
+   ],
+   "endless": false
   },
   {
    "key": "Mission_Challenge_Mission26",
@@ -529,7 +556,8 @@
     3,
     4,
     5
-   ]
+   ],
+   "endless": false
   },
   {
    "key": "Mission_Challenge_Mission27",
@@ -542,7 +570,8 @@
     3,
     4,
     5
-   ]
+   ],
+   "endless": false
   },
   {
    "key": "Mission_Challenge_Mission28",
@@ -551,7 +580,8 @@
    "zone": 4,
    "difficulties": [
     5
-   ]
+   ],
+   "endless": false
   },
   {
    "key": "Mission_Challenge_Mission29",
@@ -564,7 +594,8 @@
     3,
     4,
     5
-   ]
+   ],
+   "endless": false
   },
   {
    "key": "Mission_Challenge_Mission31",
@@ -577,7 +608,8 @@
     3,
     4,
     5
-   ]
+   ],
+   "endless": false
   }
  ],
  "items": {

@@ -1,7 +1,8 @@
 -- APClient: the in-game half of the Deadzone Rogue Archipelago client.
 -- Talks to the Python client through files in Win64/APBridge (format: deadzone_rogue/bridge.py):
---   inbox.txt  -> what to lock and grant      outbox.txt <- missions completed, rooms cleared, deaths
--- Received items are tracked per AP session and per game save slot in APBridge/state_<session>_slot<n>.txt.
+--   inbox.txt -> what to lock and grant     outbox_<session>.txt <- missions completed, save-wide totals, deaths
+-- Received items and save-wide totals (sectors, kills, Scrap) are tracked per AP session and per game save slot in
+-- APBridge/state_<session>_slot<n>.txt.
 local BRIDGE = "APBridge/"
 local POLL_MS = 1000
 local ENSURE_EVERY_S = 30       -- re-check one-time unlocks against the save this often
@@ -24,10 +25,13 @@ local function readFile(path)
     return text
 end
 
-local function emit(line)
-    local f = io.open(BRIDGE .. "outbox.txt", "a")
+local sessionId = nil -- set from the inbox; events go to that session's own outbox
+
+local function emit(line, quiet)
+    if sessionId == nil then return end
+    local f = io.open(BRIDGE .. "outbox_" .. sessionId .. ".txt", "a")
     if f then f:write(line .. "\n"); f:close() end
-    log("sent: " .. line)
+    if not quiet then log("sent: " .. line) end
 end
 
 local function nonDefault(className)
@@ -80,23 +84,42 @@ end
 
 -- Per-session, per-save-slot progress -----------------------------------------------------------------------------
 
-local state = { key = nil, applied = -1, rooms = 0 }
+-- sectors / kills / scrap are save-wide running totals across every run on this session's save slot
+local state = { key = nil, applied = -1, sectors = 0, kills = 0, scrap = 0 }
+local totalsDirty = false -- totals changed since they were last written to the outbox
 
 local function stateFile() return BRIDGE .. "state_" .. state.key .. ".txt" end
 
 local function loadState(key)
-    state.key, state.applied, state.rooms = key, -1, 0
+    state.key, state.applied, state.sectors, state.kills, state.scrap = key, -1, 0, 0, 0
     local text = readFile(stateFile())
     if text then
         state.applied = tonumber(text:match("applied (%-?%d+)")) or -1
-        state.rooms = tonumber(text:match("rooms (%d+)")) or 0
+        state.sectors = tonumber(text:match("sectors (%d+)") or text:match("rooms (%d+)")) or 0 -- "rooms" before 0.5.0
+        state.kills = tonumber(text:match("kills (%d+)")) or 0
+        state.scrap = tonumber(text:match("scrap (%d+)")) or 0
     end
-    log(string.format("session %s: %d items applied before, %d rooms cleared", key, state.applied + 1, state.rooms))
+    log(string.format("session %s: %d items applied before; %d sectors cleared, %d kills, %d Scrap gathered",
+        key, state.applied + 1, state.sectors, state.kills, state.scrap))
 end
 
 local function saveState()
     local f = io.open(stateFile(), "w")
-    if f then f:write(string.format("applied %d\nrooms %d\n", state.applied, state.rooms)); f:close() end
+    if f then
+        f:write(string.format("applied %d\nsectors %d\nkills %d\nscrap %d\n",
+            state.applied, state.sectors, state.kills, state.scrap))
+        f:close()
+    end
+end
+
+-- Totals are written at most every few seconds (kills and Scrap pickups come in bursts).
+local function flushTotals()
+    if not totalsDirty then return end
+    totalsDirty = false
+    saveState()
+    emit("sectors " .. state.sectors, true)
+    emit("kills " .. state.kills, true)
+    emit("scrap " .. state.scrap, true)
 end
 
 -- The active save slot, or nil until the save system has finished loading (before that it reports slot 0,
@@ -237,6 +260,19 @@ local function requestMissionRebuild(inv)
     return true
 end
 
+-- Name of the local player's character, so only the player's own kills count.
+local localPawn = nil
+local function refreshLocalPawn()
+    localPawn = nil
+    pcall(function()
+        for _, pc in ipairs(FindAllOf("PlayerController") or {}) do
+            if pc:IsValid() and pc:IsLocalController() and pc.Pawn:IsValid() then localPawn = str(pc.Pawn:GetFName()) end
+        end
+    end)
+end
+
+local lastFlush = 0
+
 local function tick()
     local now = os.time()
     if now - lastBeat >= 5 then
@@ -251,6 +287,7 @@ local function tick()
         if new.rev ~= inbox.rev then
             if zonesSignature(new.zones) ~= zonesSignature(inbox.zones) then rebuildMissions = true end
             inbox = new
+            sessionId = new.session
             lastEnsure = 0
             locksDirty = true
         end
@@ -273,6 +310,8 @@ local function tick()
 
     local key = inbox.session .. "_slot" .. slot
     if key ~= state.key then loadState(key); lastEnsure = 0 end
+    refreshLocalPawn()
+    if now - lastFlush >= 5 then lastFlush = now; flushTotals() end
 
     local inv = inventory()
     if inv == nil then return end
@@ -315,11 +354,36 @@ hook("/Script/Valhalla.ValMissionComponent:OnMissionCompleted", function(self, m
     emit("mission " .. str(p.MissionData:GetFName()) .. " " .. tostring(p.Difficulty))
 end)
 
+-- Save-wide objectives (only on the session's own save slot) ---------------------------------------------------
+local SCRAP_ID = "F92B0D82-41C68D42-B990048B-2A1267DE" -- Item_Currency_Scrap
+
 hook("/Script/Valhalla.ValGameState_SpaceDungeon:IncrementEncountersCleared", function(self, amount)
-    if not onBoundSlot or state.key == nil then return end -- rooms only count on the session's own save slot
-    state.rooms = state.rooms + amount:get()
-    saveState()
-    emit("rooms " .. state.rooms)
+    if not onBoundSlot or state.key == nil then return end
+    state.sectors = state.sectors + amount:get()
+    totalsDirty = true
+    flushTotals() -- sectors are rare, send right away
+end)
+
+hook("/Script/Valhalla.ValPlayerUpgradeComponent:OnBotKilled", function(self, victim, killer)
+    if not onBoundSlot or state.key == nil or localPawn == nil then return end
+    local k = nil
+    pcall(function() k = str(killer:get():GetFName()) end)
+    if k == localPawn then
+        state.kills = state.kills + 1
+        totalsDirty = true
+    end
+end)
+
+-- Scrap gathered = every increase of the Scrap count; spending (decreases) doesn't count against it.
+hook("/Script/Valhalla.ValPlayerUpgradeComponent:OnInventoryChanged", function(self, itemId, initial, old, new)
+    if not onBoundSlot or state.key == nil or initial:get() then return end
+    local g = itemId:get()
+    local id = string.format("%08X-%08X-%08X-%08X", g.A & 0xFFFFFFFF, g.B & 0xFFFFFFFF, g.C & 0xFFFFFFFF, g.D & 0xFFFFFFFF)
+    local gained = new:get() - old:get()
+    if id == SCRAP_ID and gained > 0 then
+        state.scrap = state.scrap + gained
+        totalsDirty = true
+    end
 end)
 
 hook("/Script/Valhalla.ValMissionComponent:OnFrontierState", function(self, frontierState)

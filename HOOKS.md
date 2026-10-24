@@ -67,7 +67,8 @@ Launch windowed: `bash ue4ss_setup/launch.sh` → `DeadzoneSteam.exe -windowed -
 - **Progression items:** zone and story-mission access, element unlocks, and maybe key weapons.
 - **Useful items:** weapons, Fate and restock unlocks, "Progressive <upgrade>" items.
 - **Filler:** Scrap, Tech, Nanite Vials.
-- **Goal:** complete "Getting Answers" (Zone 4 Story 2), or Zone 3 "Get Out of My Head" for shorter seeds.
+- **Goal:** complete every story and challenge mission through zone 3 or 4. The 3 endless-wave missions
+  (`BP_Mission_Endless`: Gauntlet, Crossfire, Last Stand) are excluded.
 
 ## Persistence and safety
 
@@ -82,8 +83,8 @@ What the client mod has to do for the v0.2.0 world. The status column says how m
 | Job | How | Status |
 |---|---|---|
 | Send mission checks | `OnMissionCompleted` → `mission <key> <difficulty>` in the outbox → location id | ✅ **done** (APClient + client): live mission completion reached the outbox, and outbox → server is tested |
-| Send room-clear checks | `IncrementEncountersCleared` → cumulative count per session and save slot → `Rooms Cleared: N` | ✅ **done**: live room clears counted and sent |
-| Goal | Client sends `StatusUpdate(CLIENT_GOAL)` when the goal mission completes | ✅ done in code (tested offline) |
+| Save-wide objectives | Sectors: `IncrementEncountersCleared` ("sectors cleared" is the game's own name, see `UI_Game_SectorTracker`). Kills: `UValPlayerUpgradeComponent::OnBotKilled` where the killer is the local player's pawn. Scrap: increases of `Item_Currency_Scrap` in `OnInventoryChanged`. Totals are kept per session and save slot in the state file, and sent every 5 s as `sectors|kills|scrap <total>` | ✅ counting verified live |
+| Goal | The client rebuilds the set of completed missions (any difficulty) from this session's outbox and sends `StatusUpdate(CLIENT_GOAL)` once every goal mission is in it | ✅ done in code (tested offline) |
 | Grant weapons / perks / augments / unlocks | `AddInventoryCount` per resolved asset path. One-time unlocks are re-checked every 30 s and restored if missing (this survived a live save reset). Currency is applied once per received index | ✅ **done**: 13 live grants (weapons, perks, augments, unlocks), no duplicates on reload |
 | Lock normally-free content | `bRequireOwnership = true` on every free asset in shuffled categories, reapplied on mission start | ✅ **done, verified in a real run**: with a 2-weapon / 3-augment / 5-perk kit, the weapon bundle offered only the 2 owned weapons, the augment room exactly the 3 owned augments, and the perk room only owned families (Bot Companion, Fire, Ironblood Engine). Bundles show fewer than 3 options when fewer are owned |
 | Packs | `slot_data.packs`: AP item id → asset keys (paths in `ap_data.json → group_pools`). Grant all on receipt, and lock the unreceived ones the same way | ⚠️ items/Tech/SuperItem gating via ownership not yet tested |
