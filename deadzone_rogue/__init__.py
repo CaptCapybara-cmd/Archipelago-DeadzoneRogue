@@ -5,12 +5,16 @@ from Options import OptionError
 from worlds.AutoWorld import WebWorld, World
 from worlds.LauncherComponents import Component, Type, components, launch as launch_component
 
+from .bridge import load_data
 from .game_data import GROUP_POOLS, MISSIONS
 from .items import FILLER_ITEMS, PACK_POOLS, DeadzoneRogueItem, item_name_groups, item_name_to_id, item_table
 from .locations import (DIFFICULTY_NAMES, OBJECTIVES, DeadzoneRogueLocation, location_name_groups,
                         location_name_to_id, mission_location, objective_location)
 from .options import DeadzoneRogueOptions, option_groups
 from .rules import set_rules
+
+# Pack key -> levels it can gain (Tech upgrades 10, superior items 4); a leveled pack takes several copies.
+UPGRADE_POINTS = {key: entry["points"] for key, entry in load_data()["upgrade_levels"].items()}
 
 # When there are more items than checks, useful items are dropped from these categories first (in order).
 TRIM_ORDER = ["synergy_component", "item_group", "superior_group", "mastery_group", "unlock",
@@ -63,6 +67,7 @@ class DeadzoneRogueWorld(World):
     victory_location: Location
     starting_kit: List[str]
     packs: Dict[str, List[str]]  # pack item name -> asset keys it unlocks
+    pack_levels: Dict[str, int]  # leveled pack item name -> levels each copy adds
 
     def generate_early(self) -> None:
         opts = self.options
@@ -124,7 +129,21 @@ class DeadzoneRogueWorld(World):
             names = sorted((n for n, d in item_table.items() if d.category == category), key=lambda n: item_table[n].code)
             for i in range(0, len(keys), size):
                 packs[names[i // size]] = keys[i:i + size]
+        self.pack_levels = {}
+        chunks = {"mastery_group": self.options.tech_levels_per_copy.value,
+                  "superior_group": self.options.superior_levels_per_copy.value}
+        for name in packs:
+            category = item_table[name].category
+            if category in chunks:
+                self.pack_levels[name] = chunks[category]
         return packs
+
+    def pack_copies(self, name: str) -> int:
+        """Copies of a pack in the pool: one, or enough to max its upgrades for a leveled pack."""
+        if name not in self.pack_levels:
+            return 1
+        points = max(UPGRADE_POINTS.get(key, 0) for key in self.packs[name])
+        return max(1, -(-points // self.pack_levels[name]))
 
     def create_item(self, name: str) -> DeadzoneRogueItem:
         data = item_table[name]
@@ -166,7 +185,8 @@ class DeadzoneRogueWorld(World):
         names = []
         if opts.zone_gating:
             names += [f"Zone {z} Access" for z in range(2, opts.goal.value + 1)]
-        names += list(self.packs)
+        for name in self.packs:
+            names += [name] * self.pack_copies(name)
         for name, data in item_table.items():
             if name in self.starting_kit:
                 continue
@@ -178,6 +198,9 @@ class DeadzoneRogueWorld(World):
                 continue
             elif data.category != "unlock":
                 continue
+            elif name == "Tier 10 Tech Upgrades" and any(
+                    item_table[p].category == "mastery_group" for p in self.pack_levels):
+                continue  # Tech levels come from Mastery Packs; buying them is blocked
             names += [name] * data.count
         return names
 
@@ -194,7 +217,9 @@ class DeadzoneRogueWorld(World):
             self.random.shuffle(droppable)
             for n in droppable[:len(names) - slots]:
                 names.remove(n)
-                self.packs.pop(n, None)  # a dropped pack's contents stay as in the base game
+                if n not in names:  # the last copy of a pack: its contents stay as in the base game
+                    self.packs.pop(n, None)
+                    self.pack_levels.pop(n, None)
         if len(names) > slots:
             raise OptionError(f"{self.player_name}: {len(names)} items but only {slots} checks. "
                               f"Add mission difficulties or objective checks, or enable challenge missions.")
@@ -218,6 +243,8 @@ class DeadzoneRogueWorld(World):
             # categories the client must lock at start (their normally-free entries are shuffled)
             "lock_free": [c for c in ("weapon", "perk", "augment") if self.shuffled(c)],
             "packs": {str(item_name_to_id[name]): keys for name, keys in self.packs.items()},
+            # leveled pack id -> levels per copy; upgrades in these categories can't be bought in-game
+            "pack_levels": {str(item_name_to_id[name]): chunk for name, chunk in self.pack_levels.items()},
             "death_link": bool(opts.death_link),
             "death_link_mode": opts.death_link_mode.current_key,
         }

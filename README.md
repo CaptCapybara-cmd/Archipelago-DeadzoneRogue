@@ -4,8 +4,8 @@ An Archipelago integration has two halves:
 
 | Half | What it does | Status |
 |---|---|---|
-| **APWorld** (`deadzone_rogue/`, Python) | Tells the generator what items and locations exist and what the logic is | v0.6.0: built from the game's real data, passes AP's tests, generates seeds |
-| **Client** (Python, in the apworld) + **APClient** (Lua mod) | Talks to the AP server: sends checks, grants received items, locks unreceived content, reports the goal | v0.6.0: mission and save-wide objective checks, grants, locking and zone gating work live, protected by save-slot binding. DeathLink effects work in a run (except push back). Reward suppression not done yet |
+| **APWorld** (`deadzone_rogue/`, Python) | Tells the generator what items and locations exist and what the logic is | v0.7.0: built from the game's real data, passes AP's tests, generates seeds |
+| **Client** (Python, in the apworld) + **APClient** (Lua mod) | Talks to the AP server: sends checks, grants received items, locks unreceived content, reports the goal | v0.7.0: mission and save-wide objective checks, grants, locking and zone gating work live, protected by save-slot binding. DeathLink effects work in a run (except push back). Reward suppression not done yet |
 
 ## Files
 
@@ -42,6 +42,9 @@ An Archipelago integration has two halves:
   locks the normally-free ones and gives a starting kit.
 - Item / Mastery (Tech upgrade) / Superior Item (SuperItem upgrade) **packs**: random groups per seed, with
   `*_pack_size` options (0 = off). The pack contents go to the client in slot data.
+- Mastery and Superior Item packs are **progressive**: every copy raises the pack's upgrades by
+  `tech_levels_per_copy` / `superior_levels_per_copy` levels (the first copy also unlocks them), and while they're
+  shuffled those upgrades can't be bought in the hub. Tier 10 Tech Upgrades is left out then.
 - Unlocks: the Fate rerolls, Fabricator restocks (two progressive chains), Tier 10 Tech Upgrades, Epic Beginnings.
 - Optional `Zone N Access` items (zone gating). Difficulties are never gated; each is just a separate check. Zone Access opens that zone's first story mission even when the earlier story isn't done; after that, logic follows the game's own mission prerequisites.
 - If there are more items than checks, the lowest-priority items are left out (they stay as in the base game):
@@ -77,7 +80,7 @@ that difficulty has checks. `/goal` in the client lists what's left.
 - **Vanilla mission rewards**: stop the game's own first-time and milestone rewards unless `vanilla_mission_rewards`
   is on.
 - **DeathLink push back**: move the player back a sector (`push_back_room` currently costs half the Scrap instead).
-- **Pack locking**: lock Mastery and Superior Item pack contents until they're received.
+- **Pack locking**: lock Item Pack contents in runs until they're received (verify).
 - **Goal**: verify in a full real run.
 
 ## License

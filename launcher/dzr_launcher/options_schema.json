@@ -197,21 +197,41 @@
   {
    "name": "mastery_pack_size",
    "label": "Mastery Pack Size",
-   "help": "Masteries (Tech upgrades: Maximum Health, Weapon Damage, ...) are shuffled in random packs of this size.\n0: not shuffled.",
+   "help": "Masteries (Tech upgrades: Maximum Health, Weapon Damage, ...) are shuffled in random packs of this size.\nEach pack is progressive: the first copy unlocks its upgrades, every copy raises them by Tech Levels Per Copy.\nWhile they're shuffled, Tech upgrades can't be bought in the game. 0: not shuffled.",
    "kind": "range",
    "min": 0,
    "max": 10,
-   "default": 4,
+   "default": 5,
    "group": "Unlocks"
   },
   {
    "name": "superior_item_pack_size",
    "label": "Superior Item Pack Size",
-   "help": "Superior items (SuperItem upgrades: Heat Coil, Rabbit Foot, ...) are shuffled in random packs of this size.\n0: not shuffled.",
+   "help": "Superior items (SuperItem upgrades: Heat Coil, Rabbit Foot, ...) are shuffled in random packs of this size.\nEach pack is progressive: the first copy unlocks its superior items, every copy raises them by Superior Levels\nPer Copy. While they're shuffled, superior items can't be upgraded in the game. 0: not shuffled.",
    "kind": "range",
    "min": 0,
    "max": 10,
-   "default": 4,
+   "default": 10,
+   "group": "Unlocks"
+  },
+  {
+   "name": "tech_levels_per_copy",
+   "label": "Tech Levels Per Copy",
+   "help": "Levels (out of 10) each copy of a Mastery Pack adds to every Tech upgrade in it. Smaller chunks mean more\ncopies: 10 / this, rounded up, per pack.",
+   "kind": "range",
+   "min": 1,
+   "max": 10,
+   "default": 3,
+   "group": "Unlocks"
+  },
+  {
+   "name": "superior_levels_per_copy",
+   "label": "Superior Levels Per Copy",
+   "help": "Levels each copy of a Superior Item Pack adds to every superior item in it. They start at level 1 and go up\nto 5, so 4 levels in all: 4 / this, rounded up, copies per pack.",
+   "kind": "range",
+   "min": 1,
+   "max": 4,
+   "default": 2,
    "group": "Unlocks"
   },
   {

@@ -9,7 +9,9 @@ sends checks out to other players instead. What you receive:
   start are shuffled too. The client locks them until you receive them, and you begin with a small random
   starting kit so the first runs are playable.
 - **Item Packs, Mastery Packs and Superior Item Packs**: the run items, Tech upgrades and SuperItem upgrades,
-  dealt out in random packs (pack size is an option).
+  dealt out in random packs (pack size is an option). Mastery and Superior Item Packs come in several copies: each
+  copy raises every upgrade in the pack by a few levels (an option), so you find them more than once. Those
+  upgrades can't be bought at the station; only other players' checks level them up.
 - **Unlocks**: the "Fate" rerolls, Fabricator restocks, Tier 10 Tech Upgrades and Epic Beginnings.
 - **Zone Access** (optional), which unlocks zones 2–4. A zone's first story mission opens as soon as its access arrives, even if earlier zones' story missions aren't done. Difficulties are never locked; each one is just a separate check.
 

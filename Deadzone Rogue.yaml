@@ -34,7 +34,7 @@ game: Deadzone Rogue
 requires:
   version: 0.6.9 # Version of Archipelago required for this yaml to work as expected.
   game:
-    Deadzone Rogue: 0.5.0 # Version of the world required for this yaml to work as expected.
+    Deadzone Rogue: 0.6.0 # Version of the world required for this yaml to work as expected.
 
 Deadzone Rogue:
   ################
@@ -76,7 +76,7 @@ Deadzone Rogue:
   mission_difficulties:
     # Which difficulties give a check for completing each mission. Every mission completed on each listed
     # difficulty is a separate check (e.g. "Who am I? (Normal)").
-    ['Normal', 'Hard', 'Adventure']
+    ['Normal', 'Adventure', 'Hard']
 
   include_challenge_missions:
     # Challenge missions (Close Quarters, Headhunter, Ultra Nightmare, ...) have checks.
@@ -250,12 +250,13 @@ Deadzone Rogue:
 
   mastery_pack_size:
     # Masteries (Tech upgrades: Maximum Health, Weapon Damage, ...) are shuffled in random packs of this size.
-    # 0: not shuffled.
+    # Each pack is progressive: the first copy unlocks its upgrades, every copy raises them by Tech Levels Per Copy.
+    # While they're shuffled, Tech upgrades can't be bought in the game. 0: not shuffled.
     #
     # You can define additional values between the minimum and maximum values.
     # Minimum value is 0
     # Maximum value is 10
-    4: 50
+    5: 50
     random: 0
     random-low: 0 # random value weighted towards lower values
     random-high: 0 # random value weighted towards higher values
@@ -263,16 +264,43 @@ Deadzone Rogue:
 
   superior_item_pack_size:
     # Superior items (SuperItem upgrades: Heat Coil, Rabbit Foot, ...) are shuffled in random packs of this size.
-    # 0: not shuffled.
+    # Each pack is progressive: the first copy unlocks its superior items, every copy raises them by Superior Levels
+    # Per Copy. While they're shuffled, superior items can't be upgraded in the game. 0: not shuffled.
     #
     # You can define additional values between the minimum and maximum values.
     # Minimum value is 0
     # Maximum value is 10
-    4: 50
+    10: 50
     random: 0
     random-low: 0 # random value weighted towards lower values
     random-high: 0 # random value weighted towards higher values
     random-range-0-10: 0 # random value between 0 and 10
+
+  tech_levels_per_copy:
+    # Levels (out of 10) each copy of a Mastery Pack adds to every Tech upgrade in it. Smaller chunks mean more
+    # copies: 10 / this, rounded up, per pack.
+    #
+    # You can define additional values between the minimum and maximum values.
+    # Minimum value is 1
+    # Maximum value is 10
+    3: 50
+    random: 0
+    random-low: 0 # random value weighted towards lower values
+    random-high: 0 # random value weighted towards higher values
+    random-range-1-10: 0 # random value between 1 and 10
+
+  superior_levels_per_copy:
+    # Levels each copy of a Superior Item Pack adds to every superior item in it. They start at level 1 and go up
+    # to 5, so 4 levels in all: 4 / this, rounded up, copies per pack.
+    #
+    # You can define additional values between the minimum and maximum values.
+    # Minimum value is 1
+    # Maximum value is 4
+    2: 50
+    random: 0
+    random-low: 0 # random value weighted towards lower values
+    random-high: 0 # random value weighted towards higher values
+    random-range-1-4: 0 # random value between 1 and 4
 
   include_synergy_components:
     # Synergy Components are individual items.
@@ -284,9 +312,10 @@ Deadzone Rogue:
   #############
   death_link_mode:
     # What happens when you receive a DeathLink. Your own run ends normally when you die.
-    # lose_perk: lose a random perk from the current run. lose_item: lose a random item from the current run.
-    # lose_scrap: lose half your Scrap. take_damage: take heavy damage (can't kill you).
-    # push_back_room: sent back to the previous room (experimental). kill: the run ends.
+    # lose_perk: lose a random element perk from the current run. lose_item: lose a random item from the current run.
+    # Unlocks are never touched, only what you picked up this run.
+    # lose_scrap: lose half your Scrap. take_damage: drop to a quarter of your health (can't kill you).
+    # push_back_room: not possible yet, so it costs half your Scrap instead. kill: the run ends.
     lose_perk: 50
     lose_item: 0
     lose_scrap: 0

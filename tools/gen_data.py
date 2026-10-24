@@ -103,6 +103,28 @@ def group_pools(rows):
     }
 
 
+# Components whose upgrade asset is named differently.
+UPGRADE_RENAMES = {
+    "Component_SuperItem_GetAmmoWhenProcElement": "SuperItem_GetAmmoWhenApplyingElementalEffect",
+    "Component_SuperItem_GrenadeProcWeapons": "SuperItem_GrenadeProcsWeapons",
+}
+
+
+def upgrade_levels(rows, pools):
+    """Pack keys with levels: a mastery's Tech Component -> its Upgrade_*, a superior's Item Component -> its
+    SuperItem_*. A level is the upgrade asset's inventory count (superior items start at level 1, so they take
+    one point fewer). Returns key -> {"path", "points"}."""
+    out = {}
+    for pool, prefix, base in (("masteries", "Upgrade_", 0), ("superior_items", "SuperItem_", 1)):
+        for entry in pools[pool]:
+            upgrade = UPGRADE_RENAMES.get(entry["key"], prefix + entry["key"].split("_", 2)[2])
+            row = rows.get(upgrade)
+            if row is None:
+                sys.exit(f"no upgrade asset {upgrade} for {entry['key']}")
+            out[entry["key"]] = {"path": object_path(row), "points": int(row["extra"]["levels"]) - base}
+    return out
+
+
 def items_table(rows, pools):
     items = []
     next_id = dict(ID_BLOCKS)
@@ -195,11 +217,13 @@ def main():
     dupes = {n for n in names if names.count(n) > 1}
     if dupes:
         sys.exit(f"duplicate item names: {sorted(dupes)}")
+    levels = upgrade_levels(rows, pools)
     write_python(missions, items, pools, os.path.join(ROOT, "deadzone_rogue", "game_data.py"))
     # Client data ships inside the apworld (the Python client reads it with pkgutil).
     with open(os.path.join(ROOT, "deadzone_rogue", "ap_data.json"), "w", encoding="utf-8") as f:
         json.dump({"item_base": ITEM_BASE, "location_base": LOCATION_BASE,
                    "group_pools": {name: {e["key"]: e["path"] for e in entries} for name, entries in pools.items()},
+                   "upgrade_levels": levels,
                    "missions": [{k: m[k] for k in ("key", "name", "guid", "zone", "difficulties", "endless")} for m in missions],
                    "items": {str(i["id"]): {"name": i["name"], "category": i["category"], "grants": i["grants"],
                                             "lock": i["lock"], "default_locked": i["default_locked"],

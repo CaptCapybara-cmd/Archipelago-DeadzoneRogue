@@ -182,6 +182,244 @@
    "Component_SuperItem_SmartRocket": "/Game/Items/Components/SuperItems/Component_SuperItem_SmartRocket.Component_SuperItem_SmartRocket"
   }
  },
+ "upgrade_levels": {
+  "Component_Tech_AllElementDamage": {
+   "path": "/Game/Game/Data/Upgrades/Assets/Upgrade_AllElementDamage.Upgrade_AllElementDamage",
+   "points": 10
+  },
+  "Component_Tech_AllWeaponsDamage": {
+   "path": "/Game/Game/Data/Upgrades/Assets/Upgrade_AllWeaponsDamage.Upgrade_AllWeaponsDamage",
+   "points": 10
+  },
+  "Component_Tech_GrenadeAoE": {
+   "path": "/Game/Game/Data/Upgrades/Assets/Upgrade_GrenadeAoE.Upgrade_GrenadeAoE",
+   "points": 10
+  },
+  "Component_Tech_GrenadeCooldown": {
+   "path": "/Game/Game/Data/Upgrades/Assets/Upgrade_GrenadeCooldown.Upgrade_GrenadeCooldown",
+   "points": 10
+  },
+  "Component_Tech_GrenadeDamage": {
+   "path": "/Game/Game/Data/Upgrades/Assets/Upgrade_GrenadeDamage.Upgrade_GrenadeDamage",
+   "points": 10
+  },
+  "Component_Tech_HealthOrbDropRate": {
+   "path": "/Game/Game/Data/Upgrades/Assets/Upgrade_HealthOrbDropRate.Upgrade_HealthOrbDropRate",
+   "points": 10
+  },
+  "Component_Tech_HealthOrbValue": {
+   "path": "/Game/Game/Data/Upgrades/Assets/Upgrade_HealthOrbValue.Upgrade_HealthOrbValue",
+   "points": 10
+  },
+  "Component_Tech_Magnetizer": {
+   "path": "/Game/Game/Data/Upgrades/Assets/Upgrade_Magnetizer.Upgrade_Magnetizer",
+   "points": 10
+  },
+  "Component_Tech_MaxHealth": {
+   "path": "/Game/Game/Data/Upgrades/Assets/Upgrade_MaxHealth.Upgrade_MaxHealth",
+   "points": 10
+  },
+  "Component_Tech_MaxShield": {
+   "path": "/Game/Game/Data/Upgrades/Assets/Upgrade_MaxShield.Upgrade_MaxShield",
+   "points": 10
+  },
+  "Component_Tech_MeleeDamage": {
+   "path": "/Game/Game/Data/Upgrades/Assets/Upgrade_MeleeDamage.Upgrade_MeleeDamage",
+   "points": 10
+  },
+  "Component_Tech_PrimaryDamage": {
+   "path": "/Game/Game/Data/Upgrades/Assets/Upgrade_PrimaryDamage.Upgrade_PrimaryDamage",
+   "points": 10
+  },
+  "Component_Tech_ProcChance": {
+   "path": "/Game/Game/Data/Upgrades/Assets/Upgrade_ProcChance.Upgrade_ProcChance",
+   "points": 10
+  },
+  "Component_Tech_ScrapPickup": {
+   "path": "/Game/Game/Data/Upgrades/Assets/Upgrade_ScrapPickup.Upgrade_ScrapPickup",
+   "points": 10
+  },
+  "Component_Tech_SecondaryDamage": {
+   "path": "/Game/Game/Data/Upgrades/Assets/Upgrade_SecondaryDamage.Upgrade_SecondaryDamage",
+   "points": 10
+  },
+  "Component_Tech_ShieldRechargeDelay": {
+   "path": "/Game/Game/Data/Upgrades/Assets/Upgrade_ShieldRechargeDelay.Upgrade_ShieldRechargeDelay",
+   "points": 10
+  },
+  "Component_Tech_ShieldRechargeRate": {
+   "path": "/Game/Game/Data/Upgrades/Assets/Upgrade_ShieldRechargeRate.Upgrade_ShieldRechargeRate",
+   "points": 10
+  },
+  "Component_Tech_SprintSpeed": {
+   "path": "/Game/Game/Data/Upgrades/Assets/Upgrade_SprintSpeed.Upgrade_SprintSpeed",
+   "points": 10
+  },
+  "Component_Tech_TechPickup": {
+   "path": "/Game/Game/Data/Upgrades/Assets/Upgrade_TechPickup.Upgrade_TechPickup",
+   "points": 10
+  },
+  "Component_SuperItem_AmmoRefundDamage": {
+   "path": "/Game/Game/Data/Upgrades/SuperItems/SuperItem_AmmoRefundDamage.SuperItem_AmmoRefundDamage",
+   "points": 4
+  },
+  "Component_SuperItem_ConsecutiveCritDamage": {
+   "path": "/Game/Game/Data/Upgrades/SuperItems/SuperItem_ConsecutiveCritDamage.SuperItem_ConsecutiveCritDamage",
+   "points": 4
+  },
+  "Component_SuperItem_ConsecutiveWeakpoints": {
+   "path": "/Game/Game/Data/Upgrades/SuperItems/SuperItem_ConsecutiveWeakpoints.SuperItem_ConsecutiveWeakpoints",
+   "points": 4
+  },
+  "Component_SuperItem_CritsBoostCritDamage": {
+   "path": "/Game/Game/Data/Upgrades/SuperItems/SuperItem_CritsBoostCritDamage.SuperItem_CritsBoostCritDamage",
+   "points": 4
+  },
+  "Component_SuperItem_DamageBoostPerEnemyWithElementalDebuff": {
+   "path": "/Game/Game/Data/Upgrades/SuperItems/SuperItem_DamageBoostPerEnemyWithElementalDebuff.SuperItem_DamageBoostPerEnemyWithElementalDebuff",
+   "points": 4
+  },
+  "Component_SuperItem_DamageBoostPerMissingHealth": {
+   "path": "/Game/Game/Data/Upgrades/SuperItems/SuperItem_DamageBoostPerMissingHealth.SuperItem_DamageBoostPerMissingHealth",
+   "points": 4
+  },
+  "Component_SuperItem_DebuffConfettiExplosion": {
+   "path": "/Game/Game/Data/Upgrades/SuperItems/SuperItem_DebuffConfettiExplosion.SuperItem_DebuffConfettiExplosion",
+   "points": 4
+  },
+  "Component_SuperItem_DelayedShotBonus": {
+   "path": "/Game/Game/Data/Upgrades/SuperItems/SuperItem_DelayedShotBonus.SuperItem_DelayedShotBonus",
+   "points": 4
+  },
+  "Component_SuperItem_ExcessCritChanceDamage": {
+   "path": "/Game/Game/Data/Upgrades/SuperItems/SuperItem_ExcessCritChanceDamage.SuperItem_ExcessCritChanceDamage",
+   "points": 4
+  },
+  "Component_SuperItem_ExitStealthBonuses": {
+   "path": "/Game/Game/Data/Upgrades/SuperItems/SuperItem_ExitStealthBonuses.SuperItem_ExitStealthBonuses",
+   "points": 4
+  },
+  "Component_SuperItem_FirstShotReloadedBulletDamage": {
+   "path": "/Game/Game/Data/Upgrades/SuperItems/SuperItem_FirstShotReloadedBulletDamage.SuperItem_FirstShotReloadedBulletDamage",
+   "points": 4
+  },
+  "Component_SuperItem_FreeShotsAfterKill": {
+   "path": "/Game/Game/Data/Upgrades/SuperItems/SuperItem_FreeShotsAfterKill.SuperItem_FreeShotsAfterKill",
+   "points": 4
+  },
+  "Component_SuperItem_GetAmmoWhenProcElement": {
+   "path": "/Game/Game/Data/Upgrades/SuperItems/SuperItem_GetAmmoWhenApplyingElementalEffect.SuperItem_GetAmmoWhenApplyingElementalEffect",
+   "points": 4
+  },
+  "Component_SuperItem_GrenadeDamageToHealthyEnemies": {
+   "path": "/Game/Game/Data/Upgrades/SuperItems/SuperItem_GrenadeDamageToHealthyEnemies.SuperItem_GrenadeDamageToHealthyEnemies",
+   "points": 4
+  },
+  "Component_SuperItem_GrenadeDoubleDamage": {
+   "path": "/Game/Game/Data/Upgrades/SuperItems/SuperItem_GrenadeDoubleDamage.SuperItem_GrenadeDoubleDamage",
+   "points": 4
+  },
+  "Component_SuperItem_GrenadeProcWeapons": {
+   "path": "/Game/Game/Data/Upgrades/SuperItems/SuperItem_GrenadeProcsWeapons.SuperItem_GrenadeProcsWeapons",
+   "points": 4
+  },
+  "Component_SuperItem_GrenadeSecondExplosion": {
+   "path": "/Game/Game/Data/Upgrades/SuperItems/SuperItem_GrenadeSecondExplosion.SuperItem_GrenadeSecondExplosion",
+   "points": 4
+  },
+  "Component_SuperItem_HealthBasedDamage": {
+   "path": "/Game/Game/Data/Upgrades/SuperItems/SuperItem_HealthBasedDamage.SuperItem_HealthBasedDamage",
+   "points": 4
+  },
+  "Component_SuperItem_HealthOrbGrantsImmunity": {
+   "path": "/Game/Game/Data/Upgrades/SuperItems/SuperItem_HealthOrbGrantsImmunity.SuperItem_HealthOrbGrantsImmunity",
+   "points": 4
+  },
+  "Component_SuperItem_IncreasedFirstWeakpointDamage": {
+   "path": "/Game/Game/Data/Upgrades/SuperItems/SuperItem_IncreasedFirstWeakpointDamage.SuperItem_IncreasedFirstWeakpointDamage",
+   "points": 4
+  },
+  "Component_SuperItem_IncreasedProcChanceAndDamage": {
+   "path": "/Game/Game/Data/Upgrades/SuperItems/SuperItem_IncreasedProcChanceAndDamage.SuperItem_IncreasedProcChanceAndDamage",
+   "points": 4
+  },
+  "Component_SuperItem_IncreasedWeakpointCritDamage": {
+   "path": "/Game/Game/Data/Upgrades/SuperItems/SuperItem_IncreasedWeakpointCritDamage.SuperItem_IncreasedWeakpointCritDamage",
+   "points": 4
+  },
+  "Component_SuperItem_KillRestoresBullet_NotKillBoostsDamage": {
+   "path": "/Game/Game/Data/Upgrades/SuperItems/SuperItem_KillRestoresBullet_NotKillBoostsDamage.SuperItem_KillRestoresBullet_NotKillBoostsDamage",
+   "points": 4
+  },
+  "Component_SuperItem_KillsGrantBarrier": {
+   "path": "/Game/Game/Data/Upgrades/SuperItems/SuperItem_KillsGrantBarrier.SuperItem_KillsGrantBarrier",
+   "points": 4
+  },
+  "Component_SuperItem_KillsGrantDamage": {
+   "path": "/Game/Game/Data/Upgrades/SuperItems/SuperItem_KillsGrantDamage.SuperItem_KillsGrantDamage",
+   "points": 4
+  },
+  "Component_SuperItem_KillstreakGrantsSmartBullets": {
+   "path": "/Game/Game/Data/Upgrades/SuperItems/SuperItem_KillstreakGrantsSmartBullets.SuperItem_KillstreakGrantsSmartBullets",
+   "points": 4
+  },
+  "Component_SuperItem_MarkNearbyEnemiesOnKill": {
+   "path": "/Game/Game/Data/Upgrades/SuperItems/SuperItem_MarkNearbyEnemiesOnKill.SuperItem_MarkNearbyEnemiesOnKill",
+   "points": 4
+  },
+  "Component_SuperItem_MeleeProcPrimary": {
+   "path": "/Game/Game/Data/Upgrades/SuperItems/SuperItem_MeleeProcPrimary.SuperItem_MeleeProcPrimary",
+   "points": 4
+  },
+  "Component_SuperItem_MeleeProcSecondary": {
+   "path": "/Game/Game/Data/Upgrades/SuperItems/SuperItem_MeleeProcSecondary.SuperItem_MeleeProcSecondary",
+   "points": 4
+  },
+  "Component_SuperItem_MissedShotAmmoRefund": {
+   "path": "/Game/Game/Data/Upgrades/SuperItems/SuperItem_MissedShotAmmoRefund.SuperItem_MissedShotAmmoRefund",
+   "points": 4
+  },
+  "Component_SuperItem_MissingBulletsIncreaseDamage": {
+   "path": "/Game/Game/Data/Upgrades/SuperItems/SuperItem_MissingBulletsIncreaseDamage.SuperItem_MissingBulletsIncreaseDamage",
+   "points": 4
+  },
+  "Component_SuperItem_OverhealingRestoresShields": {
+   "path": "/Game/Game/Data/Upgrades/SuperItems/SuperItem_OverhealingRestoresShields.SuperItem_OverhealingRestoresShields",
+   "points": 4
+  },
+  "Component_SuperItem_PlasmaOrbGenerator": {
+   "path": "/Game/Game/Data/Upgrades/SuperItems/SuperItem_PlasmaOrbGenerator.SuperItem_PlasmaOrbGenerator",
+   "points": 4
+  },
+  "Component_SuperItem_PrimaryProcMelee": {
+   "path": "/Game/Game/Data/Upgrades/SuperItems/SuperItem_PrimaryProcMelee.SuperItem_PrimaryProcMelee",
+   "points": 4
+  },
+  "Component_SuperItem_PrimaryProcSecondary": {
+   "path": "/Game/Game/Data/Upgrades/SuperItems/SuperItem_PrimaryProcSecondary.SuperItem_PrimaryProcSecondary",
+   "points": 4
+  },
+  "Component_SuperItem_ProcTriggersAdditionalDamage": {
+   "path": "/Game/Game/Data/Upgrades/SuperItems/SuperItem_ProcTriggersAdditionalDamage.SuperItem_ProcTriggersAdditionalDamage",
+   "points": 4
+  },
+  "Component_SuperItem_SecondaryProcMelee": {
+   "path": "/Game/Game/Data/Upgrades/SuperItems/SuperItem_SecondaryProcMelee.SuperItem_SecondaryProcMelee",
+   "points": 4
+  },
+  "Component_SuperItem_SecondaryProcPrimary": {
+   "path": "/Game/Game/Data/Upgrades/SuperItems/SuperItem_SecondaryProcPrimary.SuperItem_SecondaryProcPrimary",
+   "points": 4
+  },
+  "Component_SuperItem_ShieldBoostsGrenadeDamage": {
+   "path": "/Game/Game/Data/Upgrades/SuperItems/SuperItem_ShieldBoostsGrenadeDamage.SuperItem_ShieldBoostsGrenadeDamage",
+   "points": 4
+  },
+  "Component_SuperItem_SmartRocket": {
+   "path": "/Game/Game/Data/Upgrades/SuperItems/SuperItem_SmartRocket.SuperItem_SmartRocket",
+   "points": 4
+  }
+ },
  "missions": [
   {
    "key": "Mission_Zone1_Story",

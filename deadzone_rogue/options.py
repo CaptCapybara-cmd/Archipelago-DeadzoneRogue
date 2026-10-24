@@ -153,16 +153,36 @@ class ItemPackSize(PackSize):
 
 class MasteryPackSize(PackSize):
     """Masteries (Tech upgrades: Maximum Health, Weapon Damage, ...) are shuffled in random packs of this size.
-    0: not shuffled."""
+    Each pack is progressive: the first copy unlocks its upgrades, every copy raises them by Tech Levels Per Copy.
+    While they're shuffled, Tech upgrades can't be bought in the game. 0: not shuffled."""
     display_name = "Mastery Pack Size"
-    default = 4
+    default = 5
 
 
 class SuperiorItemPackSize(PackSize):
     """Superior items (SuperItem upgrades: Heat Coil, Rabbit Foot, ...) are shuffled in random packs of this size.
-    0: not shuffled."""
+    Each pack is progressive: the first copy unlocks its superior items, every copy raises them by Superior Levels
+    Per Copy. While they're shuffled, superior items can't be upgraded in the game. 0: not shuffled."""
     display_name = "Superior Item Pack Size"
-    default = 4
+    default = 10
+
+
+class TechLevelsPerCopy(Range):
+    """Levels (out of 10) each copy of a Mastery Pack adds to every Tech upgrade in it. Smaller chunks mean more
+    copies: 10 / this, rounded up, per pack."""
+    display_name = "Tech Levels Per Copy"
+    range_start = 1
+    range_end = 10
+    default = 3
+
+
+class SuperiorLevelsPerCopy(Range):
+    """Levels each copy of a Superior Item Pack adds to every superior item in it. They start at level 1 and go up
+    to 5, so 4 levels in all: 4 / this, rounded up, copies per pack."""
+    display_name = "Superior Levels Per Copy"
+    range_start = 1
+    range_end = 4
+    default = 2
 
 
 class IncludeSynergyComponents(Toggle):
@@ -208,6 +228,8 @@ class DeadzoneRogueOptions(PerGameCommonOptions):
     item_pack_size: ItemPackSize
     mastery_pack_size: MasteryPackSize
     superior_item_pack_size: SuperiorItemPackSize
+    tech_levels_per_copy: TechLevelsPerCopy
+    superior_levels_per_copy: SuperiorLevelsPerCopy
     include_synergy_components: IncludeSynergyComponents
     death_link: DeathLink
     death_link_mode: DeathLinkMode
@@ -219,6 +241,7 @@ option_groups = [
                                          EnemiesKilledInterval, ScrapGatheredTotal, ScrapGatheredInterval]),
     OptionGroup("Progression", [Goal, ZoneGating]),
     OptionGroup("Unlocks", [WeaponShuffle, PerkShuffle, AugmentShuffle, StartingKitWeapons, StartingKitPerks,
-                            ItemPackSize, MasteryPackSize, SuperiorItemPackSize, IncludeSynergyComponents]),
+                            ItemPackSize, MasteryPackSize, SuperiorItemPackSize, TechLevelsPerCopy,
+                            SuperiorLevelsPerCopy, IncludeSynergyComponents]),
     OptionGroup("DeathLink", [DeathLinkMode]),
 ]

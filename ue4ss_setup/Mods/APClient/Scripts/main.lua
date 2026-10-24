@@ -1,10 +1,10 @@
--- APClient v0.6.0: the in-game half of the Deadzone Rogue Archipelago client.
+-- APClient v0.7.0: the in-game half of the Deadzone Rogue Archipelago client.
 -- Talks to the Python client through files in Win64/APBridge (format: deadzone_rogue/bridge.py):
 --   inbox.txt -> what to lock and grant     outbox_<session>.txt <- missions completed, save-wide totals, deaths
 -- Received items and save-wide totals (sectors, kills, Scrap) are tracked per AP session and per game save slot in
 -- APBridge/state_<session>_slot<n>.txt.
 local BRIDGE = "APBridge/"
-local MOD_VERSION = "0.6.0"
+local MOD_VERSION = "0.7.0"
 local POLL_MS = 1000
 local ENSURE_EVERY_S = 30       -- re-check one-time unlocks against the save this often
 local GRANTS_PER_TICK = 25      -- spread big batches over a few ticks to avoid hitches
@@ -87,11 +87,11 @@ end
 -- Inbox ---------------------------------------------------------------------------------------------------------
 
 local inbox = { rev = nil, session = nil, goal = nil, locks = {}, byIndex = {}, maxIndex = -1,
-                zones = nil, missionZones = {}, zoneEntries = {}, notes = {}, deathlinks = {} }
+                zones = nil, missionZones = {}, zoneEntries = {}, notes = {}, deathlinks = {}, noBuy = {} }
 
 local function parseInbox(text)
     local new = { locks = {}, byIndex = {}, maxIndex = -1, zones = nil, missionZones = {}, zoneEntries = {}, notes = {},
-                  deathlinks = {} }
+                  deathlinks = {}, noBuy = {} }
     for line in text:gmatch("[^\n]+") do
         local kind, rest = line:match("^(%S+)%s*(.*)$")
         if kind == "rev" then new.rev = rest
@@ -102,6 +102,8 @@ local function parseInbox(text)
             local key, z = rest:match("^(%S+) (%d+)$")
             if key then new.missionZones[key] = tonumber(z) end
         elseif kind == "zoneentry" then new.zoneEntries[rest] = true
+        elseif kind == "noupgradebuy" then
+            for k in rest:gmatch("%a+") do new.noBuy[k] = true end
         elseif kind == "session" then new.session = rest
         elseif kind == "goal" then new.goal = rest
         elseif kind == "lock" then new.locks[#new.locks + 1] = rest
@@ -194,6 +196,63 @@ end
 
 local originalFlags = {} -- path -> bRequireOwnership before we touched it
 
+-- Upgrades whose levels come from Archipelago can't be bought: every level of their hub price group costs more
+-- shards and Tech than anyone has. Groups are keyed by zone tag (verified: zone 1 = the 19 Tech upgrades,
+-- zone 2 = the 40 superior items, zone 3 = synergies, never touched).
+local PRICE_GROUPS = { tech = "Mission.Zone.1", superior = "Mission.Zone.2" }
+local UNAFFORDABLE = 999999
+local originalPrices = {} -- group name -> level -> { shards, values }
+
+local function forEachPriceGroup(fn)
+    for _, cfg in ipairs(FindAllOf("ValPlayerUpgradeConfig") or {}) do
+        if not str(cfg:GetFName()):find("Default__") then
+            cfg.GroupConfigsByType:ForEach(function(tag, group) fn(str(tag:get().TagName), group:get()) end)
+        end
+    end
+end
+
+local function blockUpgradePurchases()
+    local blocked = {}
+    for kind, tag in pairs(PRICE_GROUPS) do
+        if inbox.noBuy[kind] then blocked[tag] = kind end
+    end
+    if next(blocked) == nil then return end
+    forEachPriceGroup(function(tag, group)
+        if not blocked[tag] then return end
+        local name = str(group:GetFName())
+        originalPrices[name] = originalPrices[name] or {}
+        group.UpgradeLevelPricing:ForEach(function(level, price)
+            local p, lvl = price:get(), level:get()
+            if originalPrices[name][lvl] == nil then
+                local values = {}
+                p.BasePrice.CurrencyData:ForEach(function(i, c) values[i] = c:get().Value end)
+                originalPrices[name][lvl] = { shards = p.ShardCost, values = values }
+            end
+            p.ShardCost = UNAFFORDABLE
+            p.BasePrice.CurrencyData:ForEach(function(_, c) c:get().Value = UNAFFORDABLE end)
+        end)
+        log("upgrades can't be bought: " .. blocked[tag] .. " (" .. name .. ")")
+    end)
+end
+
+local function restoreUpgradePrices()
+    if next(originalPrices) == nil then return end
+    forEachPriceGroup(function(_, group)
+        local saved = originalPrices[str(group:GetFName())]
+        if saved == nil then return end
+        group.UpgradeLevelPricing:ForEach(function(level, price)
+            local orig = saved[level:get()]
+            if orig then
+                local p = price:get()
+                p.ShardCost = orig.shards
+                p.BasePrice.CurrencyData:ForEach(function(i, c) c:get().Value = orig.values[i] or c:get().Value end)
+            end
+        end)
+    end)
+    originalPrices = {}
+    log("upgrade prices back to normal")
+end
+
 local function applyLocks()
     local n = 0
     for _, path in ipairs(inbox.locks) do
@@ -205,6 +264,8 @@ local function applyLocks()
         end
     end
     if #inbox.locks > 0 then log(string.format("locked %d/%d normally-free assets", n, #inbox.locks)) end
+    local ok, err = pcall(blockUpgradePurchases)
+    if not ok then log("upgrade purchase block failed: " .. tostring(err)) end
 end
 
 local function restoreLocks()
@@ -215,6 +276,8 @@ local function restoreLocks()
     end
     originalFlags = {}
     if n > 0 then log("restored " .. n .. " locked assets to normal") end
+    local ok, err = pcall(restoreUpgradePrices)
+    if not ok then log("restoring upgrade prices failed: " .. tostring(err)) end
 end
 
 local function inventory()
@@ -241,6 +304,22 @@ local function grantOnce(inv, a, path)
     log("granted " .. str(a.DisplayName) .. " (" .. str(a:GetFName()) .. ")")
 end
 
+-- Tech and superior upgrade levels are the upgrade asset's inventory count (superior items show one level more).
+-- A level grant raises the count to its target; like AddInventoryCount above, the count lags, so a target set in
+-- the last minute counts as reached (two copies arriving together must not stack).
+local recentLevels = {} -- path -> { target, time }
+
+local function topUp(inv, a, path, target)
+    local have = inv:GetItemCount(a.ItemId)
+    local recent = recentLevels[path]
+    if recent and os.time() - recent.time < GRANT_SETTLE_S then have = math.max(have, recent.target) end
+    if have >= target then return false end
+    inv:AddInventoryCount(a.AssetId, target - have)
+    recentLevels[path] = { target = target, time = os.time() }
+    log(string.format("raised %s to %d (was %d)", str(a:GetFName()), target, have))
+    return true
+end
+
 -- One-time unlocks: grant anything received that the save doesn't have (idempotent, so safe to repeat).
 local function ensureUnlocks(inv)
     local added = 0
@@ -252,6 +331,9 @@ local function ensureUnlocks(inv)
                     grantOnce(inv, a, g.path)
                     added = added + 1
                 end
+            elseif g.mode == "level" then
+                local a = asset(g.path)
+                if a and topUp(inv, a, g.path, g.amount) then added = added + 1 end
             end
         end
     end
@@ -269,6 +351,8 @@ local function applyNewGrants(inv)
                 if g.mode == "add" then
                     inv:AddInventoryCount(a.AssetId, g.amount)
                     log(string.format("granted %d x %s", g.amount, str(a.DisplayName)))
+                elseif g.mode == "level" then
+                    topUp(inv, a, g.path, g.amount)
                 elseif not owns(inv, a, g.path) then
                     grantOnce(inv, a, g.path)
                 end
@@ -967,6 +1051,79 @@ function commands.bundle()
     if augments == nil then return "no augment component in this level" end
     augments:SpawnAugmentBundle(pc.PlayerState, pawn, {})
     return "spawned a perk bundle at your feet"
+end
+
+-- Tech upgrade and superior item levels: what the upgrade component reports next to the inventory count.
+function commands.upgrades(args)
+    local inv = inventory()
+    local comp = nonDefault("ValPlayerUpgradeComponent")
+    if inv == nil or comp == nil then return "inventory or upgrade component not ready" end
+    local lines = {}
+    for _, a in ipairs(FindAllOf("ValPlayerUpgradeAsset") or {}) do
+        local name = str(a:GetFName())
+        if a:IsValid() and not name:find("Default__") and (args == "" or name:find(args)) then
+            local okLevel, level = pcall(function() return comp:GetUpgradeLevelById(a.ItemId) end)
+            lines[#lines + 1] = string.format("%s: level %s, inventory %d", name,
+                okLevel and tostring(level) or ("? " .. tostring(level)), inv:GetItemCount(a.ItemId))
+        end
+    end
+    table.sort(lines)
+    return #lines .. " upgrades\n" .. table.concat(lines, "\n")
+end
+
+-- Test: raise one upgrade by n levels through the inventory, e.g. "uplevel Upgrade_MaxShield 2".
+function commands.uplevel(args)
+    local name, n = args:match("^(%S+) (%d+)$")
+    if name == nil then return "usage: uplevel <asset name> <levels>" end
+    local inv = inventory()
+    local comp = nonDefault("ValPlayerUpgradeComponent")
+    if inv == nil or comp == nil then return "inventory or upgrade component not ready" end
+    local a = nil
+    for _, o in ipairs(FindAllOf("ValPlayerUpgradeAsset") or {}) do
+        if o:IsValid() and str(o:GetFName()) == name then a = o end
+    end
+    if a == nil then return name .. " isn't loaded" end
+    local before = comp:GetUpgradeLevelById(a.ItemId)
+    local ok, err = pcall(function() comp:AddUpgradeValue(a.ItemId, tonumber(n)) end)
+    local after = comp:GetUpgradeLevelById(a.ItemId)
+    return string.format("%s: AddUpgradeValue %s; level %s -> %s right away, inventory %d", name,
+        ok and "ok" or ("failed: " .. tostring(err)), tostring(before), tostring(after), inv:GetItemCount(a.ItemId))
+end
+
+-- The upgrade price groups: their tag, config and price per level (to see what the purchase block touches).
+function commands.upgradegroups()
+    local lines = {}
+    for _, cfg in ipairs(FindAllOf("ValPlayerUpgradeConfig") or {}) do
+        if not str(cfg:GetFName()):find("Default__") then
+            cfg.GroupConfigsByType:ForEach(function(tag, group)
+                local g = group:get()
+                local prices = {}
+                pcall(function()
+                    g.UpgradeLevelPricing:ForEach(function(level, price)
+                        local p = price:get()
+                        local cost = {}
+                        p.BasePrice.CurrencyData:ForEach(function(_, c)
+                            cost[#cost + 1] = tostring(c:get().Value) .. " " .. str(c:get().Asset:GetFName())
+                        end)
+                        prices[#prices + 1] = string.format("L%d: %d shards + %s", level:get(), p.ShardCost,
+                            table.concat(cost, " + "))
+                    end)
+                end)
+                local members = {}
+                pcall(function()
+                    g.UpgradeAssets:ForEach(function(_, soft)
+                        local s = soft:get()
+                        local ok, path = pcall(function() return s:ToString() end)
+                        if not ok then ok, path = pcall(function() return str(s:Get():GetFName()) end) end
+                        members[#members + 1] = ok and tostring(path):match("([%w_]+)$") or "?"
+                    end)
+                end)
+                lines[#lines + 1] = string.format("%s -> %s: %d upgrades [%s]: %s", str(tag:get().TagName),
+                    str(g:GetFName()), #members, table.concat(members, ", "), table.concat(prices, "; "))
+            end)
+        end
+    end
+    return #lines .. " groups\n" .. table.concat(lines, "\n")
 end
 
 function commands.regate() rebuildMissions = true; return "rebuilding mission options" end

@@ -112,3 +112,17 @@ class TestGoalAndObjectives(DeadzoneRogueTestBase):
         self.assertNotIn("Sectors Cleared: 160", names)
         self.assertIn("Scrap Gathered: 20000", names)  # defaults: total 20000, interval 2000
         self.assertNotIn("Gauntlet (Normal)", names)  # endless missions are off by default
+
+
+class TestLeveledPacks(DeadzoneRogueTestBase):
+    options = {"mission_difficulties": ["Adventure", "Normal", "Hard", "Difficulty 4", "Difficulty 5"],
+               "tech_levels_per_copy": 3, "superior_levels_per_copy": 2}
+
+    def test_pack_copies_cover_every_level(self) -> None:
+        world = self.multiworld.worlds[self.player]
+        pool = [item.name for item in self.multiworld.itempool if item.player == self.player]
+        self.assertEqual(pool.count("Mastery Pack 1"), 4)  # 10 levels in chunks of 3
+        self.assertEqual(pool.count("Superior Item Pack 1"), 2)  # 4 levels in chunks of 2
+        self.assertEqual(world.pack_levels["Mastery Pack 1"], 3)
+        self.assertNotIn("Tier 10 Tech Upgrades", pool)  # buying levels is blocked, so the cap unlock is pointless
+        self.assertEqual(world.fill_slot_data()["pack_levels"][str(self.world.item_name_to_id["Mastery Pack 1"])], 3)

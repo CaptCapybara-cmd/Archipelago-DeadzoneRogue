@@ -60,6 +60,24 @@ class TestBridge(unittest.TestCase):
         self.assertFalse(any(p.endswith("Perk_Plasma_Parent") for p in locks))  # locked by the game already
         self.assertTrue(any(p.endswith("Item_ADSSpeed") for p in locks))  # pack contents
 
+    def test_leveled_pack_copies_raise_levels_in_chunks(self) -> None:
+        pack_id = str(item_name_to_id["Mastery Pack 1"])
+        superior_id = str(item_name_to_id["Superior Item Pack 1"])
+        slot_data = dict(self.slot_data, packs={pack_id: ["Component_Tech_MaxShield"],
+                                                superior_id: ["Component_SuperItem_HealthBasedDamage"]},
+                         pack_levels={pack_id: 3, superior_id: 3})
+        received = [int(pack_id)] * 5 + [int(superior_id)] * 2
+        levels = [(i, amount, path.rsplit(".", 1)[1]) for i, mode, amount, path
+                  in bridge.grant_lines(self.data, slot_data, received) if mode == "level"]
+        self.assertEqual([amount for _, amount, name in levels if name == "Upgrade_MaxShield"], [3, 6, 9, 10, 10])
+        self.assertEqual([amount for _, amount, name in levels if name.startswith("SuperItem_")], [3, 4])
+        unlocks = [p for _, mode, _, p in bridge.grant_lines(self.data, slot_data, received[:1]) if mode == "once"]
+        self.assertTrue(unlocks[0].endswith("Component_Tech_MaxShield"))
+        self.assertIn("noupgradebuy superior tech\n", bridge.render_inbox(1, "s", slot_data, [], []))
+        only_tech = dict(slot_data, pack_levels={pack_id: 3})
+        self.assertIn("noupgradebuy tech\n", bridge.render_inbox(1, "s", only_tech, [], []))
+        self.assertNotIn("noupgradebuy", bridge.render_inbox(1, "s", self.slot_data, [], []))
+
     def test_gating(self) -> None:
         gated = dict(self.slot_data, zone_gating=True)
         lines = bridge.gating_lines(self.data, gated, [])

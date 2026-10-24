@@ -9,7 +9,9 @@ Folder: <game>/Valhalla/Binaries/Win64/APBridge/
                    zones <open zones...> / missionzone <mission guid> <zone>   (zone gating)
                    zoneentry <mission guid>                       (opened by its zone's access, story order aside)
                    lock <asset object path>                       (one per asset the mod must lock)
-                   grant <index> <once|add> <amount> <asset path>  (index = position in ReceivedItems)
+                   grant <index> <once|add|level> <amount> <asset path>  (index = position in ReceivedItems;
+                                                                   level: raise the count to at least amount)
+                   noupgradebuy <tech|superior...>                (those upgrades can't be bought in the hub)
                    note <id> <text>                               (in-game chat message; ids only ever increase)
                    deathlink <id> <mode> <source>                 (a received DeathLink, applied once per id)
   outbox_<session>.txt   appended by the mod, tailed by the client (one file per AP session):
@@ -83,9 +85,15 @@ def grant_lines(data: dict, slot_data: dict, received_ids: Sequence[int]) -> Lis
             if k < len(item["grants"]):
                 lines.append((index, "once", 1, item["grants"][k]))
         elif str(item_id) in slot_data.get("packs", {}):
+            copy = progressive_seen.get(item_id, 0) + 1  # leveled packs are progressive
+            progressive_seen[item_id] = copy
+            chunk = slot_data.get("pack_levels", {}).get(str(item_id))
             for key in slot_data["packs"][str(item_id)]:
                 if key in pool_paths:
                     lines.append((index, "once", 1, pool_paths[key]))
+                upgrade = data.get("upgrade_levels", {}).get(key)
+                if chunk and upgrade:
+                    lines.append((index, "level", min(upgrade["points"], copy * chunk), upgrade["path"]))
         else:
             for path in item["grants"]:
                 lines.append((index, item["mode"], item["amount"], path))
@@ -107,12 +115,26 @@ def gating_lines(data: dict, slot_data: dict, received_ids: Sequence[int]) -> Li
     return lines
 
 
+LEVELED_CATEGORIES = {"mastery_group": "tech", "superior_group": "superior"}
+
+
+def upgrade_purchase_blocks(slot_data: dict) -> List[str]:
+    """Upgrade kinds whose levels come from Archipelago in this seed, so the game mustn't sell them."""
+    data = load_data()
+    kinds = {LEVELED_CATEGORIES.get(data["items"].get(item_id, {}).get("category"))
+             for item_id in slot_data.get("pack_levels", {})}
+    return sorted(k for k in kinds if k)
+
+
 def render_inbox(rev: int, session: str, slot_data: dict, locks: Iterable[str],
                  grants: Iterable[Tuple[int, str, int, str]], gating: Iterable[str] = (),
                  notes: Iterable[Tuple[int, str]] = (),
                  deathlinks: Iterable[Tuple[int, str, str]] = ()) -> str:
     out = ["version 1", f"rev {rev}", f"session {session}", f"goal {slot_data.get('goal_zone', '')}"]
     out += list(gating)
+    blocked = upgrade_purchase_blocks(slot_data)
+    if blocked:
+        out.append("noupgradebuy " + " ".join(blocked))
     out += [f"lock {path}" for path in locks]
     out += [f"grant {index} {mode} {amount} {path}" for index, mode, amount, path in grants]
     out += [f"note {note_id} {' '.join(text.split())}" for note_id, text in notes]
