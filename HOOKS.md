@@ -96,4 +96,4 @@ What the client mod has to do for the v0.2.0 world. The status column says how m
 | Never spawn augment bundles | Each run gets one augment offer; spawning bundles uses it up | ⚠️ rule |
 
 | Save-slot binding | Each AP session binds to the first save slot it's used on (`APBridge/binding_<session>.txt`). On any other slot the mod restores its locks, doesn't gate and sends no checks. It waits for `ValSaveGameSubsystem.bSubsystemLoadComplete`, because before that the active slot reads as 0 | ✅ done, verified (bound to slot 2) |
-| ⚠️ Never touch `MissionOption.MissionData` from Lua | It can be null while the hub loads, and dereferencing it crashed the game inside UE4SS. Use the inline `MissionId` GUID | rule |
+| ⚠️ Never touch `MissionOption.MissionData` from Lua | It can be null while the hub loads, and dereferencing it crashed the game inside UE4SS. Use the inline `MissionId` GUID | rule || Launcher (planned) | One app for players: locate the game, install UE4SS + `VTableLayout.ini` + APClient, and a GUI for the player YAML options | ❌ not started |

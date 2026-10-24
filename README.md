@@ -71,6 +71,17 @@ that difficulty has checks. `/goal` in the client lists what's left.
 - Install steps for players: `deadzone_rogue/docs/setup_en.md`. What's done and what's left:
   [HOOKS.md](HOOKS.md#client-to-do).
 
+## Roadmap
+
+- **Launcher**: one app that sets up the mod (finds the game, installs UE4SS, the crash fix and APClient) and
+  generates the player YAML from a GUI instead of editing the template by hand.
+- **Vanilla mission rewards**: stop the game's own first-time and milestone rewards unless `vanilla_mission_rewards`
+  is on.
+- **DeathLink effects**: apply received deaths in-game per `death_link_mode` (lose a perk or an item, lose Scrap,
+  take damage, pushed back a sector, or die).
+- **Pack locking**: lock Mastery and Superior Item pack contents until they're received.
+- **Goal**: verify in a full real run.
+
 ## License
 
 MIT, see [LICENSE](LICENSE). Deadzone: Rogue belongs to Prophecy Games; this project ships no game files.
