@@ -1,6 +1,6 @@
 {
 	"game": "Deadzone Rogue",
 	"minimum_ap_version": "0.6.6",
-	"world_version": "0.5.1",
+	"world_version": "0.6.0",
 	"authors": ["Ethan"]
 }

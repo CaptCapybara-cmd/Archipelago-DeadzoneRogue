@@ -56,6 +56,8 @@ class DeadzoneRogueContext(CommonContext):
         self.goal_sent = False
         self.session = ""
         self.notes: List[Tuple[int, str]] = []  # (id, text) for in-game chat; ids are millisecond timestamps
+        self.deathlinks: List[Tuple[int, str, str]] = []  # (id, mode, source) received, for the mod to apply
+        self.last_deathlink_received = 0.0
         self.completed_missions: Set[str] = set()  # rebuilt from this session's outbox, which is read from the start
         self.set_game_dir(game_dir)
 
@@ -95,8 +97,13 @@ class DeadzoneRogueContext(CommonContext):
 
     MAX_NOTES = 30
 
+    @staticmethod
+    def next_id(entries: list) -> int:
+        """Millisecond timestamp, kept increasing (the mod applies each id once)."""
+        return max(int(time.time() * 1000), (entries[-1][0] + 1) if entries else 0)
+
     def add_note(self, text: str) -> None:
-        note_id = max(int(time.time() * 1000), (self.notes[-1][0] + 1) if self.notes else 0)
+        note_id = self.next_id(self.notes)
         self.notes = (self.notes + [(note_id, text[:150])])[-self.MAX_NOTES:]
         self.write_inbox()
 
@@ -111,8 +118,11 @@ class DeadzoneRogueContext(CommonContext):
 
     def on_deathlink(self, data: Dict[str, Any]) -> None:
         super().on_deathlink(data)
-        # Receiving deaths is the next step for the mod (death_link_mode); for now it is only logged.
-        logger.info(f"DeathLink received ({self.slot_data.get('death_link_mode')}); not applied in-game yet.")
+        self.last_deathlink_received = time.time()
+        mode = self.slot_data.get("death_link_mode", "lose_perk")
+        source = data.get("source", "another player")
+        self.deathlinks = (self.deathlinks + [(self.next_id(self.deathlinks), mode, source)])[-self.MAX_NOTES:]
+        self.write_inbox()
 
     def write_inbox(self) -> None:
         if not self.slot_data or not os.path.isdir(self.bridge_dir):
@@ -125,7 +135,8 @@ class DeadzoneRogueContext(CommonContext):
         grants = bridge.grant_lines(self.data, self.slot_data, received)
         text = bridge.render_inbox(self.inbox_rev, session, self.slot_data,
                                    bridge.lock_paths(self.data, self.slot_data), grants,
-                                   bridge.gating_lines(self.data, self.slot_data, received), self.notes)
+                                   bridge.gating_lines(self.data, self.slot_data, received), self.notes,
+                                   self.deathlinks)
         bridge.write_atomic(os.path.join(self.bridge_dir, "inbox.txt"), text)
 
     async def poll_game(self) -> None:
@@ -150,7 +161,8 @@ class DeadzoneRogueContext(CommonContext):
             self.goal_sent = True
             logger.info("Goal complete!")
             self.add_note("Goal complete! Every goal mission is done.")
-        if deaths and "DeathLink" in self.tags:
+        # a death right after a received DeathLink is that DeathLink's doing (the kill mode), not a new one
+        if deaths and "DeathLink" in self.tags and time.time() - self.last_deathlink_received > 15:
             await self.send_death(f"{self.player_names.get(self.slot, 'A Deadzone Rogue player')} died on the station.")
 
     async def game_loop(self) -> None:

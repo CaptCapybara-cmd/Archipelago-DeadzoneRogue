@@ -172,9 +172,10 @@ class IncludeSynergyComponents(Toggle):
 
 class DeathLinkMode(Choice):
     """What happens when you receive a DeathLink. Your own run ends normally when you die.
-    lose_perk: lose a random perk from the current run. lose_item: lose a random item from the current run.
-    lose_scrap: lose half your Scrap. take_damage: take heavy damage (can't kill you).
-    push_back_room: sent back to the previous room (experimental). kill: the run ends."""
+    lose_perk: lose a random element perk from the current run. lose_item: lose a random item from the current run.
+    Unlocks are never touched, only what you picked up this run.
+    lose_scrap: lose half your Scrap. take_damage: drop to a quarter of your health (can't kill you).
+    push_back_room: not possible yet, so it costs half your Scrap instead. kill: the run ends."""
     display_name = "DeathLink Mode"
     option_lose_perk = 0
     option_lose_item = 1

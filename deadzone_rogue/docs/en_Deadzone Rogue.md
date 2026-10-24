@@ -30,8 +30,9 @@ to see what's left.
 ## DeathLink
 
 When another player dies, your current run isn't ended by default. Instead you lose a random perk, depending on
-`death_link_mode`. Other modes are losing an item, losing Scrap, taking heavy damage, being pushed back a room
-(experimental), or a real death.
+`death_link_mode`. Other modes are losing an item, losing half your Scrap, dropping to a quarter of your health, or a
+real death. Only what you picked up during the run can be lost, never your unlocks. Deaths that arrive while you're
+in the hub are skipped. `push_back_room` isn't possible yet and costs half your Scrap instead.
 
 ## What does another world's item look like in Deadzone Rogue?
 

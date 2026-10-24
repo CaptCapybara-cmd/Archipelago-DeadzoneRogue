@@ -53,3 +53,9 @@ result to your host.
    yet is locked.
 4. The mod posts to the in-game chat, prefixed `[Archipelago]`: when it loads, when your save slot connects, and
    for every item you send or receive. Press **F10** in game for a status line (mod version, save slot, open zones).
+
+## Testing (dev menu)
+
+Press **Ctrl+Shift+D** in the launcher to show the DEV tab. With the game running it can show the mod's status,
+apply any DeathLink effect, send fake mission completions or save-wide totals (these count for real in the
+multiworld), grant or revoke unlocks, open or close zones, and spawn a perk bundle. Use it on a test save.

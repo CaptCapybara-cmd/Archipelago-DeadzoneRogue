@@ -11,6 +11,7 @@ Folder: <game>/Valhalla/Binaries/Win64/APBridge/
                    lock <asset object path>                       (one per asset the mod must lock)
                    grant <index> <once|add> <amount> <asset path>  (index = position in ReceivedItems)
                    note <id> <text>                               (in-game chat message; ids only ever increase)
+                   deathlink <id> <mode> <source>                 (a received DeathLink, applied once per id)
   outbox_<session>.txt   appended by the mod, tailed by the client (one file per AP session):
                    mission <mission key> <difficulty>
                    sectors|kills|scrap <save-wide total so far>
@@ -108,12 +109,14 @@ def gating_lines(data: dict, slot_data: dict, received_ids: Sequence[int]) -> Li
 
 def render_inbox(rev: int, session: str, slot_data: dict, locks: Iterable[str],
                  grants: Iterable[Tuple[int, str, int, str]], gating: Iterable[str] = (),
-                 notes: Iterable[Tuple[int, str]] = ()) -> str:
+                 notes: Iterable[Tuple[int, str]] = (),
+                 deathlinks: Iterable[Tuple[int, str, str]] = ()) -> str:
     out = ["version 1", f"rev {rev}", f"session {session}", f"goal {slot_data.get('goal_zone', '')}"]
     out += list(gating)
     out += [f"lock {path}" for path in locks]
     out += [f"grant {index} {mode} {amount} {path}" for index, mode, amount, path in grants]
     out += [f"note {note_id} {' '.join(text.split())}" for note_id, text in notes]
+    out += [f"deathlink {death_id} {mode} {' '.join(source.split())}" for death_id, mode, source in deathlinks]
     return "\n".join(out) + "\n"
 
 

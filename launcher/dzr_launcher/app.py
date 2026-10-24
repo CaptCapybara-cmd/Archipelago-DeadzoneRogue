@@ -9,7 +9,7 @@ import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 from typing import Callable, Dict, List, Tuple
 
-from . import VERSION, installer, locate, theme, yamlgen
+from . import VERSION, devtools, installer, locate, theme, yamlgen
 
 SETTINGS_PATH = os.path.join(os.path.expandvars("%APPDATA%"), "DeadzoneRogueLauncher", "settings.json")
 DOT = "●"
@@ -35,7 +35,8 @@ def card(parent: tk.Widget, title: str, subtitle: str = "", expand: bool = False
     outer.pack(fill="both" if expand else "x", expand=expand, padx=16, pady=(12, 0))
     ttk.Label(outer, text=title, style="CardTitle.TLabel").pack(anchor="w")
     if subtitle:
-        ttk.Label(outer, text=subtitle, style="Muted.TLabel").pack(anchor="w", pady=(0, 6))
+        ttk.Label(outer, text=subtitle, style="Muted.TLabel", wraplength=820, justify="left").pack(
+            anchor="w", pady=(0, 6))
     body = ttk.Frame(outer, style="Card.TFrame")
     body.pack(fill="both", expand=True, pady=(6, 0))
     return body
@@ -79,7 +80,10 @@ class ScrollFrame(ttk.Frame):
         canvas.configure(yscrollcommand=bar.set)
         canvas.pack(side="left", fill="both", expand=True)
         bar.pack(side="right", fill="y")
-        canvas.bind_all("<MouseWheel>", lambda e: canvas.yview_scroll(int(-e.delta / 120), "units"))
+        # the wheel scrolls whichever scroll frame the pointer is over (there's one on Options and one on Dev)
+        wheel = lambda e: canvas.yview_scroll(int(-e.delta / 120), "units")  # noqa: E731
+        self.bind("<Enter>", lambda e: canvas.bind_all("<MouseWheel>", wheel))
+        self.bind("<Leave>", lambda e: canvas.unbind_all("<MouseWheel>"))
 
 
 class LauncherApp:
@@ -93,7 +97,7 @@ class LauncherApp:
         root.minsize(760, 640)
 
         self.build_header()
-        notebook = ttk.Notebook(root)
+        notebook = self.notebook = ttk.Notebook(root)
         notebook.pack(fill="both", expand=True)
         self.setup_tab = ttk.Frame(notebook)
         self.options_tab = ttk.Frame(notebook)
@@ -105,7 +109,12 @@ class LauncherApp:
         self.build_setup()
         self.build_options()
         self.build_play()
-        notebook.select(int(os.environ.get("DZR_TAB", "0")))  # dev aid: open a given tab (for screenshots)
+        self.dev_tab = None
+        if self.settings.get("dev_menu") or os.environ.get("DZR_DEV"):
+            self.show_dev_tab()
+        root.bind_all("<Control-Shift-D>", lambda e: self.toggle_dev_tab())
+        tab = int(os.environ.get("DZR_TAB", "0"))  # dev aid: open a given tab (for screenshots)
+        notebook.select(min(tab, notebook.index("end") - 1))
         self.refresh_status()
         root.after(100, self.pump_events)
         root.after(500, self.refresh_live)
@@ -469,6 +478,152 @@ class LauncherApp:
             messagebox.showwarning("Archipelago not found", "Set your Archipelago folder on the Setup tab first.")
             return
         subprocess.Popen([os.path.join(ap, "ArchipelagoLauncher.exe"), "Deadzone Rogue Client"], cwd=ap)
+
+    # Dev tab (Ctrl+Shift+D) -------------------------------------------------------------------------------------
+
+    def toggle_dev_tab(self) -> None:
+        if self.dev_tab is None:
+            self.show_dev_tab()
+            self.notebook.select(self.dev_tab)
+        else:
+            self.notebook.forget(self.dev_tab)
+            self.dev_tab.destroy()
+            self.dev_tab = None
+        self.settings["dev_menu"] = self.dev_tab is not None
+        save_settings(self.settings)
+
+    def show_dev_tab(self) -> None:
+        self.dev_tab = ttk.Frame(self.notebook)
+        self.notebook.add(self.dev_tab, text="DEV")
+        self.build_dev(self.dev_tab)
+
+    def dev_send(self, *commands: str) -> None:
+        win64 = self.game_dir()
+        if not win64:
+            messagebox.showwarning("Game not found", "Set the game folder on the Setup tab first.")
+            return
+        if not commands:
+            return
+        if not installer.mod_runtime(win64)["running"]:
+            self.dev_output_add("The game isn't running (or the mod isn't loaded), so nothing was sent.")
+            return
+        devtools.send(win64, *commands)
+        for command in commands:
+            self.dev_output_add("> " + command)
+
+    def dev_output_add(self, line: str) -> None:
+        self.dev_output.configure(state="normal")
+        self.dev_output.insert("end", line + "\n")
+        self.dev_output.see("end")
+        self.dev_output.configure(state="disabled")
+
+    def poll_dev_replies(self) -> None:
+        if self.dev_tab is None:
+            return
+        try:
+            win64 = self.game_dir()
+            if win64:
+                for reply_id, text in devtools.replies(win64, self.dev_seen):
+                    self.dev_output_add("  " + text)
+                    self.dev_seen = max(self.dev_seen, reply_id)
+        finally:
+            self.root.after(700, self.poll_dev_replies)
+
+    def build_dev(self, tab: ttk.Frame) -> None:
+        try:
+            data = devtools.load_game_data()
+        except (OSError, KeyError, ValueError) as e:
+            ttk.Label(tab, text=f"Couldn't read the bundled world: {e}", style="Muted.TLabel").pack(padx=16, pady=16)
+            return
+        win64 = self.game_dir()
+        self.dev_seen = max((i for i, _ in devtools.replies(win64)), default=0) if win64 else 0  # new replies only
+
+        def row(parent: tk.Widget) -> ttk.Frame:
+            r = ttk.Frame(parent, style="Card.TFrame")
+            r.pack(fill="x", pady=(0, 8))
+            return r
+
+        def button(parent: tk.Widget, text: str, command: str, accent: bool = False) -> None:
+            ttk.Button(parent, text=text, style="Accent.TButton" if accent else "TButton",
+                       command=lambda: self.dev_send(command)).pack(side="left", padx=(0, 8))
+
+        # the output is packed first, at the bottom, so it keeps its space when the window is short
+        out = ttk.Frame(tab, style="Card.TFrame", padding=(16, 10))
+        out.pack(side="bottom", fill="x")
+        self.dev_output = tk.Text(out, height=11, state="disabled", wrap="word", background=theme.FIELD,
+                                  foreground=theme.TEXT, relief="flat", borderwidth=0, font=("Consolas", 9),
+                                  padx=10, pady=8)
+        self.dev_output.pack(fill="both", expand=True)
+        scroll = ScrollFrame(tab)
+        scroll.pack(fill="both", expand=True)
+        body = scroll.inner
+
+        status = card(body, "Status", "For testing. Everything here acts on the running game, on your Archipelago "
+                                      "save slot. Results show below and in the in-game chat.")
+        r = row(status)
+        button(r, "Status", "status", accent=True)
+        button(r, "Probe run", "probe")
+        chat_var = tk.StringVar(value="test message")
+        ttk.Entry(r, textvariable=chat_var, width=22).pack(side="left", padx=(8, 8))
+        ttk.Button(r, text="Post to chat", command=lambda: self.dev_send("chat " + chat_var.get())).pack(side="left")
+
+        death = card(body, "DeathLink effects", "Applies the effect now, as if a DeathLink arrived. Needs a run "
+                                                "in progress.")
+        r = row(death)
+        for mode in devtools.DEATHLINK_MODES:
+            button(r, mode.replace("_", " ").capitalize(), "deathlink " + mode)
+        r = row(death)
+        button(r, "Spawn perk bundle", "bundle")
+        ttk.Label(r, text="Drops a perk pickup at your feet. It can use up the run's one augment offer.",
+                  style="Muted.TLabel").pack(side="left")
+
+        checks = card(body, "Fake checks", "Sends a mission completion or raises a save-wide total through the "
+                                           "client, as if you'd played it. These count for real in the multiworld.")
+        mission_list = devtools.missions(data)
+        labels = [label for label, _, _ in mission_list]
+        mission_var, difficulty_var = tk.StringVar(value=labels[0]), tk.StringVar(value="Adventure")
+        r = row(checks)
+        ttk.Combobox(r, textvariable=mission_var, values=labels, state="readonly", width=38).pack(side="left")
+        ttk.Combobox(r, textvariable=difficulty_var, values=list(devtools.DIFFICULTIES), state="readonly",
+                     width=12).pack(side="left", padx=8)
+
+        def send_mission() -> None:
+            key = next(k for label, k, _ in mission_list if label == mission_var.get())
+            self.dev_send(f"mission {key} {devtools.DIFFICULTIES[difficulty_var.get()]}")
+        ttk.Button(r, text="Complete", command=send_mission).pack(side="left")
+        r = row(checks)
+        total_var, amount_var = tk.StringVar(value="sectors"), tk.StringVar(value="5")
+        ttk.Combobox(r, textvariable=total_var, values=devtools.TOTALS, state="readonly", width=10).pack(side="left")
+        ttk.Spinbox(r, from_=-100000, to=1000000, textvariable=amount_var, width=10).pack(side="left", padx=8)
+        ttk.Button(r, text="Add to total", command=lambda: self.dev_send(
+            f"add {total_var.get()} {amount_var.get().strip()}")).pack(side="left")
+
+        items = card(body, "Items and zones", "Grant and Revoke act straight on the save, outside Archipelago "
+                                              "(received items come back within 30 s). Zone changes last until the "
+                                              "game restarts or you reset them.")
+        grantable = devtools.grantable_items(data)
+        names = list(grantable)
+        item_var = tk.StringVar(value=names[0] if names else "")
+        r = row(items)
+        ttk.Combobox(r, textvariable=item_var, values=names, state="readonly", width=38).pack(side="left")
+        ttk.Button(r, text="Grant", command=lambda: self.dev_send(
+            *("grant " + p for p in grantable.get(item_var.get(), [])))).pack(side="left", padx=8)
+        ttk.Button(r, text="Revoke", command=lambda: self.dev_send(
+            *("revoke " + p for p in grantable.get(item_var.get(), [])))).pack(side="left")
+        r = row(items)
+        zone_var = tk.StringVar(value="2")
+        ttk.Label(r, text="Zone", style="Card.TLabel").pack(side="left")
+        ttk.Combobox(r, textvariable=zone_var, values=["1", "2", "3", "4"], state="readonly", width=4).pack(
+            side="left", padx=8)
+        for how in ("open", "close", "reset"):
+            ttk.Button(r, text=how.capitalize(), command=lambda h=how: self.dev_send(
+                f"zone {zone_var.get()} {h}")).pack(side="left", padx=(0, 8))
+        r = row(items)
+        button(r, "Rebuild mission board", "regate")
+        button(r, "Reapply locks", "relock")
+        button(r, "Lift locks", "unlock")
+        ttk.Frame(body).pack(pady=6)
+        self.root.after(700, self.poll_dev_replies)
 
 
 def main() -> None:

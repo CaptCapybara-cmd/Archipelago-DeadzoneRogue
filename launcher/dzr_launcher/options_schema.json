@@ -233,7 +233,7 @@
   {
    "name": "death_link_mode",
    "label": "DeathLink Mode",
-   "help": "What happens when you receive a DeathLink. Your own run ends normally when you die.\nlose_perk: lose a random perk from the current run. lose_item: lose a random item from the current run.\nlose_scrap: lose half your Scrap. take_damage: take heavy damage (can't kill you).\npush_back_room: sent back to the previous room (experimental). kill: the run ends.",
+   "help": "What happens when you receive a DeathLink. Your own run ends normally when you die.\nlose_perk: lose a random element perk from the current run. lose_item: lose a random item from the current run.\nUnlocks are never touched, only what you picked up this run.\nlose_scrap: lose half your Scrap. take_damage: drop to a quarter of your health (can't kill you).\npush_back_room: not possible yet, so it costs half your Scrap instead. kill: the run ends.",
    "kind": "choice",
    "choices": [
     "lose_perk",

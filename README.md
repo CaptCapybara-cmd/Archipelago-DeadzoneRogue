@@ -4,8 +4,8 @@ An Archipelago integration has two halves:
 
 | Half | What it does | Status |
 |---|---|---|
-| **APWorld** (`deadzone_rogue/`, Python) | Tells the generator what items and locations exist and what the logic is | v0.5.1: built from the game's real data, passes AP's tests, generates seeds |
-| **Client** (Python, in the apworld) + **APClient** (Lua mod) | Talks to the AP server: sends checks, grants received items, locks unreceived content, reports the goal | v0.5.1: mission and save-wide objective checks, grants, locking and zone gating work live, protected by save-slot binding. Reward suppression and DeathLink effects not done yet |
+| **APWorld** (`deadzone_rogue/`, Python) | Tells the generator what items and locations exist and what the logic is | v0.6.0: built from the game's real data, passes AP's tests, generates seeds |
+| **Client** (Python, in the apworld) + **APClient** (Lua mod) | Talks to the AP server: sends checks, grants received items, locks unreceived content, reports the goal | v0.6.0: mission and save-wide objective checks, grants, locking and zone gating work live, protected by save-slot binding. DeathLink effects work in a run (except push back). Reward suppression not done yet |
 
 ## Files
 
@@ -76,8 +76,7 @@ that difficulty has checks. `/goal` in the client lists what's left.
 
 - **Vanilla mission rewards**: stop the game's own first-time and milestone rewards unless `vanilla_mission_rewards`
   is on.
-- **DeathLink effects**: apply received deaths in-game per `death_link_mode` (lose a perk or an item, lose Scrap,
-  take damage, pushed back a sector, or die).
+- **DeathLink push back**: move the player back a sector (`push_back_room` currently costs half the Scrap instead).
 - **Pack locking**: lock Mastery and Superior Item pack contents until they're received.
 - **Goal**: verify in a full real run.
 

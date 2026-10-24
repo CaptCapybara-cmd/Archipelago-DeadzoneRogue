@@ -1,10 +1,10 @@
--- APClient v0.5.1: the in-game half of the Deadzone Rogue Archipelago client.
+-- APClient v0.6.0: the in-game half of the Deadzone Rogue Archipelago client.
 -- Talks to the Python client through files in Win64/APBridge (format: deadzone_rogue/bridge.py):
 --   inbox.txt -> what to lock and grant     outbox_<session>.txt <- missions completed, save-wide totals, deaths
 -- Received items and save-wide totals (sectors, kills, Scrap) are tracked per AP session and per game save slot in
 -- APBridge/state_<session>_slot<n>.txt.
 local BRIDGE = "APBridge/"
-local MOD_VERSION = "0.5.1"
+local MOD_VERSION = "0.6.0"
 local POLL_MS = 1000
 local ENSURE_EVERY_S = 30       -- re-check one-time unlocks against the save this often
 local GRANTS_PER_TICK = 25      -- spread big batches over a few ticks to avoid hitches
@@ -87,10 +87,11 @@ end
 -- Inbox ---------------------------------------------------------------------------------------------------------
 
 local inbox = { rev = nil, session = nil, goal = nil, locks = {}, byIndex = {}, maxIndex = -1,
-                zones = nil, missionZones = {}, zoneEntries = {}, notes = {} }
+                zones = nil, missionZones = {}, zoneEntries = {}, notes = {}, deathlinks = {} }
 
 local function parseInbox(text)
-    local new = { locks = {}, byIndex = {}, maxIndex = -1, zones = nil, missionZones = {}, zoneEntries = {}, notes = {} }
+    local new = { locks = {}, byIndex = {}, maxIndex = -1, zones = nil, missionZones = {}, zoneEntries = {}, notes = {},
+                  deathlinks = {} }
     for line in text:gmatch("[^\n]+") do
         local kind, rest = line:match("^(%S+)%s*(.*)$")
         if kind == "rev" then new.rev = rest
@@ -107,6 +108,9 @@ local function parseInbox(text)
         elseif kind == "note" then
             local id, text = rest:match("^(%d+) (.+)$")
             if id then new.notes[#new.notes + 1] = { id = tonumber(id), text = text } end
+        elseif kind == "deathlink" then
+            local id, mode, text = rest:match("^(%d+) (%S+) ?(.*)$")
+            if id then new.deathlinks[#new.deathlinks + 1] = { id = tonumber(id), mode = mode, text = text } end
         elseif kind == "grant" then
             local index, mode, amount, path = rest:match("^(%d+) (%S+) (%d+) (%S+)$")
             if index then
@@ -123,13 +127,14 @@ end
 -- Per-session, per-save-slot progress -----------------------------------------------------------------------------
 
 -- sectors / kills / scrap are save-wide running totals across every run on this session's save slot
-local state = { key = nil, applied = -1, sectors = 0, kills = 0, scrap = 0, lastNote = 0 }
+local state = { key = nil, applied = -1, sectors = 0, kills = 0, scrap = 0, lastNote = 0, lastDeath = 0 }
 local totalsDirty = false -- totals changed since they were last written to the outbox
 
 local function stateFile() return BRIDGE .. "state_" .. state.key .. ".txt" end
 
 local function loadState(key)
-    state.key, state.applied, state.sectors, state.kills, state.scrap, state.lastNote = key, -1, 0, 0, 0, 0
+    state.key, state.applied, state.sectors, state.kills, state.scrap = key, -1, 0, 0, 0
+    state.lastNote, state.lastDeath = 0, 0
     local text = readFile(stateFile())
     if text then
         state.applied = tonumber(text:match("applied (%-?%d+)")) or -1
@@ -137,6 +142,7 @@ local function loadState(key)
         state.kills = tonumber(text:match("kills (%d+)")) or 0
         state.scrap = tonumber(text:match("scrap (%d+)")) or 0
         state.lastNote = tonumber(text:match("lastnote (%d+)")) or 0
+        state.lastDeath = tonumber(text:match("lastdeath (%d+)")) or 0
     end
     log(string.format("session %s: %d items applied before; %d sectors cleared, %d kills, %d Scrap gathered",
         key, state.applied + 1, state.sectors, state.kills, state.scrap))
@@ -145,8 +151,8 @@ end
 local function saveState()
     local f = io.open(stateFile(), "w")
     if f then
-        f:write(string.format("applied %d\nsectors %d\nkills %d\nscrap %d\nlastnote %d\n",
-            state.applied, state.sectors, state.kills, state.scrap, state.lastNote))
+        f:write(string.format("applied %d\nsectors %d\nkills %d\nscrap %d\nlastnote %d\nlastdeath %d\n",
+            state.applied, state.sectors, state.kills, state.scrap, state.lastNote, state.lastDeath))
         f:close()
     end
 end
@@ -282,6 +288,15 @@ local locksDirty = false
 local warnedSlot = nil
 local rebuildMissions = true -- ask the game to rebuild mission options (on load and when open zones change)
 
+-- Dev menu overrides (zone -> true/false), on top of the Zone Access items; only while gating is on.
+local zoneOverride = {}
+
+local function zoneIsOpen(zone)
+    if inbox.zones == nil or zone == nil then return true end
+    if zoneOverride[zone] ~= nil then return zoneOverride[zone] end
+    return inbox.zones[zone] == true
+end
+
 local function zonesSignature(zones)
     if zones == nil then return "off" end
     local s = ""
@@ -295,7 +310,9 @@ local function requestMissionRebuild(inv)
     local component = nonDefault("ValMissionComponent")
     if component == nil or not component:IsValid() then return false end
     component:UpdateHostMissionOptions(inv)
-    log("asked the game to rebuild mission options (zones open: " .. zonesSignature(inbox.zones) .. ")")
+    local open = ""
+    for z = 1, 4 do if zoneIsOpen(z) then open = open .. z end end
+    log("asked the game to rebuild mission options (zones open: " .. (inbox.zones == nil and "all, gating off" or open) .. ")")
     return true
 end
 
@@ -352,6 +369,7 @@ local function tick()
             locksDirty = true
         end
     end
+    handleDebug()
     if inbox.session == nil then return end
 
     local slot = activeSaveSlot()
@@ -377,6 +395,7 @@ local function tick()
     if key ~= state.key then loadState(key); lastEnsure = 0 end
     refreshLocalPawn()
     showNewNotes()
+    handleDeathLinks()
     if now - lastFlush >= 5 then lastFlush = now; flushTotals() end
 
     local inv = inventory()
@@ -452,10 +471,6 @@ hook("/Script/Valhalla.ValPlayerUpgradeComponent:OnInventoryChanged", function(s
     end
 end)
 
-hook("/Script/Valhalla.ValMissionComponent:OnFrontierState", function(self, frontierState)
-    if onBoundSlot and frontierState:get() == 1 then emit("death " .. os.time()) end -- EFrontierState::Died
-end)
-
 -- Zone gating ----------------------------------------------------------------------------------------
 -- Mission options are built by the game (story order, "beat Normal before Hard") into
 -- UValMissionComponent.r_MissionOptions; for missions in zones without Zone Access we turn bAvailable off.
@@ -510,7 +525,7 @@ local function applyGating(component)
         local opt = o:get()
         local key = missionKey(opt)
         local zone = inbox.missionZones[key]
-        local zoneOpen = inbox.zones == nil or zone == nil or inbox.zones[zone]
+        local zoneOpen = zoneIsOpen(zone)
         if zoneOpen and inbox.zoneEntries[key] then changed = changed + forceOpen(opt) end
         if not zoneOpen and opt.bAvailable then opt.bAvailable = false; changed = changed + 1 end
         opt.TierOptions:ForEach(function(_, t)
@@ -564,14 +579,422 @@ hook("/Script/Valhalla.ValMissionComponent:OnMissionReady", function(self, missi
     if onBoundSlot then applyLocks() end
 end)
 
-RegisterKeyBind(Key.F10, function() ExecuteInGameThread(function()
+-- Run state, DeathLink effects -----------------------------------------------------------------------------------
+
+local SCRAP_PATH = "/Game/Items/Currencies/Item_Currency_Scrap.Item_Currency_Scrap"
+
+local function guidKey(g)
+    return string.format("%08X-%08X-%08X-%08X", g.A & 0xFFFFFFFF, g.B & 0xFFFFFFFF, g.C & 0xFFFFFFFF, g.D & 0xFFFFFFFF)
+end
+
+local function localPawnObject()
+    local pc = chatController()
+    if pc == nil then return nil end
+    local pawn = pc.Pawn
+    if pawn ~= nil and pawn:IsValid() then return pawn end
+end
+
+-- What the player picked up this run: transient inventory entries (the game drops them when the run ends), so
+-- removing one never touches the save's permanent unlocks. Returns { asset, name, class, count } entries.
+local function runItems(inv)
+    local transient = {}
+    inv.TransientItemIds:ForEach(function(_, g) transient[guidKey(g:get())] = true end)
+    local items = {}
+    inv.InventoryAssetMap:ForEach(function(k, v)
+        local g = k:get()
+        if transient[guidKey(g)] then
+            local a = v:get()
+            if a ~= nil and a:IsValid() then
+                local count = inv:GetItemCount(g)
+                if count > 0 then
+                    items[#items + 1] = { asset = a, name = str(a.DisplayName), id = str(a:GetFName()),
+                                          class = str(a:GetClass():GetFName()), count = count }
+                end
+            end
+        end
+    end)
+    return items
+end
+
+local function pickRandom(list) if #list > 0 then return list[math.random(#list)] end end
+
+-- Run pickups aren't inventory entries; they're lists on the player state, mirrored on the character:
+--   r_PerkIds    - run items (Item_*)
+--   r_AugmentIds - augments (Augment_*) and element perks (Perk_*_Parent)
+-- Removing one from the list and re-sending it to the character drops its effect (verified for items).
+local RUN_LISTS = {
+    items = { field = "r_PerkIds", rep = "OnRep_PerkIds", loaded = "OnPerkAssetsLoaded",
+              changed = "OnPerkIdsChanged", equipped = "EquippedPerkIds" },
+    augments = { field = "r_AugmentIds", rep = "OnRep_AugmentIds", loaded = "OnAugmentAssetsLoaded",
+                 changed = "OnAugmentIdsChanged", equipped = "EquippedAugmentIds" },
+}
+
+local function runIds(ps, list)
+    local ids = {}
+    ps[list.field]:ForEach(function(_, id)
+        local v = id:get()
+        ids[#ids + 1] = { type = str(v.PrimaryAssetType.Name), name = str(v.PrimaryAssetName) }
+    end)
+    return ids
+end
+
+local function names(ids)
+    local t = {}
+    for _, id in ipairs(ids) do t[#t + 1] = id.name end
+    return table.concat(t, ", ")
+end
+
+-- Takes one copy of `victim` out of the run list and lets the character re-sync its effects.
+local function removeRunEntry(ps, pawn, list, victim)
+    local before = runIds(ps, list)
+    local keep, removed = {}, false
+    for _, id in ipairs(before) do
+        if not removed and id.name == victim.name then
+            removed = true
+        else
+            keep[#keep + 1] = { PrimaryAssetType = { Name = FName(id.type) }, PrimaryAssetName = FName(id.name) }
+        end
+    end
+    ps[list.field] = keep
+    pcall(function() ps[list.rep](ps) end)
+    -- the HUD listens to the player state's "ids changed" event, which the game fires once the assets have loaded
+    local okLoaded, errLoaded = pcall(function() ps[list.loaded](ps, keep) end)
+    if not okLoaded then log(list.loaded .. " failed: " .. tostring(errLoaded)) end
+    pcall(function() pawn[list.changed](pawn, keep) end)
+    local after = runIds(ps, list)
+    local equipped = {}
+    pcall(function() pawn[list.equipped]:ForEach(function(_, id) equipped[#equipped + 1] = str(id:get().PrimaryAssetName) end) end)
+    log(string.format("removed %s from %s: now [%s], character has [%s]", victim.name, list.field, names(after),
+        table.concat(equipped, ", ")))
+    return #after < #before
+end
+
+local function displayName(name)
+    local shown = name
+    pcall(function()
+        local a = FindObject("ValItemAsset", name) or FindObject("ValPerkAsset", name)
+        if a and a:IsValid() and str(a.DisplayName) ~= "" then shown = str(a.DisplayName) end
+    end)
+    shown = shown:gsub("_Parent$", ""):gsub("^Perk_", ""):gsub("^Item_", "")
+    return shown
+end
+
+-- Loses a random entry of `list` whose asset name matches `pattern`.
+local function loseRunEntry(list, pattern, nothing)
+    local pc = chatController()
+    local pawn = localPawnObject()
+    if pc == nil or pawn == nil then return nil, "not in a run" end
+    local ps = pc.PlayerState
+    local candidates = {}
+    for _, id in ipairs(runIds(ps, list)) do
+        if id.name:find(pattern) then candidates[#candidates + 1] = id end
+    end
+    local victim = pickRandom(candidates)
+    if victim == nil then return nil, nothing end
+    local shown = displayName(victim.name)
+    if not removeRunEntry(ps, pawn, list, victim) then return nil, "couldn't remove " .. shown end
+    return shown
+end
+
+-- Each returns a short description of what happened, for the chat line.
+local effects = {}
+
+function effects.lose_perk()
+    local name, why = loseRunEntry(RUN_LISTS.augments, "^Perk_", "no run perks to lose")
+    return name and ("lost the perk " .. name) or why
+end
+
+function effects.lose_item()
+    local name, why = loseRunEntry(RUN_LISTS.items, "^Item_", "no run items to lose")
+    return name and ("lost " .. name) or why
+end
+
+function effects.lose_scrap(inv)
+    local a = asset(SCRAP_PATH)
+    if a == nil then return "Scrap asset not found" end
+    local have = inv:GetItemCount(a.ItemId)
+    local lose = have // 2
+    if lose <= 0 then return "no Scrap to lose" end
+    inv:RemoveInventoryCount(a.AssetId, lose)
+    return string.format("lost %d Scrap (of %d)", lose, have)
+end
+
+function effects.take_damage()
+    local pawn = localPawnObject()
+    if pawn == nil then return "not in a run" end
+    local health = pawn:GetTotalHealth()
+    local left = math.max(1, math.floor(health * 0.25))
+    pawn:SetHealth(left)
+    return string.format("took heavy damage (%d -> %d health)", math.floor(health), left)
+end
+
+function effects.kill()
+    local pawn = localPawnObject()
+    if pawn == nil then return "not in a run" end
+    pawn:Suicide({ TagName = FName("None") })
+    return "was killed"
+end
+
+-- Not found a safe way to move the player back a room yet; it costs Scrap instead.
+function effects.push_back_room(inv)
+    return "push back isn't supported yet, so: " .. effects.lose_scrap(inv)
+end
+
+local function inRun()
+    return localPawnObject() ~= nil and nonDefault("ValGameState_SpaceDungeon") ~= nil
+end
+
+local recentDeathLinkAt = 0 -- a kill from a DeathLink must not be reported back as our own death
+
+local function applyDeathLink(mode, source)
+    local effect = effects[mode]
+    if effect == nil then return "unknown DeathLink mode " .. tostring(mode) end
+    if not inRun() then return "DeathLink from " .. source .. " ignored: not in a run" end
+    local inv = inventory()
+    if inv == nil then return "inventory not ready" end
+    recentDeathLinkAt = os.time()
+    local ok, result = pcall(effect, inv)
+    if not ok then return "DeathLink " .. mode .. " failed: " .. tostring(result) end
+    return "DeathLink from " .. source .. ": " .. result
+end
+
+-- Deaths received through the client; each one is applied once (the last id is kept in the state file).
+function handleDeathLinks()
+    for _, d in ipairs(inbox.deathlinks) do
+        if d.id > state.lastDeath then
+            state.lastDeath = d.id
+            saveState()
+            notify(applyDeathLink(d.mode, d.text ~= "" and d.text or "another player"))
+        end
+    end
+end
+
+hook("/Script/Valhalla.ValMissionComponent:OnFrontierState", function(self, frontierState)
+    -- EFrontierState::Died. Skipped right after a DeathLink kill, so deaths don't bounce between players.
+    if onBoundSlot and frontierState:get() == 1 and os.time() - recentDeathLinkAt > 10 then
+        emit("death " .. os.time())
+    end
+end)
+
+-- Dev menu ---------------------------------------------------------------------------------------------------------
+-- The launcher's DEV tab writes APBridge/debug.txt, one command per line: "<id> <command> <args...>" with ids
+-- that only increase. Each is run once; results go to the chat and to APBridge/debug_log.txt.
+
+local DEBUG_FILE, DEBUG_LOG = BRIDGE .. "debug.txt", BRIDGE .. "debug_log.txt"
+local debugLastId = nil -- nil until the first read: commands already in the file when the game starts are skipped
+
+local function debugReply(id, text)
+    local f = io.open(DEBUG_LOG, "a")
+    if f then
+        for line in text:gmatch("[^\n]+") do f:write(id .. " " .. line .. "\n") end
+        f:close()
+    end
+    log("dev: " .. text:gsub("\n", " | "))
+end
+
+local function statusLines()
+    local lines = {}
+    local function add(fmt, ...) lines[#lines + 1] = string.format(fmt, ...) end
+    add("APClient v%s", MOD_VERSION)
+    add("session: %s", inbox.session or "no client connected yet")
+    add("save slot: %s (%s)", tostring(lastSlotSeen), onBoundSlot and "your Archipelago save" or "not bound")
     local zones = {}
-    for z = 1, 4 do if inbox.zones == nil or inbox.zones[z] then zones[#zones + 1] = tostring(z) end end
-    notify(string.format("status: v%s, %s, zones open: %s", MOD_VERSION,
-        inbox.session == nil and "no client connected yet"
-            or (onBoundSlot and ("save slot " .. tostring(lastSlotSeen) .. " is your Archipelago save")
-                or "this save slot isn't your Archipelago save"),
-        table.concat(zones, " ")))
+    for z = 1, 4 do if zoneIsOpen(z) then zones[#zones + 1] = tostring(z) end end
+    add("zones open: %s%s", inbox.zones == nil and "all (gating off)" or table.concat(zones, " "),
+        next(zoneOverride) and " (dev overrides active)" or "")
+    add("items applied: %d of %d received", state.applied + 1, inbox.maxIndex + 1)
+    add("locks: %d assets", #inbox.locks)
+    add("totals: %d sectors, %d kills, %d Scrap", state.sectors, state.kills, state.scrap)
+    add("in a run: %s", inRun() and "yes" or "no")
+    return lines
+end
+
+local function probeLines()
+    local lines = {}
+    local inv = inventory()
+    if inv == nil then return { "inventory not ready" } end
+    local pawn = localPawnObject()
+    if pawn ~= nil then
+        local ok, h = pcall(function() return pawn:GetTotalHealth() end)
+        lines[#lines + 1] = "pawn " .. str(pawn:GetFName()) .. ", health " .. (ok and tostring(h) or ("? " .. tostring(h)))
+    else
+        lines[#lines + 1] = "no pawn"
+    end
+    local ok, items = pcall(runItems, inv)
+    if not ok then return { lines[1], "run items failed: " .. tostring(items) } end
+    lines[#lines + 1] = #items .. " run items:"
+    for _, it in ipairs(items) do
+        lines[#lines + 1] = string.format("  %s x%d  [%s] %s", it.id, it.count, it.class, it.name)
+    end
+    pcall(function()
+        local all = FindAllOf("ValInventoryComponent") or {}
+        local assetsKnown = 0
+        inv.InventoryAssetMap:ForEach(function() assetsKnown = assetsKnown + 1 end)
+        lines[#lines + 1] = string.format("%d inventory components; this one: %d transient ids, %d assets", #all,
+            inv.TransientItemIds:GetArrayNum(), assetsKnown)
+        for _, c in ipairs(all) do lines[#lines + 1] = "  inv " .. c:GetFullName() end
+    end)
+    local pc = chatController()
+    local ps = pc and pc.PlayerState
+    if ps ~= nil and ps:IsValid() then
+        for _, field in ipairs({ "r_PerkIds", "r_AugmentIds", "r_SynergyIds", "r_SpecialtyIds" }) do
+            local ok2, err = pcall(function()
+                local ids = {}
+                ps[field]:ForEach(function(_, id)
+                    local v = id:get()
+                    ids[#ids + 1] = str(v.PrimaryAssetType.Name) .. ":" .. str(v.PrimaryAssetName)
+                end)
+                lines[#lines + 1] = field .. ": " .. table.concat(ids, ", ")
+            end)
+            if not ok2 then lines[#lines + 1] = field .. " failed: " .. tostring(err) end
+        end
+        pcall(function()
+            -- where each run perk/item lives in the inventory, if anywhere
+            local transient = {}
+            inv.TransientItemIds:ForEach(function(_, g) transient[guidKey(g:get())] = true end)
+            local byName = {}
+            inv.InventoryAssetMap:ForEach(function(k, v)
+                local a = v:get()
+                if a ~= nil and a:IsValid() then
+                    byName[str(a:GetFName())] = { guid = k:get(), asset = a, transient = transient[guidKey(k:get())] }
+                end
+            end)
+            ps.r_PerkIds:ForEach(function(_, id)
+                local name = str(id:get().PrimaryAssetName)
+                local e = byName[name]
+                if e then
+                    lines[#lines + 1] = string.format("  %s: in inventory x%d%s [%s]", name, inv:GetItemCount(e.guid),
+                        e.transient and " (transient)" or "", str(e.asset:GetClass():GetFName()))
+                else
+                    local a = nil
+                    pcall(function() a = StaticFindObject("/Game/Items/" .. name) end)
+                    lines[#lines + 1] = "  " .. name .. ": not in the inventory"
+                end
+            end)
+        end)
+        pcall(function()
+            local ok3, ids = pcall(function()
+                local out = {}
+                ps.r_ActivatedIds:ForEach(function(_, g) out[#out + 1] = guidKey(g:get()) end)
+                return out
+            end)
+            lines[#lines + 1] = "r_ActivatedIds: " .. (ok3 and table.concat(ids, ", ") or tostring(ids))
+            local pawn2 = localPawnObject()
+            if pawn2 then
+                local eq2 = {}
+                pawn2.EquippedPerkIds:ForEach(function(_, id) eq2[#eq2 + 1] = str(id:get().PrimaryAssetName) end)
+                lines[#lines + 1] = "character EquippedPerkIds: " .. table.concat(eq2, ", ")
+            end
+        end)
+        pcall(function()
+            local eq = {}
+            ps.r_Equipment:ForEach(function(_, s)
+                local slot = s:get()
+                eq[#eq + 1] = tostring(slot.SlotId) .. "=" .. str(slot.Item.AssetId.PrimaryAssetName) .. " x" .. tostring(slot.Item.Quantity)
+            end)
+            lines[#lines + 1] = "r_Equipment: " .. table.concat(eq, ", ")
+        end)
+    end
+    return lines
+end
+
+local commands = {}
+
+function commands.status() return table.concat(statusLines(), "\n") end
+function commands.probe() return table.concat(probeLines(), "\n") end
+function commands.chat(args) notify(args); return "posted" end
+
+function commands.deathlink(args)
+    return applyDeathLink(args:match("^(%S+)"), "the dev menu")
+end
+
+function commands.mission(args)
+    local key, difficulty = args:match("^(%S+) (%d+)$")
+    if key == nil then return "usage: mission <key> <difficulty>" end
+    if not onBoundSlot then return "not on the Archipelago save slot" end
+    emit("mission " .. key .. " " .. difficulty)
+    return "sent a completion of " .. key .. " on difficulty " .. difficulty
+end
+
+function commands.add(args)
+    local what, n = args:match("^(%a+) (%-?%d+)$")
+    if what == nil or state[what] == nil or what == "applied" then return "usage: add sectors|kills|scrap <n>" end
+    if not onBoundSlot or state.key == nil then return "not on the Archipelago save slot" end
+    state[what] = math.max(0, state[what] + tonumber(n))
+    totalsDirty = true
+    flushTotals()
+    return string.format("%s total is now %d", what, state[what])
+end
+
+-- Grants straight into the save, outside Archipelago (for testing locks and grants).
+function commands.grant(args)
+    local inv = inventory()
+    if inv == nil then return "inventory not ready" end
+    local a = asset(args)
+    if a == nil then return "could not load " .. args end
+    inv:AddInventoryCount(a.AssetId, 1)
+    return "granted " .. str(a.DisplayName) .. " (outside Archipelago)"
+end
+
+function commands.revoke(args)
+    local inv = inventory()
+    if inv == nil then return "inventory not ready" end
+    local a = asset(args)
+    if a == nil then return "could not load " .. args end
+    local have = inv:GetItemCount(a.ItemId)
+    if have <= 0 then return str(a.DisplayName) .. " isn't owned" end
+    inv:RemoveInventoryCount(a.AssetId, have)
+    recentlyGranted[args] = nil
+    return "removed " .. str(a.DisplayName) .. " (Archipelago grants it back within " .. ENSURE_EVERY_S .. " s if received)"
+end
+
+function commands.zone(args)
+    local z, how = args:match("^(%d) (%a+)$")
+    z = tonumber(z)
+    if z == nil or (how ~= "open" and how ~= "close" and how ~= "reset") then return "usage: zone <1-4> open|close|reset" end
+    if inbox.zones == nil then return "zone gating is off in this seed" end
+    if how == "reset" then zoneOverride[z] = nil else zoneOverride[z] = (how == "open") end
+    rebuildMissions = true
+    return "zone " .. z .. ": " .. (how == "reset" and "back to Archipelago" or how)
+end
+
+-- Drops one of the game's own perk-choice pickups at the player. The game's generator picks what's in it, and it
+-- can use up the run's single augment offer (an augment room later in the run may then be empty).
+function commands.bundle()
+    local pc, pawn = chatController(), localPawnObject()
+    if pc == nil or pawn == nil or not inRun() then return "not in a run" end
+    local augments = nonDefault("ValAugmentComponent")
+    if augments == nil then return "no augment component in this level" end
+    augments:SpawnAugmentBundle(pc.PlayerState, pawn, {})
+    return "spawned a perk bundle at your feet"
+end
+
+function commands.regate() rebuildMissions = true; return "rebuilding mission options" end
+function commands.relock() applyLocks(); return "locks reapplied" end
+function commands.unlock() restoreLocks(); return "locks lifted until the next relock, mission start or reload" end
+
+function handleDebug()
+    local text = readFile(DEBUG_FILE)
+    if text == nil then debugLastId = debugLastId or 0; return end
+    local maxSeen = debugLastId or 0
+    for line in text:gmatch("[^\n]+") do
+        local id, name, args = line:match("^(%d+) (%S+) ?(.*)$")
+        id = tonumber(id)
+        if id and debugLastId and id > debugLastId then
+            local command = commands[name]
+            local ok, result = true, "unknown command " .. name
+            if command then ok, result = pcall(command, args) end
+            result = ok and tostring(result) or ("error: " .. tostring(result))
+            debugReply(id, result)
+            if name ~= "status" and name ~= "probe" then notify("[dev] " .. result) end
+        end
+        if id and id > maxSeen then maxSeen = id end
+    end
+    debugLastId = maxSeen
+end
+
+RegisterKeyBind(Key.F10, function() ExecuteInGameThread(function()
+    for _, line in ipairs(statusLines()) do notify(line) end
 end) end)
 
 log("loaded (bridge folder: " .. BRIDGE .. ")")

@@ -7,7 +7,7 @@ import zipfile
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from dzr_launcher import installer, locate, yamlgen  # noqa: E402
+from dzr_launcher import devtools, installer, locate, yamlgen  # noqa: E402
 
 VDF = '''"libraryfolders"
 {
@@ -126,6 +126,33 @@ class TestInstaller(TempDirTest):
     def test_install_apworld(self) -> None:
         target = installer.install_apworld(os.path.join(self.tmp, "Archipelago"), progress=lambda m: None)
         self.assertTrue(target.endswith(os.path.join("custom_worlds", "deadzone_rogue.apworld")))
+
+
+class TestDevtools(TempDirTest):
+    def test_commands_get_increasing_ids_and_the_file_stays_short(self) -> None:
+        win64 = os.path.join(self.tmp, "Win64")
+        first = devtools.send(win64, "status", "zone 2  open")
+        second = devtools.send(win64, *["probe"] * devtools.KEEP_COMMANDS)
+        self.assertLess(first[0], first[1])
+        self.assertLess(first[1], second[0])
+        with open(os.path.join(win64, "APBridge", devtools.COMMANDS_FILE)) as f:
+            lines = f.read().splitlines()
+        self.assertEqual(len(lines), devtools.KEEP_COMMANDS)
+        self.assertEqual(lines[-1], f"{second[-1]} probe")
+
+    def test_replies_after_an_id(self) -> None:
+        win64 = os.path.join(self.tmp, "Win64")
+        self.write("Win64", "APBridge", devtools.REPLIES_FILE, text="5 old\n9 zones open: 1 2\n9 second line\njunk\n")
+        self.assertEqual(devtools.replies(win64, after=5), [(9, "zones open: 1 2"), (9, "second line")])
+        self.assertEqual(devtools.replies(os.path.join(self.tmp, "nope")), [])
+
+    def test_game_data_lists(self) -> None:
+        data = {"missions": [{"key": "M", "name": "Who am I?", "zone": 1, "difficulties": [1, 2]}],
+                "items": {"1": {"name": "Perk: Fire", "grants": ["/Game/P.P"], "mode": "once"},
+                          "2": {"name": "Tech Cache", "grants": ["/Game/T.T"], "mode": "add"},
+                          "3": {"name": "Zone 2 Access", "grants": [], "mode": "once"}}}
+        self.assertEqual(devtools.missions(data), [("Zone 1: Who am I?", "M", [1, 2])])
+        self.assertEqual(devtools.grantable_items(data), {"Perk: Fire": ["/Game/P.P"]})
 
 
 class TestYaml(unittest.TestCase):

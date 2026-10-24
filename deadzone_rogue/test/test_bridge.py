@@ -80,6 +80,8 @@ class TestBridge(unittest.TestCase):
     def test_notes_are_one_line_each(self) -> None:
         text = bridge.render_inbox(1, "s", self.slot_data, [], [], notes=[(5, "Alice sent\nPlasma  to Ethan")])
         self.assertIn("note 5 Alice sent Plasma to Ethan\n", text)
+        text = bridge.render_inbox(1, "s", self.slot_data, [], [], deathlinks=[(7, "lose_scrap", "Alice  B")])
+        self.assertIn("deathlink 7 lose_scrap Alice B\n", text)
 
     def test_inbox_format(self) -> None:
         text = bridge.render_inbox(3, "seed-Ethan", self.slot_data, ["/Game/A.A"], [(0, "once", 1, "/Game/B.B")])
