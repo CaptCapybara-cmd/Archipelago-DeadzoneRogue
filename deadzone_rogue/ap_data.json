@@ -1,0 +1,3499 @@
+{
+ "item_base": 7310000,
+ "location_base": 7320000,
+ "group_pools": {
+  "items": {
+   "Item_ADSSpeed": "/Game/Items/Items/Item_ADSSpeed.Item_ADSSpeed",
+   "Item_ADSSpeed_E": "/Game/Items/Items/Epics/Item_ADSSpeed_E.Item_ADSSpeed_E",
+   "Item_ArmorValue": "/Game/Items/Items/Item_ArmorValue.Item_ArmorValue",
+   "Item_BoostWeaponProcChanceAfterAbility": "/Game/Items/Items/Item_BoostWeaponProcChanceAfterAbility.Item_BoostWeaponProcChanceAfterAbility",
+   "Item_CollectLootOnWeakpointKill": "/Game/Items/Items/Item_CollectLootOnWeakpointKill.Item_CollectLootOnWeakpointKill",
+   "Item_CritChance": "/Game/Items/Items/Item_CritChance.Item_CritChance",
+   "Item_CritChance_E": "/Game/Items/Items/Epics/Item_CritChance_E.Item_CritChance_E",
+   "Item_CritsReduceCooldowns": "/Game/Items/Items/Item_CritsReduceCooldowns.Item_CritsReduceCooldowns",
+   "Item_DamageBoostPerElementalDebuff": "/Game/Items/Items/Item_DamageBoostPerElementalDebuff.Item_DamageBoostPerElementalDebuff",
+   "Item_DamageBoostPerElementalDebuff_E": "/Game/Items/Items/Epics/Item_DamageBoostPerElementalDebuff_E.Item_DamageBoostPerElementalDebuff_E",
+   "Item_DamageBoostWhenKillEnemy": "/Game/Items/Items/Item_DamageBoostWhenKillEnemy.Item_DamageBoostWhenKillEnemy",
+   "Item_DamageBoostWhenKillEnemy_E": "/Game/Items/Items/Epics/Item_DamageBoostWhenKillEnemy_E.Item_DamageBoostWhenKillEnemy_E",
+   "Item_DamageReductionAfterReload": "/Game/Items/Items/Item_DamageReductionAfterReload.Item_DamageReductionAfterReload",
+   "Item_DamageToFlyingEnemies": "/Game/Items/Items/Item_DamageToFlyingEnemies.Item_DamageToFlyingEnemies",
+   "Item_DamageToFlyingEnemies_E": "/Game/Items/Items/Epics/Item_DamageToFlyingEnemies_E.Item_DamageToFlyingEnemies_E",
+   "Item_DamageToFullHealthEnemies": "/Game/Items/Items/Item_DamageToFullHealthEnemies.Item_DamageToFullHealthEnemies",
+   "Item_DamageToFullHealthEnemies_E": "/Game/Items/Items/Epics/Item_DamageToFullHealthEnemies_E.Item_DamageToFullHealthEnemies_E",
+   "Item_DamageToLieutenants": "/Game/Items/Items/Item_DamageToLieutenants.Item_DamageToLieutenants",
+   "Item_DamageToLieutenants_E": "/Game/Items/Items/Epics/Item_DamageToLieutenants_E.Item_DamageToLieutenants_E",
+   "Item_DamageToLowHealthEnemies": "/Game/Items/Items/Item_DamageToLowHealthEnemies.Item_DamageToLowHealthEnemies",
+   "Item_DamageToLowHealthEnemies_E": "/Game/Items/Items/Epics/Item_DamageToLowHealthEnemies_E.Item_DamageToLowHealthEnemies_E",
+   "Item_DamageToMeleeEnemies": "/Game/Items/Items/Item_DamageToMeleeEnemies.Item_DamageToMeleeEnemies",
+   "Item_DamageToMeleeEnemies_E": "/Game/Items/Items/Epics/Item_DamageToMeleeEnemies_E.Item_DamageToMeleeEnemies_E",
+   "Item_DamageToRangedEnemies": "/Game/Items/Items/Item_DamageToRangedEnemies.Item_DamageToRangedEnemies",
+   "Item_DamageToRangedEnemies_E": "/Game/Items/Items/Epics/Item_DamageToRangedEnemies_E.Item_DamageToRangedEnemies_E",
+   "Item_DamageWhileAtFullHealth": "/Game/Items/Items/Item_DamageWhileAtFullHealth.Item_DamageWhileAtFullHealth",
+   "Item_DamageWhileAtFullHealth_E": "/Game/Items/Items/Epics/Item_DamageWhileAtFullHealth_E.Item_DamageWhileAtFullHealth_E",
+   "Item_DashBoostsMeleeDamage": "/Game/Items/Items/Item_DashBoostsMeleeDamage.Item_DashBoostsMeleeDamage",
+   "Item_DashBoostsMeleeDamage_E": "/Game/Items/Items/Epics/Item_DashBoostsMeleeDamage_E.Item_DashBoostsMeleeDamage_E",
+   "Item_DashBoostsMoveSpeed": "/Game/Items/Items/Item_DashBoostsMoveSpeed.Item_DashBoostsMoveSpeed",
+   "Item_DashReload": "/Game/Items/Items/Item_DashReload.Item_DashReload",
+   "Item_DebuffCausesStagger": "/Game/Items/Items/Item_DebuffCausesStagger.Item_DebuffCausesStagger",
+   "Item_DiscountOnFirstWeaponPurchase": "/Game/Items/Items/Item_DiscountOnFirstWeaponPurchase.Item_DiscountOnFirstWeaponPurchase",
+   "Item_ElementalDamageBuff": "/Game/Items/Items/Item_ElementalDamageBuff.Item_ElementalDamageBuff",
+   "Item_ElementalDamageBuff_E": "/Game/Items/Items/Epics/Item_ElementalDamageBuff_E.Item_ElementalDamageBuff_E",
+   "Item_ElementalDamageSynergy_Damage": "/Game/Items/Items/Item_ElementalDamageSynergy_Damage.Item_ElementalDamageSynergy_Damage",
+   "Item_ElementalDamageSynergy_Damage_E": "/Game/Items/Items/Epics/Item_ElementalDamageSynergy_Damage_E.Item_ElementalDamageSynergy_Damage_E",
+   "Item_ElementalDamageSynergy_Stagger": "/Game/Items/Items/Item_ElementalDamageSynergy_Stagger.Item_ElementalDamageSynergy_Stagger",
+   "Item_ElementalDebuffIncreasedWeakpointDamage": "/Game/Items/Items/Item_ElementalDebuffIncreasedWeakpointDamage.Item_ElementalDebuffIncreasedWeakpointDamage",
+   "Item_ElementalDebuffIncreasedWeakpointDamage_E": "/Game/Items/Items/Epics/Item_ElementalDebuffIncreasedWeakpointDamage_E.Item_ElementalDebuffIncreasedWeakpointDamage_E",
+   "Item_ElementalDebuffPotency": "/Game/Items/Items/Item_ElementalDebuffPotency.Item_ElementalDebuffPotency",
+   "Item_ElementalDebuffsCauseDot": "/Game/Items/Items/Item_ElementalDebuffsCauseDot.Item_ElementalDebuffsCauseDot",
+   "Item_EmptyMagFasterReload": "/Game/Items/Items/Item_EmptyMagFasterReload.Item_EmptyMagFasterReload",
+   "Item_ExplosionDamage": "/Game/Items/Items/Item_ExplosionDamage.Item_ExplosionDamage",
+   "Item_ExplosionDamage_E": "/Game/Items/Items/Epics/Item_ExplosionDamage_E.Item_ExplosionDamage_E",
+   "Item_ExplosionRadius": "/Game/Items/Items/Item_ExplosionRadius.Item_ExplosionRadius",
+   "Item_ExtraAffixReroll": "/Game/Items/Items/Item_ExtraAffixReroll.Item_ExtraAffixReroll",
+   "Item_ExtraAffixReroll_E": "/Game/Items/Items/Epics/Item_ExtraAffixReroll_E.Item_ExtraAffixReroll_E",
+   "Item_ExtraGrenadeCharge": "/Game/Items/Items/Item_ExtraGrenadeCharge.Item_ExtraGrenadeCharge",
+   "Item_ExtraMaxHealth": "/Game/Items/Items/Item_ExtraMaxHealth.Item_ExtraMaxHealth",
+   "Item_ExtraMaxShield": "/Game/Items/Items/Item_ExtraMaxShield.Item_ExtraMaxShield",
+   "Item_ExtraQualityUpgrade": "/Game/Items/Items/Item_ExtraQualityUpgrade.Item_ExtraQualityUpgrade",
+   "Item_ExtraQualityUpgrade_E": "/Game/Items/Items/Epics/Item_ExtraQualityUpgrade_E.Item_ExtraQualityUpgrade_E",
+   "Item_FarEnemyDamage": "/Game/Items/Items/Item_FarEnemyDamage.Item_FarEnemyDamage",
+   "Item_FarEnemyDamageMitigation": "/Game/Items/Items/Item_FarEnemyDamageMitigation.Item_FarEnemyDamageMitigation",
+   "Item_FarEnemyDamageMitigation_U": "/Game/Items/Items/Epics/Item_FarEnemyDamageMitigation_U.Item_FarEnemyDamageMitigation_U",
+   "Item_FarEnemyDamage_E": "/Game/Items/Items/Epics/Item_FarEnemyDamage_E.Item_FarEnemyDamage_E",
+   "Item_FireRateReloadSpeed": "/Game/Items/Items/Item_FireRateReloadSpeed.Item_FireRateReloadSpeed",
+   "Item_FireRate_E": "/Game/Items/Items/Epics/Item_FireRate_E.Item_FireRate_E",
+   "Item_FirstShotDamage": "/Game/Items/Items/Item_FirstShotDamage.Item_FirstShotDamage",
+   "Item_FirstShotDamage_E": "/Game/Items/Items/Epics/Item_FirstShotDamage_E.Item_FirstShotDamage_E",
+   "Item_FullShieldGiveResistance": "/Game/Items/Items/Item_FullShieldGiveResistance.Item_FullShieldGiveResistance",
+   "Item_GrenadeKillRestoresAmmo": "/Game/Items/Items/Item_GrenadeKillRestoresAmmo.Item_GrenadeKillRestoresAmmo",
+   "Item_GrenadeSingleTargetBonusDamage": "/Game/Items/Items/Item_GrenadeSingleTargetBonusDamage.Item_GrenadeSingleTargetBonusDamage",
+   "Item_GrenadeSingleTargetBonusDamage_E": "/Game/Items/Items/Epics/Item_GrenadeSingleTargetBonusDamage_E.Item_GrenadeSingleTargetBonusDamage_E",
+   "Item_GrenadeWeakensEnemies": "/Game/Items/Items/Item_GrenadeWeakensEnemies.Item_GrenadeWeakensEnemies",
+   "Item_HealthOrbRestoreShield": "/Game/Items/Items/Item_HealthOrbRestoreShield.Item_HealthOrbRestoreShield",
+   "Item_HipfireReduceSpread": "/Game/Items/Items/Item_HipfireReduceSpread.Item_HipfireReduceSpread",
+   "Item_IncreaseCritDamage_DecreaseNonCritDamage": "/Game/Items/Items/Item_IncreaseCritDamage_DecreaseNonCritDamage.Item_IncreaseCritDamage_DecreaseNonCritDamage",
+   "Item_IncreaseCritDamage_E": "/Game/Items/Items/Epics/Item_IncreaseCritDamage_E.Item_IncreaseCritDamage_E",
+   "Item_IncreaseMeleeSwingSpeed": "/Game/Items/Items/Item_IncreaseMeleeSwingSpeed.Item_IncreaseMeleeSwingSpeed",
+   "Item_IncreaseSwapSpeed": "/Game/Items/Items/Item_IncreaseSwapSpeed.Item_IncreaseSwapSpeed",
+   "Item_IncreasedBarrelDamage": "/Game/Items/Items/Item_IncreasedBarrelDamage.Item_IncreasedBarrelDamage",
+   "Item_KilledEnemiesSpreadDebuffs": "/Game/Items/Items/Item_KilledEnemiesSpreadDebuffs.Item_KilledEnemiesSpreadDebuffs",
+   "Item_KillingDebuffedEnemy_BoostsElementDamage": "/Game/Items/Items/Item_KillingDebuffedEnemy_BoostsElementDamage.Item_KillingDebuffedEnemy_BoostsElementDamage",
+   "Item_KillingDebuffedEnemy_BoostsElementDamage_E": "/Game/Items/Items/Epics/Item_KillingDebuffedEnemy_BoostsElementDamage_E.Item_KillingDebuffedEnemy_BoostsElementDamage_E",
+   "Item_KillsReduceReload": "/Game/Items/Items/Item_KillsReduceReload.Item_KillsReduceReload",
+   "Item_LastShotsPlusCrit": "/Game/Items/Items/Item_LastShotsPlusCrit.Item_LastShotsPlusCrit",
+   "Item_LastShotsPlusCrit_E": "/Game/Items/Items/Epics/Item_LastShotsPlusCrit_E.Item_LastShotsPlusCrit_E",
+   "Item_MagazineSize": "/Game/Items/Items/Item_MagazineSize.Item_MagazineSize",
+   "Item_MagazineSize_E": "/Game/Items/Items/Epics/Item_MagazineSize_E.Item_MagazineSize_E",
+   "Item_MeleeStaggersLowHealth": "/Game/Items/Items/Item_MeleeStaggersLowHealth.Item_MeleeStaggersLowHealth",
+   "Item_MoveSpeedBuffOnDamaged": "/Game/Items/Items/Item_MoveSpeedBuffOnDamaged.Item_MoveSpeedBuffOnDamaged",
+   "Item_NearbyEnemyDamage": "/Game/Items/Items/Item_NearbyEnemyDamage.Item_NearbyEnemyDamage",
+   "Item_NearbyEnemyDamage_E": "/Game/Items/Items/Epics/Item_NearbyEnemyDamage_E.Item_NearbyEnemyDamage_E",
+   "Item_NonWeakpointDamage": "/Game/Items/Items/Item_NonWeakpointDamage.Item_NonWeakpointDamage",
+   "Item_NonWeakpointDamage_E": "/Game/Items/Items/Epics/Item_NonWeakpointDamage_E.Item_NonWeakpointDamage_E",
+   "Item_OrbHealing": "/Game/Items/Items/Item_OrbHealing.Item_OrbHealing",
+   "Item_PickupRange": "/Game/Items/Items/Item_PickupRange.Item_PickupRange",
+   "Item_PickupRange_E": "/Game/Items/Items/Epics/Item_PickupRange_E.Item_PickupRange_E",
+   "Item_PreventDamageWhenLowHealth": "/Game/Items/Items/Item_PreventDamageWhenLowHealth.Item_PreventDamageWhenLowHealth",
+   "Item_ProcChanceBoostForCloseRange": "/Game/Items/Items/Item_ProcChanceBoostForCloseRange.Item_ProcChanceBoostForCloseRange",
+   "Item_ProcChanceIncrease": "/Game/Items/Items/Item_ProcChanceIncrease.Item_ProcChanceIncrease",
+   "Item_ProcChanceIncrease_E": "/Game/Items/Items/Epics/Item_ProcChanceIncrease_E.Item_ProcChanceIncrease_E",
+   "Item_ReducedGrenadeCooldown": "/Game/Items/Items/Item_ReducedGrenadeCooldown.Item_ReducedGrenadeCooldown",
+   "Item_ReducedGrenadeCooldown_E": "/Game/Items/Items/Epics/Item_ReducedGrenadeCooldown_E.Item_ReducedGrenadeCooldown_E",
+   "Item_ReflectDamage": "/Game/Items/Items/Item_ReflectDamage.Item_ReflectDamage",
+   "Item_ReflectDamage_E": "/Game/Items/Items/Epics/Item_ReflectDamage_E.Item_ReflectDamage_E",
+   "Item_ReloadBoostsFireRate": "/Game/Items/Items/Item_ReloadBoostsFireRate.Item_ReloadBoostsFireRate",
+   "Item_ResilientShield": "/Game/Items/Items/Item_ResilientShield.Item_ResilientShield",
+   "Item_RestoreBulletsOnDistanceTraveled": "/Game/Items/Items/Item_RestoreBulletsOnDistanceTraveled.Item_RestoreBulletsOnDistanceTraveled",
+   "Item_ScrapAmmo": "/Game/Items/Items/Item_ScrapAmmo.Item_ScrapAmmo",
+   "Item_ScrapDrop": "/Game/Items/Items/Item_ScrapDrop.Item_ScrapDrop",
+   "Item_ShieldBreakDamageImmunity": "/Game/Items/Items/Item_ShieldBreakDamageImmunity.Item_ShieldBreakDamageImmunity",
+   "Item_SlowDescentBoostAirborneDamage": "/Game/Items/Items/Item_SlowDescentBoostAirborneDamage.Item_SlowDescentBoostAirborneDamage",
+   "Item_SlowDescentBoostAirborneDamage_E": "/Game/Items/Items/Epics/Item_SlowDescentBoostAirborneDamage_E.Item_SlowDescentBoostAirborneDamage_E",
+   "Item_SpeedBoostNearEnemies": "/Game/Items/Items/Item_SpeedBoostNearEnemies.Item_SpeedBoostNearEnemies",
+   "Item_SwapBoostsFireRate": "/Game/Items/Items/Item_SwapBoostsFireRate.Item_SwapBoostsFireRate",
+   "Item_SwapGrantsSpeedAndDodge": "/Game/Items/Items/Item_SwapGrantsSpeedAndDodge.Item_SwapGrantsSpeedAndDodge",
+   "Item_WeakpointDamageBoost": "/Game/Items/Items/Item_WeakpointDamageBoost.Item_WeakpointDamageBoost",
+   "Item_WeakpointDamageBoost_E": "/Game/Items/Items/Epics/Item_WeakpointDamageBoost_E.Item_WeakpointDamageBoost_E",
+   "Item_WeakpointKillsBoostNextShot": "/Game/Items/Items/Item_WeakpointKillsBoostNextShot.Item_WeakpointKillsBoostNextShot",
+   "Item_WeakpointKillsBoostNextShot_E": "/Game/Items/Items/Epics/Item_WeakpointKillsBoostNextShot_E.Item_WeakpointKillsBoostNextShot_E",
+   "Item_WeakpointShotsStaggerEnemy": "/Game/Items/Items/Item_WeakpointShotsStaggerEnemy.Item_WeakpointShotsStaggerEnemy"
+  },
+  "masteries": {
+   "Component_Tech_AllElementDamage": "/Game/Items/Components/Tech/Component_Tech_AllElementDamage.Component_Tech_AllElementDamage",
+   "Component_Tech_AllWeaponsDamage": "/Game/Items/Components/Tech/Component_Tech_AllWeaponsDamage.Component_Tech_AllWeaponsDamage",
+   "Component_Tech_GrenadeAoE": "/Game/Items/Components/Tech/Component_Tech_GrenadeAoE.Component_Tech_GrenadeAoE",
+   "Component_Tech_GrenadeCooldown": "/Game/Items/Components/Tech/Component_Tech_GrenadeCooldown.Component_Tech_GrenadeCooldown",
+   "Component_Tech_GrenadeDamage": "/Game/Items/Components/Tech/Component_Tech_GrenadeDamage.Component_Tech_GrenadeDamage",
+   "Component_Tech_HealthOrbDropRate": "/Game/Items/Components/Tech/Component_Tech_HealthOrbDropRate.Component_Tech_HealthOrbDropRate",
+   "Component_Tech_HealthOrbValue": "/Game/Items/Components/Tech/Component_Tech_HealthOrbValue.Component_Tech_HealthOrbValue",
+   "Component_Tech_Magnetizer": "/Game/Items/Components/Tech/Component_Tech_Magnetizer.Component_Tech_Magnetizer",
+   "Component_Tech_MaxHealth": "/Game/Items/Components/Tech/Component_Tech_MaxHealth.Component_Tech_MaxHealth",
+   "Component_Tech_MaxShield": "/Game/Items/Components/Tech/Component_Tech_MaxShield.Component_Tech_MaxShield",
+   "Component_Tech_MeleeDamage": "/Game/Items/Components/Tech/Component_Tech_MeleeDamage.Component_Tech_MeleeDamage",
+   "Component_Tech_PrimaryDamage": "/Game/Items/Components/Tech/Component_Tech_PrimaryDamage.Component_Tech_PrimaryDamage",
+   "Component_Tech_ProcChance": "/Game/Items/Components/Tech/Component_Tech_ProcChance.Component_Tech_ProcChance",
+   "Component_Tech_ScrapPickup": "/Game/Items/Components/Tech/Component_Tech_ScrapPickup.Component_Tech_ScrapPickup",
+   "Component_Tech_SecondaryDamage": "/Game/Items/Components/Tech/Component_Tech_SecondaryDamage.Component_Tech_SecondaryDamage",
+   "Component_Tech_ShieldRechargeDelay": "/Game/Items/Components/Tech/Component_Tech_ShieldRechargeDelay.Component_Tech_ShieldRechargeDelay",
+   "Component_Tech_ShieldRechargeRate": "/Game/Items/Components/Tech/Component_Tech_ShieldRechargeRate.Component_Tech_ShieldRechargeRate",
+   "Component_Tech_SprintSpeed": "/Game/Items/Components/Tech/Component_Tech_SprintSpeed.Component_Tech_SprintSpeed",
+   "Component_Tech_TechPickup": "/Game/Items/Components/Tech/Component_Tech_TechPickup.Component_Tech_TechPickup"
+  },
+  "superior_items": {
+   "Component_SuperItem_AmmoRefundDamage": "/Game/Items/Components/SuperItems/Component_SuperItem_AmmoRefundDamage.Component_SuperItem_AmmoRefundDamage",
+   "Component_SuperItem_ConsecutiveCritDamage": "/Game/Items/Components/SuperItems/Component_SuperItem_ConsecutiveCritDamage.Component_SuperItem_ConsecutiveCritDamage",
+   "Component_SuperItem_ConsecutiveWeakpoints": "/Game/Items/Components/SuperItems/Component_SuperItem_ConsecutiveWeakpoints.Component_SuperItem_ConsecutiveWeakpoints",
+   "Component_SuperItem_CritsBoostCritDamage": "/Game/Items/Components/SuperItems/Component_SuperItem_CritsBoostCritDamage.Component_SuperItem_CritsBoostCritDamage",
+   "Component_SuperItem_DamageBoostPerEnemyWithElementalDebuff": "/Game/Items/Components/SuperItems/Component_SuperItem_DamageBoostPerEnemyWithElementalDebuff.Component_SuperItem_DamageBoostPerEnemyWithElementalDebuff",
+   "Component_SuperItem_DamageBoostPerMissingHealth": "/Game/Items/Components/SuperItems/Component_SuperItem_DamageBoostPerMissingHealth.Component_SuperItem_DamageBoostPerMissingHealth",
+   "Component_SuperItem_DebuffConfettiExplosion": "/Game/Items/Components/SuperItems/Component_SuperItem_DebuffConfettiExplosion.Component_SuperItem_DebuffConfettiExplosion",
+   "Component_SuperItem_DelayedShotBonus": "/Game/Items/Components/SuperItems/Component_SuperItem_DelayedShotBonus.Component_SuperItem_DelayedShotBonus",
+   "Component_SuperItem_ExcessCritChanceDamage": "/Game/Items/Components/SuperItems/Component_SuperItem_ExcessCritChanceDamage.Component_SuperItem_ExcessCritChanceDamage",
+   "Component_SuperItem_ExitStealthBonuses": "/Game/Items/Components/SuperItems/Component_SuperItem_ExitStealthBonuses.Component_SuperItem_ExitStealthBonuses",
+   "Component_SuperItem_FirstShotReloadedBulletDamage": "/Game/Items/Components/SuperItems/Component_SuperItem_FirstShotReloadedBulletDamage.Component_SuperItem_FirstShotReloadedBulletDamage",
+   "Component_SuperItem_FreeShotsAfterKill": "/Game/Items/Components/SuperItems/Component_SuperItem_FreeShotsAfterKill.Component_SuperItem_FreeShotsAfterKill",
+   "Component_SuperItem_GetAmmoWhenProcElement": "/Game/Items/Components/SuperItems/Component_SuperItem_GetAmmoWhenProcElement.Component_SuperItem_GetAmmoWhenProcElement",
+   "Component_SuperItem_GrenadeDamageToHealthyEnemies": "/Game/Items/Components/SuperItems/Component_SuperItem_GrenadeDamageToHealthyEnemies.Component_SuperItem_GrenadeDamageToHealthyEnemies",
+   "Component_SuperItem_GrenadeDoubleDamage": "/Game/Items/Components/SuperItems/Component_SuperItem_GrenadeDoubleDamage.Component_SuperItem_GrenadeDoubleDamage",
+   "Component_SuperItem_GrenadeProcWeapons": "/Game/Items/Components/SuperItems/Component_SuperItem_GrenadeProcWeapons.Component_SuperItem_GrenadeProcWeapons",
+   "Component_SuperItem_GrenadeSecondExplosion": "/Game/Items/Components/SuperItems/Component_SuperItem_GrenadeSecondExplosion.Component_SuperItem_GrenadeSecondExplosion",
+   "Component_SuperItem_HealthBasedDamage": "/Game/Items/Components/SuperItems/Component_SuperItem_HealthBasedDamage.Component_SuperItem_HealthBasedDamage",
+   "Component_SuperItem_HealthOrbGrantsImmunity": "/Game/Items/Components/SuperItems/Component_SuperItem_HealthOrbGrantsImmunity.Component_SuperItem_HealthOrbGrantsImmunity",
+   "Component_SuperItem_IncreasedFirstWeakpointDamage": "/Game/Items/Components/SuperItems/Component_SuperItem_IncreasedFirstWeakpointDamage.Component_SuperItem_IncreasedFirstWeakpointDamage",
+   "Component_SuperItem_IncreasedProcChanceAndDamage": "/Game/Items/Components/SuperItems/Component_SuperItem_IncreasedProcChanceAndDamage.Component_SuperItem_IncreasedProcChanceAndDamage",
+   "Component_SuperItem_IncreasedWeakpointCritDamage": "/Game/Items/Components/SuperItems/Component_SuperItem_IncreasedWeakpointCritDamage.Component_SuperItem_IncreasedWeakpointCritDamage",
+   "Component_SuperItem_KillRestoresBullet_NotKillBoostsDamage": "/Game/Items/Components/SuperItems/Component_SuperItem_KillRestoresBullet_NotKillBoostsDamage.Component_SuperItem_KillRestoresBullet_NotKillBoostsDamage",
+   "Component_SuperItem_KillsGrantBarrier": "/Game/Items/Components/SuperItems/Component_SuperItem_KillsGrantBarrier.Component_SuperItem_KillsGrantBarrier",
+   "Component_SuperItem_KillsGrantDamage": "/Game/Items/Components/SuperItems/Component_SuperItem_KillsGrantDamage.Component_SuperItem_KillsGrantDamage",
+   "Component_SuperItem_KillstreakGrantsSmartBullets": "/Game/Items/Components/SuperItems/Component_SuperItem_KillstreakGrantsSmartBullets.Component_SuperItem_KillstreakGrantsSmartBullets",
+   "Component_SuperItem_MarkNearbyEnemiesOnKill": "/Game/Items/Components/SuperItems/Component_SuperItem_MarkNearbyEnemiesOnKill.Component_SuperItem_MarkNearbyEnemiesOnKill",
+   "Component_SuperItem_MeleeProcPrimary": "/Game/Items/Components/SuperItems/Component_SuperItem_MeleeProcPrimary.Component_SuperItem_MeleeProcPrimary",
+   "Component_SuperItem_MeleeProcSecondary": "/Game/Items/Components/SuperItems/Component_SuperItem_MeleeProcSecondary.Component_SuperItem_MeleeProcSecondary",
+   "Component_SuperItem_MissedShotAmmoRefund": "/Game/Items/Components/SuperItems/Component_SuperItem_MissedShotAmmoRefund.Component_SuperItem_MissedShotAmmoRefund",
+   "Component_SuperItem_MissingBulletsIncreaseDamage": "/Game/Items/Components/SuperItems/Component_SuperItem_MissingBulletsIncreaseDamage.Component_SuperItem_MissingBulletsIncreaseDamage",
+   "Component_SuperItem_OverhealingRestoresShields": "/Game/Items/Components/SuperItems/Component_SuperItem_OverhealingRestoresShields.Component_SuperItem_OverhealingRestoresShields",
+   "Component_SuperItem_PlasmaOrbGenerator": "/Game/Items/Components/SuperItems/Component_SuperItem_PlasmaOrbGenerator.Component_SuperItem_PlasmaOrbGenerator",
+   "Component_SuperItem_PrimaryProcMelee": "/Game/Items/Components/SuperItems/Component_SuperItem_PrimaryProcMelee.Component_SuperItem_PrimaryProcMelee",
+   "Component_SuperItem_PrimaryProcSecondary": "/Game/Items/Components/SuperItems/Component_SuperItem_PrimaryProcSecondary.Component_SuperItem_PrimaryProcSecondary",
+   "Component_SuperItem_ProcTriggersAdditionalDamage": "/Game/Items/Components/SuperItems/Component_SuperItem_ProcTriggersAdditionalDamage.Component_SuperItem_ProcTriggersAdditionalDamage",
+   "Component_SuperItem_SecondaryProcMelee": "/Game/Items/Components/SuperItems/Component_SuperItem_SecondaryProcMelee.Component_SuperItem_SecondaryProcMelee",
+   "Component_SuperItem_SecondaryProcPrimary": "/Game/Items/Components/SuperItems/Component_SuperItem_SecondaryProcPrimary.Component_SuperItem_SecondaryProcPrimary",
+   "Component_SuperItem_ShieldBoostsGrenadeDamage": "/Game/Items/Components/SuperItems/Component_SuperItem_ShieldBoostsGrenadeDamage.Component_SuperItem_ShieldBoostsGrenadeDamage",
+   "Component_SuperItem_SmartRocket": "/Game/Items/Components/SuperItems/Component_SuperItem_SmartRocket.Component_SuperItem_SmartRocket"
+  }
+ },
+ "missions": [
+  {
+   "key": "Mission_Zone1_Story",
+   "name": "Who am I?",
+   "guid": "32F53B5B-49FC7A91-146A52B7-B9A554E0",
+   "zone": 1,
+   "difficulties": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ]
+  },
+  {
+   "key": "Mission_Challenge_Mission04",
+   "name": "Close Quarters",
+   "guid": "7FCC3D78-4DC9D521-FB8EFE86-46D04D81",
+   "zone": 1,
+   "difficulties": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ]
+  },
+  {
+   "key": "Mission_Challenge_Mission05",
+   "name": "Uniform Chaos",
+   "guid": "E5A571FF-42B9B0DF-0C1A81A8-42BF32FE",
+   "zone": 1,
+   "difficulties": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ]
+  },
+  {
+   "key": "Mission_Challenge_Mission10",
+   "name": "Pinpoint",
+   "guid": "392466ED-46BFF273-1F49CD92-0FE23D35",
+   "zone": 1,
+   "difficulties": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ]
+  },
+  {
+   "key": "Mission_Challenge_Mission16",
+   "name": "Last Stand",
+   "guid": "BD0C9F0F-44AD7BA3-43C94FA0-DA7EF867",
+   "zone": 1,
+   "difficulties": [
+    2
+   ]
+  },
+  {
+   "key": "Mission_Zone2_Story",
+   "name": "Keep it Together",
+   "guid": "532C669F-423794F9-C36B9CBA-CA751479",
+   "zone": 2,
+   "difficulties": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ]
+  },
+  {
+   "key": "Mission_Challenge_Mission06",
+   "name": "Bugged",
+   "guid": "1CFA317D-4E0185E7-6C6FFAA2-E824C30A",
+   "zone": 2,
+   "difficulties": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ]
+  },
+  {
+   "key": "Mission_Challenge_Mission07",
+   "name": "Glass Cannon",
+   "guid": "77399DB5-4E80D2C4-3C06469D-BF31C46A",
+   "zone": 2,
+   "difficulties": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ]
+  },
+  {
+   "key": "Mission_Challenge_Mission08",
+   "name": "Headhunter",
+   "guid": "146F4FDF-4AD97DFA-5B6C92A5-8ED255AE",
+   "zone": 2,
+   "difficulties": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ]
+  },
+  {
+   "key": "Mission_Challenge_Mission09",
+   "name": "Dual Duel",
+   "guid": "5C7053E9-4CCEBF5F-A5B82EB3-FC640FBF",
+   "zone": 2,
+   "difficulties": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ]
+  },
+  {
+   "key": "Mission_Challenge_Mission11",
+   "name": "Uniform Chaos II",
+   "guid": "5F551A61-4AC0854E-1BFFFE86-393E45F3",
+   "zone": 2,
+   "difficulties": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ]
+  },
+  {
+   "key": "Mission_Challenge_Mission13",
+   "name": "Gauntlet",
+   "guid": "9ACA7158-4561C09B-F450A9BB-AE3C80C0",
+   "zone": 2,
+   "difficulties": [
+    2
+   ]
+  },
+  {
+   "key": "Mission_Challenge_Mission17",
+   "name": "Redline",
+   "guid": "73DADEBB-4B8EAE18-425538BA-EB0B3E87",
+   "zone": 2,
+   "difficulties": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ]
+  },
+  {
+   "key": "Mission_Zone3_Story",
+   "name": "Get Out of My Head",
+   "guid": "27C2A73C-4E64301A-22CFC48E-36C1346E",
+   "zone": 3,
+   "difficulties": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ]
+  },
+  {
+   "key": "Mission_Challenge_Mission12",
+   "name": "Spearhead",
+   "guid": "13CEA72E-41BBBA09-89D7C3AF-65FFC9B2",
+   "zone": 3,
+   "difficulties": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ]
+  },
+  {
+   "key": "Mission_Challenge_Mission14",
+   "name": "Legion",
+   "guid": "4F67B999-4A74ADAC-B1EA3B84-6E9317FA",
+   "zone": 3,
+   "difficulties": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ]
+  },
+  {
+   "key": "Mission_Challenge_Mission15",
+   "name": "Crossfire",
+   "guid": "96F66819-429E208A-9EA7E59A-37934066",
+   "zone": 3,
+   "difficulties": [
+    4
+   ]
+  },
+  {
+   "key": "Mission_Challenge_Mission18",
+   "name": "Killing Time",
+   "guid": "F7C33D04-48DE9E4A-4F5F82A4-5A72F798",
+   "zone": 3,
+   "difficulties": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ]
+  },
+  {
+   "key": "Mission_Challenge_Mission19",
+   "name": "Uniform Chaos III",
+   "guid": "0023DAFE-420E1911-9E7AEC8A-801DB34B",
+   "zone": 3,
+   "difficulties": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ]
+  },
+  {
+   "key": "Mission_Challenge_Mission20",
+   "name": "Harbinger",
+   "guid": "E97B9FDA-4AE7CBF3-6943A1A5-DDA6001B",
+   "zone": 3,
+   "difficulties": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ]
+  },
+  {
+   "key": "Mission_Challenge_Mission21",
+   "name": "Triggerline",
+   "guid": "C77411D4-4C67F6BC-25449096-6C3E3D06",
+   "zone": 3,
+   "difficulties": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ]
+  },
+  {
+   "key": "Mission_Challenge_Mission22",
+   "name": "The Long Haul",
+   "guid": "447CE7AE-48481AC2-4A98B2B9-B18F4344",
+   "zone": 3,
+   "difficulties": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ]
+  },
+  {
+   "key": "Mission_Zone4_Introduction",
+   "name": "Prelude",
+   "guid": "BA906212-4BCC84E3-B8A43895-0AA008D7",
+   "zone": 4,
+   "difficulties": [
+    1
+   ]
+  },
+  {
+   "key": "Mission_Zone4_Story1",
+   "name": "Distress Call",
+   "guid": "41B4438D-44A1CA55-2EE0E4A1-D7ED6EA4",
+   "zone": 4,
+   "difficulties": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ]
+  },
+  {
+   "key": "Mission_Zone4_Story2",
+   "name": "Getting Answers",
+   "guid": "91F60D88-472E3070-D8A0F591-62667953",
+   "zone": 4,
+   "difficulties": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ]
+  },
+  {
+   "key": "Mission_Challenge_Mission23",
+   "name": "Passage",
+   "guid": "B55CE036-493437E5-89F5D085-7C4AA771",
+   "zone": 4,
+   "difficulties": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ]
+  },
+  {
+   "key": "Mission_Challenge_Mission24",
+   "name": "Vector Danger",
+   "guid": "B0376434-47FC9817-64D7729E-5C7B3C6F",
+   "zone": 4,
+   "difficulties": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ]
+  },
+  {
+   "key": "Mission_Challenge_Mission26",
+   "name": "Battleline",
+   "guid": "52CA5FFF-445A123F-005AC29A-2DA974BD",
+   "zone": 4,
+   "difficulties": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ]
+  },
+  {
+   "key": "Mission_Challenge_Mission27",
+   "name": "Uniform Chaos IV",
+   "guid": "6C154B51-479A95C9-E629ECA4-260694E7",
+   "zone": 4,
+   "difficulties": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ]
+  },
+  {
+   "key": "Mission_Challenge_Mission28",
+   "name": "Ultra Nightmare",
+   "guid": "78827751-45643660-64D4A69A-EBDAAAE6",
+   "zone": 4,
+   "difficulties": [
+    5
+   ]
+  },
+  {
+   "key": "Mission_Challenge_Mission29",
+   "name": "Uniform Chaos V",
+   "guid": "FDECF669-406D84EC-9AB47AA3-D1006EBA",
+   "zone": 4,
+   "difficulties": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ]
+  },
+  {
+   "key": "Mission_Challenge_Mission31",
+   "name": "Glass Cannon II",
+   "guid": "30777901-4FA0456A-465A6EA8-F8FDD59F",
+   "zone": 4,
+   "difficulties": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ]
+  }
+ ],
+ "items": {
+  "7310000": {
+   "name": "Zone 2 Access",
+   "category": "progression",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310001": {
+   "name": "Zone 3 Access",
+   "category": "progression",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310002": {
+   "name": "Zone 4 Access",
+   "category": "progression",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310003": {
+   "name": "Progressive Difficulty",
+   "category": "progression",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310100": {
+   "name": "Perk: Ironblood Engine",
+   "category": "perk",
+   "grants": [
+    "/Game/Items/Perks/Perk_Armor_Parent.Perk_Armor_Parent"
+   ],
+   "lock": [
+    "/Game/Items/Perks/Perk_Armor_Parent.Perk_Armor_Parent"
+   ],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310101": {
+   "name": "Perk: Chromatic Cells",
+   "category": "perk",
+   "grants": [
+    "/Game/Items/Perks/Perk_Chroma_Parent.Perk_Chroma_Parent"
+   ],
+   "lock": [
+    "/Game/Items/Perks/Perk_Chroma_Parent.Perk_Chroma_Parent"
+   ],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310102": {
+   "name": "Perk: Combat Instincts",
+   "category": "perk",
+   "grants": [
+    "/Game/Items/Perks/Perk_CombatStyle_Parent.Perk_CombatStyle_Parent"
+   ],
+   "lock": [
+    "/Game/Items/Perks/Perk_CombatStyle_Parent.Perk_CombatStyle_Parent"
+   ],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310103": {
+   "name": "Perk: Cryo",
+   "category": "perk",
+   "grants": [
+    "/Game/Items/Perks/Perk_Cryo_Parent.Perk_Cryo_Parent"
+   ],
+   "lock": [
+    "/Game/Items/Perks/Perk_Cryo_Parent.Perk_Cryo_Parent"
+   ],
+   "default_locked": false,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310104": {
+   "name": "Perk: Fire",
+   "category": "perk",
+   "grants": [
+    "/Game/Items/Perks/Perk_Fire_Parent.Perk_Fire_Parent"
+   ],
+   "lock": [
+    "/Game/Items/Perks/Perk_Fire_Parent.Perk_Fire_Parent"
+   ],
+   "default_locked": false,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310105": {
+   "name": "Perk: Grenade Cascade",
+   "category": "perk",
+   "grants": [
+    "/Game/Items/Perks/Perk_Grenade_Parent.Perk_Grenade_Parent"
+   ],
+   "lock": [
+    "/Game/Items/Perks/Perk_Grenade_Parent.Perk_Grenade_Parent"
+   ],
+   "default_locked": false,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310106": {
+   "name": "Perk: Lead Head",
+   "category": "perk",
+   "grants": [
+    "/Game/Items/Perks/Perk_Gunner_Parent.Perk_Gunner_Parent"
+   ],
+   "lock": [
+    "/Game/Items/Perks/Perk_Gunner_Parent.Perk_Gunner_Parent"
+   ],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310107": {
+   "name": "Perk: Vitalizer",
+   "category": "perk",
+   "grants": [
+    "/Game/Items/Perks/Perk_Health_Parent.Perk_Health_Parent"
+   ],
+   "lock": [
+    "/Game/Items/Perks/Perk_Health_Parent.Perk_Health_Parent"
+   ],
+   "default_locked": false,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310108": {
+   "name": "Perk: Lightning",
+   "category": "perk",
+   "grants": [
+    "/Game/Items/Perks/Perk_Lightning_Parent.Perk_Lightning_Parent"
+   ],
+   "lock": [
+    "/Game/Items/Perks/Perk_Lightning_Parent.Perk_Lightning_Parent"
+   ],
+   "default_locked": false,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310109": {
+   "name": "Perk: Ghost Blade",
+   "category": "perk",
+   "grants": [
+    "/Game/Items/Perks/Perk_Ninja_Parent.Perk_Ninja_Parent"
+   ],
+   "lock": [
+    "/Game/Items/Perks/Perk_Ninja_Parent.Perk_Ninja_Parent"
+   ],
+   "default_locked": false,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310110": {
+   "name": "Perk: Bot Companion",
+   "category": "perk",
+   "grants": [
+    "/Game/Items/Perks/Perk_Pet_Parent.Perk_Pet_Parent"
+   ],
+   "lock": [
+    "/Game/Items/Perks/Perk_Pet_Parent.Perk_Pet_Parent"
+   ],
+   "default_locked": false,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310111": {
+   "name": "Perk: Plasma",
+   "category": "perk",
+   "grants": [
+    "/Game/Items/Unlocks/ItemUnlock_PlasmaElement.ItemUnlock_PlasmaElement",
+    "/Game/Items/Perks/Perk_Plasma_Parent.Perk_Plasma_Parent"
+   ],
+   "lock": [
+    "/Game/Items/Perks/Perk_Plasma_Parent.Perk_Plasma_Parent"
+   ],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310112": {
+   "name": "Perk: Psionic",
+   "category": "perk",
+   "grants": [
+    "/Game/Items/Unlocks/ItemUnlock_PsionicElement.ItemUnlock_PsionicElement",
+    "/Game/Items/Perks/Perk_Psionic_Parent.Perk_Psionic_Parent"
+   ],
+   "lock": [
+    "/Game/Items/Perks/Perk_Psionic_Parent.Perk_Psionic_Parent"
+   ],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310113": {
+   "name": "Perk: Radiation",
+   "category": "perk",
+   "grants": [
+    "/Game/Items/Unlocks/ItemUnlock_RadiationElement.ItemUnlock_RadiationElement",
+    "/Game/Items/Perks/Perk_Radiation_Parent.Perk_Radiation_Parent"
+   ],
+   "lock": [
+    "/Game/Items/Perks/Perk_Radiation_Parent.Perk_Radiation_Parent"
+   ],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310114": {
+   "name": "Perk: Shield Optimizer",
+   "category": "perk",
+   "grants": [
+    "/Game/Items/Perks/Perk_Shield_Parent.Perk_Shield_Parent"
+   ],
+   "lock": [
+    "/Game/Items/Perks/Perk_Shield_Parent.Perk_Shield_Parent"
+   ],
+   "default_locked": false,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310115": {
+   "name": "Perk: Void",
+   "category": "perk",
+   "grants": [
+    "/Game/Items/Perks/Perk_Void_Parent.Perk_Void_Parent"
+   ],
+   "lock": [
+    "/Game/Items/Perks/Perk_Void_Parent.Perk_Void_Parent"
+   ],
+   "default_locked": false,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310116": {
+   "name": "Perk: Locked & Loaded",
+   "category": "perk",
+   "grants": [
+    "/Game/Items/Perks/Perk_WeaponMaster_Parent.Perk_WeaponMaster_Parent"
+   ],
+   "lock": [
+    "/Game/Items/Perks/Perk_WeaponMaster_Parent.Perk_WeaponMaster_Parent"
+   ],
+   "default_locked": false,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310200": {
+   "name": "Augment: Aiming: Crit",
+   "category": "augment",
+   "grants": [
+    "/Game/Items/Augments/Augment_Aiming_Crit.Augment_Aiming_Crit"
+   ],
+   "lock": [
+    "/Game/Items/Augments/Augment_Aiming_Crit.Augment_Aiming_Crit"
+   ],
+   "default_locked": false,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310201": {
+   "name": "Augment: Aiming: Elemental",
+   "category": "augment",
+   "grants": [
+    "/Game/Items/Augments/Augment_Aiming_Elemental.Augment_Aiming_Elemental"
+   ],
+   "lock": [
+    "/Game/Items/Augments/Augment_Aiming_Elemental.Augment_Aiming_Elemental"
+   ],
+   "default_locked": false,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310202": {
+   "name": "Augment: Aiming: Weakpoint",
+   "category": "augment",
+   "grants": [
+    "/Game/Items/Augments/Augment_Aiming_Weakpoint.Augment_Aiming_Weakpoint"
+   ],
+   "lock": [
+    "/Game/Items/Augments/Augment_Aiming_Weakpoint.Augment_Aiming_Weakpoint"
+   ],
+   "default_locked": false,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310203": {
+   "name": "Augment: Ammo: Crit",
+   "category": "augment",
+   "grants": [
+    "/Game/Items/Augments/Augment_Ammo_Crit.Augment_Ammo_Crit"
+   ],
+   "lock": [
+    "/Game/Items/Augments/Augment_Ammo_Crit.Augment_Ammo_Crit"
+   ],
+   "default_locked": false,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310204": {
+   "name": "Augment: Ammo: Elemental",
+   "category": "augment",
+   "grants": [
+    "/Game/Items/Augments/Augment_Ammo_Elemental.Augment_Ammo_Elemental"
+   ],
+   "lock": [
+    "/Game/Items/Augments/Augment_Ammo_Elemental.Augment_Ammo_Elemental"
+   ],
+   "default_locked": false,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310205": {
+   "name": "Augment: Ammo: Weakpoint",
+   "category": "augment",
+   "grants": [
+    "/Game/Items/Augments/Augment_Ammo_Weakpoint.Augment_Ammo_Weakpoint"
+   ],
+   "lock": [
+    "/Game/Items/Augments/Augment_Ammo_Weakpoint.Augment_Ammo_Weakpoint"
+   ],
+   "default_locked": false,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310206": {
+   "name": "Augment: Hipfire: Crit",
+   "category": "augment",
+   "grants": [
+    "/Game/Items/Augments/Augment_Hipfire_Crit.Augment_Hipfire_Crit"
+   ],
+   "lock": [
+    "/Game/Items/Augments/Augment_Hipfire_Crit.Augment_Hipfire_Crit"
+   ],
+   "default_locked": false,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310207": {
+   "name": "Augment: Hipfire: Elemental",
+   "category": "augment",
+   "grants": [
+    "/Game/Items/Augments/Augment_Hipfire_Elemental.Augment_Hipfire_Elemental"
+   ],
+   "lock": [
+    "/Game/Items/Augments/Augment_Hipfire_Elemental.Augment_Hipfire_Elemental"
+   ],
+   "default_locked": false,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310208": {
+   "name": "Augment: Hipfire: Weakpoint",
+   "category": "augment",
+   "grants": [
+    "/Game/Items/Augments/Augment_Hipfire_Weakpoint.Augment_Hipfire_Weakpoint"
+   ],
+   "lock": [
+    "/Game/Items/Augments/Augment_Hipfire_Weakpoint.Augment_Hipfire_Weakpoint"
+   ],
+   "default_locked": false,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310209": {
+   "name": "Augment: Long Range: Crit",
+   "category": "augment",
+   "grants": [
+    "/Game/Items/Augments/Augment_LongRange_Crit.Augment_LongRange_Crit"
+   ],
+   "lock": [
+    "/Game/Items/Augments/Augment_LongRange_Crit.Augment_LongRange_Crit"
+   ],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310210": {
+   "name": "Augment: Long Range: Elemental",
+   "category": "augment",
+   "grants": [
+    "/Game/Items/Augments/Augment_LongRange_Elemental.Augment_LongRange_Elemental"
+   ],
+   "lock": [
+    "/Game/Items/Augments/Augment_LongRange_Elemental.Augment_LongRange_Elemental"
+   ],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310211": {
+   "name": "Augment: Long Range: Weakpoint",
+   "category": "augment",
+   "grants": [
+    "/Game/Items/Augments/Augment_LongRange_Weakpoint.Augment_LongRange_Weakpoint"
+   ],
+   "lock": [
+    "/Game/Items/Augments/Augment_LongRange_Weakpoint.Augment_LongRange_Weakpoint"
+   ],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310212": {
+   "name": "Augment: Short Range: Crit",
+   "category": "augment",
+   "grants": [
+    "/Game/Items/Augments/Augment_ShortRange_Crit.Augment_ShortRange_Crit"
+   ],
+   "lock": [
+    "/Game/Items/Augments/Augment_ShortRange_Crit.Augment_ShortRange_Crit"
+   ],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310213": {
+   "name": "Augment: Short Range: Elemental",
+   "category": "augment",
+   "grants": [
+    "/Game/Items/Augments/Augment_ShortRange_Elemental.Augment_ShortRange_Elemental"
+   ],
+   "lock": [
+    "/Game/Items/Augments/Augment_ShortRange_Elemental.Augment_ShortRange_Elemental"
+   ],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310214": {
+   "name": "Augment: Short Range: Weakpoint",
+   "category": "augment",
+   "grants": [
+    "/Game/Items/Augments/Augment_ShortRange_Weakpoint.Augment_ShortRange_Weakpoint"
+   ],
+   "lock": [
+    "/Game/Items/Augments/Augment_ShortRange_Weakpoint.Augment_ShortRange_Weakpoint"
+   ],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310300": {
+   "name": "Weapon: AR-70 Vanguard",
+   "category": "weapon",
+   "grants": [
+    "/Game/Items/Weapons/Upgradeable/Item_Gun_AssaultRifle_Upgradeable.Item_Gun_AssaultRifle_Upgradeable"
+   ],
+   "lock": [
+    "/Game/Items/Weapons/Upgradeable/Item_Gun_AssaultRifle_Upgradeable.Item_Gun_AssaultRifle_Upgradeable"
+   ],
+   "default_locked": false,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310301": {
+   "name": "Weapon: MPK-17 Snapdragon",
+   "category": "weapon",
+   "grants": [
+    "/Game/Items/Weapons/Upgradeable/Item_Gun_AutoPistol_Upgradeable.Item_Gun_AutoPistol_Upgradeable"
+   ],
+   "lock": [
+    "/Game/Items/Weapons/Upgradeable/Item_Gun_AutoPistol_Upgradeable.Item_Gun_AutoPistol_Upgradeable"
+   ],
+   "default_locked": false,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310302": {
+   "name": "Weapon: AS-12 Rampage",
+   "category": "weapon",
+   "grants": [
+    "/Game/Items/Weapons/Upgradeable/Item_Gun_AutoShotgun_Upgradeable.Item_Gun_AutoShotgun_Upgradeable"
+   ],
+   "lock": [
+    "/Game/Items/Weapons/Upgradeable/Item_Gun_AutoShotgun_Upgradeable.Item_Gun_AutoShotgun_Upgradeable"
+   ],
+   "default_locked": false,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310303": {
+   "name": "Weapon: Tritek-3SB",
+   "category": "weapon",
+   "grants": [
+    "/Game/Items/Weapons/Upgradeable/Item_Gun_BurstPistol_Upgradeable.Item_Gun_BurstPistol_Upgradeable"
+   ],
+   "lock": [
+    "/Game/Items/Weapons/Upgradeable/Item_Gun_BurstPistol_Upgradeable.Item_Gun_BurstPistol_Upgradeable"
+   ],
+   "default_locked": false,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310304": {
+   "name": "Weapon: BP-44 Harrier",
+   "category": "weapon",
+   "grants": [
+    "/Game/Items/Weapons/Upgradeable/Item_Gun_BurstRifle_Upgradeable.Item_Gun_BurstRifle_Upgradeable"
+   ],
+   "lock": [
+    "/Game/Items/Weapons/Upgradeable/Item_Gun_BurstRifle_Upgradeable.Item_Gun_BurstRifle_Upgradeable"
+   ],
+   "default_locked": false,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310305": {
+   "name": "Weapon: Venator Mk. IV",
+   "category": "weapon",
+   "grants": [
+    "/Game/Items/Weapons/Upgradeable/Item_Gun_Crossbow_Upgradeable.Item_Gun_Crossbow_Upgradeable"
+   ],
+   "lock": [
+    "/Game/Items/Weapons/Upgradeable/Item_Gun_Crossbow_Upgradeable.Item_Gun_Crossbow_Upgradeable"
+   ],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310306": {
+   "name": "Weapon: PDS Plex-1",
+   "category": "weapon",
+   "grants": [
+    "/Game/Items/Weapons/Upgradeable/Item_Gun_CyBiter_Upgradeable.Item_Gun_CyBiter_Upgradeable"
+   ],
+   "lock": [
+    "/Game/Items/Weapons/Upgradeable/Item_Gun_CyBiter_Upgradeable.Item_Gun_CyBiter_Upgradeable"
+   ],
+   "default_locked": false,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310307": {
+   "name": "Weapon: BAS-24 Warden",
+   "category": "weapon",
+   "grants": [
+    "/Game/Items/Weapons/Upgradeable/Item_Gun_DBShotgun_Upgradeable.Item_Gun_DBShotgun_Upgradeable"
+   ],
+   "lock": [
+    "/Game/Items/Weapons/Upgradeable/Item_Gun_DBShotgun_Upgradeable.Item_Gun_DBShotgun_Upgradeable"
+   ],
+   "default_locked": false,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310308": {
+   "name": "Weapon: MP18-L Revenant",
+   "category": "weapon",
+   "grants": [
+    "/Game/Items/Weapons/Upgradeable/Item_Gun_DMR_Upgradeable.Item_Gun_DMR_Upgradeable"
+   ],
+   "lock": [
+    "/Game/Items/Weapons/Upgradeable/Item_Gun_DMR_Upgradeable.Item_Gun_DMR_Upgradeable"
+   ],
+   "default_locked": false,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310309": {
+   "name": "Weapon: Iron Squires",
+   "category": "weapon",
+   "grants": [
+    "/Game/Items/Weapons/Upgradeable/Item_Gun_DualSMG_Upgradeable.Item_Gun_DualSMG_Upgradeable"
+   ],
+   "lock": [
+    "/Game/Items/Weapons/Upgradeable/Item_Gun_DualSMG_Upgradeable.Item_Gun_DualSMG_Upgradeable"
+   ],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310310": {
+   "name": "Weapon: Darkseer EX2",
+   "category": "weapon",
+   "grants": [
+    "/Game/Items/Weapons/Upgradeable/Item_Gun_EnergyDMR_Upgradeable.Item_Gun_EnergyDMR_Upgradeable"
+   ],
+   "lock": [
+    "/Game/Items/Weapons/Upgradeable/Item_Gun_EnergyDMR_Upgradeable.Item_Gun_EnergyDMR_Upgradeable"
+   ],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310311": {
+   "name": "Weapon: VLR-72 Tempest",
+   "category": "weapon",
+   "grants": [
+    "/Game/Items/Weapons/Upgradeable/Item_Gun_EnergyLMG_Upgradeable.Item_Gun_EnergyLMG_Upgradeable"
+   ],
+   "lock": [
+    "/Game/Items/Weapons/Upgradeable/Item_Gun_EnergyLMG_Upgradeable.Item_Gun_EnergyLMG_Upgradeable"
+   ],
+   "default_locked": false,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310312": {
+   "name": "Weapon: VLR Arcblade",
+   "category": "weapon",
+   "grants": [
+    "/Game/Items/Weapons/Upgradeable/Item_Gun_EnergySMG_Upgradeable.Item_Gun_EnergySMG_Upgradeable"
+   ],
+   "lock": [
+    "/Game/Items/Weapons/Upgradeable/Item_Gun_EnergySMG_Upgradeable.Item_Gun_EnergySMG_Upgradeable"
+   ],
+   "default_locked": false,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310313": {
+   "name": "Weapon: HC8 Overlord",
+   "category": "weapon",
+   "grants": [
+    "/Game/Items/Weapons/Upgradeable/Item_Gun_HandCannon_Upgradeable.Item_Gun_HandCannon_Upgradeable"
+   ],
+   "lock": [
+    "/Game/Items/Weapons/Upgradeable/Item_Gun_HandCannon_Upgradeable.Item_Gun_HandCannon_Upgradeable"
+   ],
+   "default_locked": false,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310314": {
+   "name": "Weapon: HK-44 Warrior",
+   "category": "weapon",
+   "grants": [
+    "/Game/Items/Weapons/Upgradeable/Item_Gun_HeavyAR_Upgradeable.Item_Gun_HeavyAR_Upgradeable"
+   ],
+   "lock": [
+    "/Game/Items/Weapons/Upgradeable/Item_Gun_HeavyAR_Upgradeable.Item_Gun_HeavyAR_Upgradeable"
+   ],
+   "default_locked": false,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310315": {
+   "name": "Weapon: HK-92 Warbringer",
+   "category": "weapon",
+   "grants": [
+    "/Game/Items/Weapons/Upgradeable/Item_Gun_HeavyLMG_Upgradeable.Item_Gun_HeavyLMG_Upgradeable"
+   ],
+   "lock": [
+    "/Game/Items/Weapons/Upgradeable/Item_Gun_HeavyLMG_Upgradeable.Item_Gun_HeavyLMG_Upgradeable"
+   ],
+   "default_locked": false,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310316": {
+   "name": "Weapon: HR6C Juggernaut",
+   "category": "weapon",
+   "grants": [
+    "/Game/Items/Weapons/Upgradeable/Item_Gun_LMG_Upgradeable.Item_Gun_LMG_Upgradeable"
+   ],
+   "lock": [
+    "/Game/Items/Weapons/Upgradeable/Item_Gun_LMG_Upgradeable.Item_Gun_LMG_Upgradeable"
+   ],
+   "default_locked": false,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310317": {
+   "name": "Weapon: Sidekick-3 AP",
+   "category": "weapon",
+   "grants": [
+    "/Game/Items/Weapons/Upgradeable/Item_Gun_Magnum_Upgradeable.Item_Gun_Magnum_Upgradeable"
+   ],
+   "lock": [
+    "/Game/Items/Weapons/Upgradeable/Item_Gun_Magnum_Upgradeable.Item_Gun_Magnum_Upgradeable"
+   ],
+   "default_locked": false,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310318": {
+   "name": "Weapon: Titan-10 Hellstorm",
+   "category": "weapon",
+   "grants": [
+    "/Game/Items/Weapons/Upgradeable/Item_Gun_Minigun_Upgradeable.Item_Gun_Minigun_Upgradeable"
+   ],
+   "lock": [
+    "/Game/Items/Weapons/Upgradeable/Item_Gun_Minigun_Upgradeable.Item_Gun_Minigun_Upgradeable"
+   ],
+   "default_locked": false,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310319": {
+   "name": "Weapon: Ion Driver",
+   "category": "weapon",
+   "grants": [
+    "/Game/Items/Weapons/Upgradeable/Item_Gun_PhaseRifle_Upgradeable.Item_Gun_PhaseRifle_Upgradeable"
+   ],
+   "lock": [
+    "/Game/Items/Weapons/Upgradeable/Item_Gun_PhaseRifle_Upgradeable.Item_Gun_PhaseRifle_Upgradeable"
+   ],
+   "default_locked": false,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310320": {
+   "name": "Weapon: Plasma Cycler",
+   "category": "weapon",
+   "grants": [
+    "/Game/Items/Weapons/Upgradeable/Item_Gun_PlasmaCycler_Upgradeable.Item_Gun_PlasmaCycler_Upgradeable"
+   ],
+   "lock": [
+    "/Game/Items/Weapons/Upgradeable/Item_Gun_PlasmaCycler_Upgradeable.Item_Gun_PlasmaCycler_Upgradeable"
+   ],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310321": {
+   "name": "Weapon: PR14x Aeos",
+   "category": "weapon",
+   "grants": [
+    "/Game/Items/Weapons/Upgradeable/Item_Gun_PulsePistol_Upgradeable.Item_Gun_PulsePistol_Upgradeable"
+   ],
+   "lock": [
+    "/Game/Items/Weapons/Upgradeable/Item_Gun_PulsePistol_Upgradeable.Item_Gun_PulsePistol_Upgradeable"
+   ],
+   "default_locked": false,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310322": {
+   "name": "Weapon: PR20x Pulsar",
+   "category": "weapon",
+   "grants": [
+    "/Game/Items/Weapons/Upgradeable/Item_Gun_PulseRifle_Upgradeable.Item_Gun_PulseRifle_Upgradeable"
+   ],
+   "lock": [
+    "/Game/Items/Weapons/Upgradeable/Item_Gun_PulseRifle_Upgradeable.Item_Gun_PulseRifle_Upgradeable"
+   ],
+   "default_locked": false,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310323": {
+   "name": "Weapon: T30 Nova Burst",
+   "category": "weapon",
+   "grants": [
+    "/Game/Items/Weapons/Upgradeable/Item_Gun_PulseShotgun_Upgradeable.Item_Gun_PulseShotgun_Upgradeable"
+   ],
+   "lock": [
+    "/Game/Items/Weapons/Upgradeable/Item_Gun_PulseShotgun_Upgradeable.Item_Gun_PulseShotgun_Upgradeable"
+   ],
+   "default_locked": false,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310324": {
+   "name": "Weapon: MPK-47 Blitz",
+   "category": "weapon",
+   "grants": [
+    "/Game/Items/Weapons/Upgradeable/Item_Gun_SMG_Upgradeable.Item_Gun_SMG_Upgradeable"
+   ],
+   "lock": [
+    "/Game/Items/Weapons/Upgradeable/Item_Gun_SMG_Upgradeable.Item_Gun_SMG_Upgradeable"
+   ],
+   "default_locked": false,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310325": {
+   "name": "Weapon: M-150 Headhunter",
+   "category": "weapon",
+   "grants": [
+    "/Game/Items/Weapons/Upgradeable/Item_Gun_Sniper_Headhunter_Upgradeable.Item_Gun_Sniper_Headhunter_Upgradeable"
+   ],
+   "lock": [
+    "/Game/Items/Weapons/Upgradeable/Item_Gun_Sniper_Headhunter_Upgradeable.Item_Gun_Sniper_Headhunter_Upgradeable"
+   ],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310326": {
+   "name": "Weapon: M-100 Crosspoint",
+   "category": "weapon",
+   "grants": [
+    "/Game/Items/Weapons/Upgradeable/Item_Gun_Sniper_Upgradeable.Item_Gun_Sniper_Upgradeable"
+   ],
+   "lock": [
+    "/Game/Items/Weapons/Upgradeable/Item_Gun_Sniper_Upgradeable.Item_Gun_Sniper_Upgradeable"
+   ],
+   "default_locked": false,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310327": {
+   "name": "Weapon: Hammerhead MK9",
+   "category": "weapon",
+   "grants": [
+    "/Game/Items/Weapons/Upgradeable/Item_Gun_SwitchbackMK9_Upgradeable.Item_Gun_SwitchbackMK9_Upgradeable"
+   ],
+   "lock": [
+    "/Game/Items/Weapons/Upgradeable/Item_Gun_SwitchbackMK9_Upgradeable.Item_Gun_SwitchbackMK9_Upgradeable"
+   ],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310328": {
+   "name": "Weapon: Energy Axe",
+   "category": "weapon",
+   "grants": [
+    "/Game/Items/Weapons/Upgradeable/Item_QuickMelee_Axe.Item_QuickMelee_Axe"
+   ],
+   "lock": [
+    "/Game/Items/Weapons/Upgradeable/Item_QuickMelee_Axe.Item_QuickMelee_Axe"
+   ],
+   "default_locked": false,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310329": {
+   "name": "Weapon: Knife",
+   "category": "weapon",
+   "grants": [
+    "/Game/Items/Weapons/Upgradeable/Item_QuickMelee_Knife.Item_QuickMelee_Knife"
+   ],
+   "lock": [
+    "/Game/Items/Weapons/Upgradeable/Item_QuickMelee_Knife.Item_QuickMelee_Knife"
+   ],
+   "default_locked": false,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310330": {
+   "name": "Weapon: Arc Lance",
+   "category": "weapon",
+   "grants": [
+    "/Game/Items/Weapons/Upgradeable/Item_QuickMelee_Polearm.Item_QuickMelee_Polearm"
+   ],
+   "lock": [
+    "/Game/Items/Weapons/Upgradeable/Item_QuickMelee_Polearm.Item_QuickMelee_Polearm"
+   ],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310400": {
+   "name": "Epic Beginnings",
+   "category": "unlock",
+   "grants": [
+    "/Game/Items/Unlocks/ItemUnlock_ItemBundle_GiveEpic.ItemUnlock_ItemBundle_GiveEpic"
+   ],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310401": {
+   "name": "Augmented Fate",
+   "category": "unlock",
+   "grants": [
+    "/Game/Items/Unlocks/ItemUnlock_RerollAugments.ItemUnlock_RerollAugments"
+   ],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310402": {
+   "name": "Equipped Fate",
+   "category": "unlock",
+   "grants": [
+    "/Game/Items/Unlocks/ItemUnlock_RerollEquipment.ItemUnlock_RerollEquipment"
+   ],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310403": {
+   "name": "Curated Fate",
+   "category": "unlock",
+   "grants": [
+    "/Game/Items/Unlocks/ItemUnlock_RerollItem.ItemUnlock_RerollItem"
+   ],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310404": {
+   "name": "Intentional Fate",
+   "category": "unlock",
+   "grants": [
+    "/Game/Items/Unlocks/ItemUnlock_RerollPerk.ItemUnlock_RerollPerk"
+   ],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310405": {
+   "name": "Superior Fate",
+   "category": "unlock",
+   "grants": [
+    "/Game/Items/Unlocks/ItemUnlock_RerollSuperItem.ItemUnlock_RerollSuperItem"
+   ],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310406": {
+   "name": "Fabricator Restock",
+   "category": "unlock",
+   "grants": [
+    "/Game/Items/Unlocks/ItemUnlock_ShopRestock_Scrap.ItemUnlock_ShopRestock_Scrap"
+   ],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310407": {
+   "name": "Tier 10 Tech Upgrades",
+   "category": "unlock",
+   "grants": [
+    "/Game/Items/Unlocks/ItemUnlock_TechUpgradeLevel10.ItemUnlock_TechUpgradeLevel10"
+   ],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310408": {
+   "name": "Progressive Loot Orb Tech Reroll",
+   "category": "unlock",
+   "grants": [
+    "/Game/Items/Unlocks/ItemUnlock_RerollLootOrb_TechA.ItemUnlock_RerollLootOrb_TechA",
+    "/Game/Items/Unlocks/ItemUnlock_RerollLootOrb_TechB.ItemUnlock_RerollLootOrb_TechB",
+    "/Game/Items/Unlocks/ItemUnlock_RerollLootOrb_TechC.ItemUnlock_RerollLootOrb_TechC"
+   ],
+   "lock": [],
+   "default_locked": true,
+   "mode": "progressive",
+   "amount": 1
+  },
+  "7310409": {
+   "name": "Progressive Fabricator Tech Restock",
+   "category": "unlock",
+   "grants": [
+    "/Game/Items/Unlocks/ItemUnlock_ShopRestock_TechA.ItemUnlock_ShopRestock_TechA",
+    "/Game/Items/Unlocks/ItemUnlock_ShopRestock_TechB.ItemUnlock_ShopRestock_TechB",
+    "/Game/Items/Unlocks/ItemUnlock_ShopRestock_TechC.ItemUnlock_ShopRestock_TechC"
+   ],
+   "lock": [],
+   "default_locked": true,
+   "mode": "progressive",
+   "amount": 1
+  },
+  "7310700": {
+   "name": "Synergy Component: Bladesinger",
+   "category": "synergy_component",
+   "grants": [
+    "/Game/Items/Components/Synergies/Component_Synergy_Bladesinger.Component_Synergy_Bladesinger"
+   ],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310701": {
+   "name": "Synergy Component: Bleed Glitch",
+   "category": "synergy_component",
+   "grants": [
+    "/Game/Items/Components/Synergies/Component_Synergy_BleedGlitch.Component_Synergy_BleedGlitch"
+   ],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310702": {
+   "name": "Synergy Component: Blood of Conduction",
+   "category": "synergy_component",
+   "grants": [
+    "/Game/Items/Components/Synergies/Component_Synergy_BloodOfConduction.Component_Synergy_BloodOfConduction"
+   ],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310703": {
+   "name": "Synergy Component: Cascade Field",
+   "category": "synergy_component",
+   "grants": [
+    "/Game/Items/Components/Synergies/Component_Synergy_CascadeField.Component_Synergy_CascadeField"
+   ],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310704": {
+   "name": "Synergy Component: Circuit Disruption",
+   "category": "synergy_component",
+   "grants": [
+    "/Game/Items/Components/Synergies/Component_Synergy_CircuitDisruption.Component_Synergy_CircuitDisruption"
+   ],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310705": {
+   "name": "Synergy Component: Conduction Arc",
+   "category": "synergy_component",
+   "grants": [
+    "/Game/Items/Components/Synergies/Component_Synergy_ConductionArc.Component_Synergy_ConductionArc"
+   ],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310706": {
+   "name": "Synergy Component: Core Splitter",
+   "category": "synergy_component",
+   "grants": [
+    "/Game/Items/Components/Synergies/Component_Synergy_CoreSplitter.Component_Synergy_CoreSplitter"
+   ],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310707": {
+   "name": "Synergy Component: Crimson Drive",
+   "category": "synergy_component",
+   "grants": [
+    "/Game/Items/Components/Synergies/Component_Synergy_CrimsonDrive.Component_Synergy_CrimsonDrive"
+   ],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310708": {
+   "name": "Synergy Component: Crown of Flames",
+   "category": "synergy_component",
+   "grants": [
+    "/Game/Items/Components/Synergies/Component_Synergy_CrownOfFlames.Component_Synergy_CrownOfFlames"
+   ],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310709": {
+   "name": "Synergy Component: Crystalline Concentration",
+   "category": "synergy_component",
+   "grants": [
+    "/Game/Items/Components/Synergies/Component_Synergy_CrystallineConcentration.Component_Synergy_CrystallineConcentration"
+   ],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310710": {
+   "name": "Synergy Component: Deadman's Frenzy",
+   "category": "synergy_component",
+   "grants": [
+    "/Game/Items/Components/Synergies/Component_Synergy_DeadmansFrenzy.Component_Synergy_DeadmansFrenzy"
+   ],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310711": {
+   "name": "Synergy Component: Dome Shield",
+   "category": "synergy_component",
+   "grants": [
+    "/Game/Items/Components/Synergies/Component_Synergy_DomeShield.Component_Synergy_DomeShield"
+   ],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310712": {
+   "name": "Synergy Component: Dynamicism",
+   "category": "synergy_component",
+   "grants": [
+    "/Game/Items/Components/Synergies/Component_Synergy_Dynamicism.Component_Synergy_Dynamicism"
+   ],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310713": {
+   "name": "Synergy Component: Elemental Ascendant",
+   "category": "synergy_component",
+   "grants": [
+    "/Game/Items/Components/Synergies/Component_Synergy_ElementalAscendant.Component_Synergy_ElementalAscendant"
+   ],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310714": {
+   "name": "Synergy Component: Engineer",
+   "category": "synergy_component",
+   "grants": [
+    "/Game/Items/Components/Synergies/Component_Synergy_Engineer.Component_Synergy_Engineer"
+   ],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310715": {
+   "name": "Synergy Component: Force of Will",
+   "category": "synergy_component",
+   "grants": [
+    "/Game/Items/Components/Synergies/Component_Synergy_ForceOfWill.Component_Synergy_ForceOfWill"
+   ],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310716": {
+   "name": "Synergy Component: Fortress",
+   "category": "synergy_component",
+   "grants": [
+    "/Game/Items/Components/Synergies/Component_Synergy_Fortress.Component_Synergy_Fortress"
+   ],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310717": {
+   "name": "Synergy Component: Fracture Chain",
+   "category": "synergy_component",
+   "grants": [
+    "/Game/Items/Components/Synergies/Component_Synergy_FractureChain.Component_Synergy_FractureChain"
+   ],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310718": {
+   "name": "Synergy Component: Hollowpoint Rebound",
+   "category": "synergy_component",
+   "grants": [
+    "/Game/Items/Components/Synergies/Component_Synergy_HollowpointRebound.Component_Synergy_HollowpointRebound"
+   ],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310719": {
+   "name": "Synergy Component: Jackpot",
+   "category": "synergy_component",
+   "grants": [
+    "/Game/Items/Components/Synergies/Component_Synergy_Jackpot.Component_Synergy_Jackpot"
+   ],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310720": {
+   "name": "Synergy Component: Jug Head",
+   "category": "synergy_component",
+   "grants": [
+    "/Game/Items/Components/Synergies/Component_Synergy_JugHead.Component_Synergy_JugHead"
+   ],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310721": {
+   "name": "Synergy Component: Logic Override",
+   "category": "synergy_component",
+   "grants": [
+    "/Game/Items/Components/Synergies/Component_Synergy_LogicOverride.Component_Synergy_LogicOverride"
+   ],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310722": {
+   "name": "Synergy Component: Lord of Lightning",
+   "category": "synergy_component",
+   "grants": [
+    "/Game/Items/Components/Synergies/Component_Synergy_LordOfLightning.Component_Synergy_LordOfLightning"
+   ],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310723": {
+   "name": "Synergy Component: Mantle of Decay",
+   "category": "synergy_component",
+   "grants": [
+    "/Game/Items/Components/Synergies/Component_Synergy_MantleOfDecay.Component_Synergy_MantleOfDecay"
+   ],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310724": {
+   "name": "Synergy Component: Prism Mag",
+   "category": "synergy_component",
+   "grants": [
+    "/Game/Items/Components/Synergies/Component_Synergy_PrismMag.Component_Synergy_PrismMag"
+   ],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310725": {
+   "name": "Synergy Component: Rail Gunner",
+   "category": "synergy_component",
+   "grants": [
+    "/Game/Items/Components/Synergies/Component_Synergy_RailGunner.Component_Synergy_RailGunner"
+   ],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310726": {
+   "name": "Synergy Component: Regeneration",
+   "category": "synergy_component",
+   "grants": [
+    "/Game/Items/Components/Synergies/Component_Synergy_Regeneration.Component_Synergy_Regeneration"
+   ],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310727": {
+   "name": "Synergy Component: Remote Execution",
+   "category": "synergy_component",
+   "grants": [
+    "/Game/Items/Components/Synergies/Component_Synergy_RemoteExecution.Component_Synergy_RemoteExecution"
+   ],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310728": {
+   "name": "Synergy Component: Rocket Man",
+   "category": "synergy_component",
+   "grants": [
+    "/Game/Items/Components/Synergies/Component_Synergy_RocketMan.Component_Synergy_RocketMan"
+   ],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310729": {
+   "name": "Synergy Component: Scopebreaker Halo",
+   "category": "synergy_component",
+   "grants": [
+    "/Game/Items/Components/Synergies/Component_Synergy_ScopebreakerHalo.Component_Synergy_ScopebreakerHalo"
+   ],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310730": {
+   "name": "Synergy Component: Thermal Lock",
+   "category": "synergy_component",
+   "grants": [
+    "/Game/Items/Components/Synergies/Component_Synergy_ThermalLock.Component_Synergy_ThermalLock"
+   ],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310731": {
+   "name": "Synergy Component: Throne of Ice",
+   "category": "synergy_component",
+   "grants": [
+    "/Game/Items/Components/Synergies/Component_Synergy_ThroneOfIce.Component_Synergy_ThroneOfIce"
+   ],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310732": {
+   "name": "Synergy Component: Vestiges of Darkness",
+   "category": "synergy_component",
+   "grants": [
+    "/Game/Items/Components/Synergies/Component_Synergy_VestigesOfDarkness.Component_Synergy_VestigesOfDarkness"
+   ],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311000": {
+   "name": "Item Pack 1",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311001": {
+   "name": "Item Pack 2",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311002": {
+   "name": "Item Pack 3",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311003": {
+   "name": "Item Pack 4",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311004": {
+   "name": "Item Pack 5",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311005": {
+   "name": "Item Pack 6",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311006": {
+   "name": "Item Pack 7",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311007": {
+   "name": "Item Pack 8",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311008": {
+   "name": "Item Pack 9",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311009": {
+   "name": "Item Pack 10",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311010": {
+   "name": "Item Pack 11",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311011": {
+   "name": "Item Pack 12",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311012": {
+   "name": "Item Pack 13",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311013": {
+   "name": "Item Pack 14",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311014": {
+   "name": "Item Pack 15",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311015": {
+   "name": "Item Pack 16",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311016": {
+   "name": "Item Pack 17",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311017": {
+   "name": "Item Pack 18",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311018": {
+   "name": "Item Pack 19",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311019": {
+   "name": "Item Pack 20",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311020": {
+   "name": "Item Pack 21",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311021": {
+   "name": "Item Pack 22",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311022": {
+   "name": "Item Pack 23",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311023": {
+   "name": "Item Pack 24",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311024": {
+   "name": "Item Pack 25",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311025": {
+   "name": "Item Pack 26",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311026": {
+   "name": "Item Pack 27",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311027": {
+   "name": "Item Pack 28",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311028": {
+   "name": "Item Pack 29",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311029": {
+   "name": "Item Pack 30",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311030": {
+   "name": "Item Pack 31",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311031": {
+   "name": "Item Pack 32",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311032": {
+   "name": "Item Pack 33",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311033": {
+   "name": "Item Pack 34",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311034": {
+   "name": "Item Pack 35",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311035": {
+   "name": "Item Pack 36",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311036": {
+   "name": "Item Pack 37",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311037": {
+   "name": "Item Pack 38",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311038": {
+   "name": "Item Pack 39",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311039": {
+   "name": "Item Pack 40",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311040": {
+   "name": "Item Pack 41",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311041": {
+   "name": "Item Pack 42",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311042": {
+   "name": "Item Pack 43",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311043": {
+   "name": "Item Pack 44",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311044": {
+   "name": "Item Pack 45",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311045": {
+   "name": "Item Pack 46",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311046": {
+   "name": "Item Pack 47",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311047": {
+   "name": "Item Pack 48",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311048": {
+   "name": "Item Pack 49",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311049": {
+   "name": "Item Pack 50",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311050": {
+   "name": "Item Pack 51",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311051": {
+   "name": "Item Pack 52",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311052": {
+   "name": "Item Pack 53",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311053": {
+   "name": "Item Pack 54",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311054": {
+   "name": "Item Pack 55",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311055": {
+   "name": "Item Pack 56",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311056": {
+   "name": "Item Pack 57",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311057": {
+   "name": "Item Pack 58",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311058": {
+   "name": "Item Pack 59",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311059": {
+   "name": "Item Pack 60",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311060": {
+   "name": "Item Pack 61",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311061": {
+   "name": "Item Pack 62",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311062": {
+   "name": "Item Pack 63",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311063": {
+   "name": "Item Pack 64",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311064": {
+   "name": "Item Pack 65",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311065": {
+   "name": "Item Pack 66",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311066": {
+   "name": "Item Pack 67",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311067": {
+   "name": "Item Pack 68",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311068": {
+   "name": "Item Pack 69",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311069": {
+   "name": "Item Pack 70",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311070": {
+   "name": "Item Pack 71",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311071": {
+   "name": "Item Pack 72",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311072": {
+   "name": "Item Pack 73",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311073": {
+   "name": "Item Pack 74",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311074": {
+   "name": "Item Pack 75",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311075": {
+   "name": "Item Pack 76",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311076": {
+   "name": "Item Pack 77",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311077": {
+   "name": "Item Pack 78",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311078": {
+   "name": "Item Pack 79",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311079": {
+   "name": "Item Pack 80",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311080": {
+   "name": "Item Pack 81",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311081": {
+   "name": "Item Pack 82",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311082": {
+   "name": "Item Pack 83",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311083": {
+   "name": "Item Pack 84",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311084": {
+   "name": "Item Pack 85",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311085": {
+   "name": "Item Pack 86",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311086": {
+   "name": "Item Pack 87",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311087": {
+   "name": "Item Pack 88",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311088": {
+   "name": "Item Pack 89",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311089": {
+   "name": "Item Pack 90",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311090": {
+   "name": "Item Pack 91",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311091": {
+   "name": "Item Pack 92",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311092": {
+   "name": "Item Pack 93",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311093": {
+   "name": "Item Pack 94",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311094": {
+   "name": "Item Pack 95",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311095": {
+   "name": "Item Pack 96",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311096": {
+   "name": "Item Pack 97",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311097": {
+   "name": "Item Pack 98",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311098": {
+   "name": "Item Pack 99",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311099": {
+   "name": "Item Pack 100",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311100": {
+   "name": "Item Pack 101",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311101": {
+   "name": "Item Pack 102",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311102": {
+   "name": "Item Pack 103",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311103": {
+   "name": "Item Pack 104",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311104": {
+   "name": "Item Pack 105",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311105": {
+   "name": "Item Pack 106",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311106": {
+   "name": "Item Pack 107",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311107": {
+   "name": "Item Pack 108",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311108": {
+   "name": "Item Pack 109",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311109": {
+   "name": "Item Pack 110",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311110": {
+   "name": "Item Pack 111",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311111": {
+   "name": "Item Pack 112",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311112": {
+   "name": "Item Pack 113",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311113": {
+   "name": "Item Pack 114",
+   "category": "item_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311200": {
+   "name": "Mastery Pack 1",
+   "category": "mastery_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311201": {
+   "name": "Mastery Pack 2",
+   "category": "mastery_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311202": {
+   "name": "Mastery Pack 3",
+   "category": "mastery_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311203": {
+   "name": "Mastery Pack 4",
+   "category": "mastery_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311204": {
+   "name": "Mastery Pack 5",
+   "category": "mastery_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311205": {
+   "name": "Mastery Pack 6",
+   "category": "mastery_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311206": {
+   "name": "Mastery Pack 7",
+   "category": "mastery_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311207": {
+   "name": "Mastery Pack 8",
+   "category": "mastery_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311208": {
+   "name": "Mastery Pack 9",
+   "category": "mastery_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311209": {
+   "name": "Mastery Pack 10",
+   "category": "mastery_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311210": {
+   "name": "Mastery Pack 11",
+   "category": "mastery_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311211": {
+   "name": "Mastery Pack 12",
+   "category": "mastery_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311212": {
+   "name": "Mastery Pack 13",
+   "category": "mastery_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311213": {
+   "name": "Mastery Pack 14",
+   "category": "mastery_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311214": {
+   "name": "Mastery Pack 15",
+   "category": "mastery_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311215": {
+   "name": "Mastery Pack 16",
+   "category": "mastery_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311216": {
+   "name": "Mastery Pack 17",
+   "category": "mastery_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311217": {
+   "name": "Mastery Pack 18",
+   "category": "mastery_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311218": {
+   "name": "Mastery Pack 19",
+   "category": "mastery_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311300": {
+   "name": "Superior Item Pack 1",
+   "category": "superior_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311301": {
+   "name": "Superior Item Pack 2",
+   "category": "superior_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311302": {
+   "name": "Superior Item Pack 3",
+   "category": "superior_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311303": {
+   "name": "Superior Item Pack 4",
+   "category": "superior_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311304": {
+   "name": "Superior Item Pack 5",
+   "category": "superior_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311305": {
+   "name": "Superior Item Pack 6",
+   "category": "superior_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311306": {
+   "name": "Superior Item Pack 7",
+   "category": "superior_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311307": {
+   "name": "Superior Item Pack 8",
+   "category": "superior_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311308": {
+   "name": "Superior Item Pack 9",
+   "category": "superior_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311309": {
+   "name": "Superior Item Pack 10",
+   "category": "superior_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311310": {
+   "name": "Superior Item Pack 11",
+   "category": "superior_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311311": {
+   "name": "Superior Item Pack 12",
+   "category": "superior_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311312": {
+   "name": "Superior Item Pack 13",
+   "category": "superior_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311313": {
+   "name": "Superior Item Pack 14",
+   "category": "superior_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311314": {
+   "name": "Superior Item Pack 15",
+   "category": "superior_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311315": {
+   "name": "Superior Item Pack 16",
+   "category": "superior_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311316": {
+   "name": "Superior Item Pack 17",
+   "category": "superior_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311317": {
+   "name": "Superior Item Pack 18",
+   "category": "superior_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311318": {
+   "name": "Superior Item Pack 19",
+   "category": "superior_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311319": {
+   "name": "Superior Item Pack 20",
+   "category": "superior_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311320": {
+   "name": "Superior Item Pack 21",
+   "category": "superior_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311321": {
+   "name": "Superior Item Pack 22",
+   "category": "superior_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311322": {
+   "name": "Superior Item Pack 23",
+   "category": "superior_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311323": {
+   "name": "Superior Item Pack 24",
+   "category": "superior_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311324": {
+   "name": "Superior Item Pack 25",
+   "category": "superior_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311325": {
+   "name": "Superior Item Pack 26",
+   "category": "superior_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311326": {
+   "name": "Superior Item Pack 27",
+   "category": "superior_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311327": {
+   "name": "Superior Item Pack 28",
+   "category": "superior_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311328": {
+   "name": "Superior Item Pack 29",
+   "category": "superior_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311329": {
+   "name": "Superior Item Pack 30",
+   "category": "superior_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311330": {
+   "name": "Superior Item Pack 31",
+   "category": "superior_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311331": {
+   "name": "Superior Item Pack 32",
+   "category": "superior_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311332": {
+   "name": "Superior Item Pack 33",
+   "category": "superior_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311333": {
+   "name": "Superior Item Pack 34",
+   "category": "superior_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311334": {
+   "name": "Superior Item Pack 35",
+   "category": "superior_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311335": {
+   "name": "Superior Item Pack 36",
+   "category": "superior_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311336": {
+   "name": "Superior Item Pack 37",
+   "category": "superior_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311337": {
+   "name": "Superior Item Pack 38",
+   "category": "superior_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311338": {
+   "name": "Superior Item Pack 39",
+   "category": "superior_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7311339": {
+   "name": "Superior Item Pack 40",
+   "category": "superior_group",
+   "grants": [],
+   "lock": [],
+   "default_locked": true,
+   "mode": "once",
+   "amount": 1
+  },
+  "7310900": {
+   "name": "Tech Cache",
+   "category": "filler",
+   "grants": [
+    "/Game/Items/Currencies/Item_Currency_Tech.Item_Currency_Tech"
+   ],
+   "lock": [],
+   "default_locked": true,
+   "mode": "add",
+   "amount": 50
+  },
+  "7310901": {
+   "name": "Nanite Vial",
+   "category": "filler",
+   "grants": [
+    "/Game/Items/Currencies/Item_Currency_SanctityToken.Item_Currency_SanctityToken"
+   ],
+   "lock": [],
+   "default_locked": true,
+   "mode": "add",
+   "amount": 1
+  }
+ }
+}

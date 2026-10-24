@@ -1,0 +1,66 @@
+# Deadzone Rogue – Archipelago
+
+An Archipelago integration has two halves:
+
+| Half | What it does | Status |
+|---|---|---|
+| **APWorld** (`deadzone_rogue/`, Python) | Tells the generator what items and locations exist and what the logic is | v0.4.0: built from the game's real data, passes AP's tests, generates seeds |
+| **Client** (Python, in the apworld) + **APClient** (Lua mod) | Talks to the AP server: sends checks, grants received items, locks unreceived content, reports the goal | v0.4.0: mission/room checks, grants, locking and zone gating work live, protected by save-slot binding. Reward suppression, DeathLink effects and objective checks not done yet |
+
+## Files
+
+| Path | What it is |
+|---|---|
+| [deadzone_rogue.apworld](deadzone_rogue.apworld) | The built world. Players install it into Archipelago |
+| [Deadzone Rogue.yaml](Deadzone%20Rogue.yaml) | Template player options, to fill in and give to the host |
+| `deadzone_rogue/` | World source. `game_data.py` is generated; don't edit it by hand |
+| `tools/gen_data.py` | Rebuilds `game_data.py` and `client/ap_data.json` from `dumps/APCatalog.tsv` |
+| `client/ap_data.json` | For the client mod: AP id → asset paths to grant or lock, mission GUIDs, pack pools |
+| `ue4ss_setup/` | UE4SS crash fix (`VTableLayout.ini`), the catalog/dump/test Lua mods, and the windowed launch script |
+| `dumps/` | Header dump, object dump, `.usmap`, asset catalog, hook test log |
+| [HOOKS.md](HOOKS.md) | What's verified in-game and how |
+
+## The game, technically
+
+- **Unreal Engine 5.6.1** (internal project name `Valhalla`), game version 1.4.2, by Prophecy Games. No anti-cheat.
+- UE4SS needs `ue4ss_setup/VTableLayout.ini` to start (it fixes [UE4SS-RE/RE-UE4SS#1048](https://github.com/UE4SS-RE/RE-UE4SS/issues/1048)).
+- Saves are local: `%LOCALAPPDATA%\Valhalla\Saved\SaveGames`, one file per slot. Use a separate slot for AP.
+
+## The APWorld
+
+**Checks**
+- Each mission × each difficulty in `mission_difficulties` (Adventure/Normal/Hard by default, up to 5 levels).
+  There are 32 missions: 6 story and 26 challenge, across 4 zones.
+- `room_clear_checks`: one check every 5 rooms cleared, cumulative across runs.
+
+**Items**
+- Weapons, perk families and augments as individual items. `*_shuffle` is `none` / `locked_only` / `all`; `all` also
+  locks the normally-free ones and gives a starting kit.
+- Item / Mastery (Tech upgrade) / Superior Item (SuperItem upgrade) **packs**: random groups per seed, with
+  `*_pack_size` options (0 = off). The pack contents go to the client in slot data.
+- Unlocks: the Fate rerolls, Fabricator restocks (two progressive chains), Tier 10 Tech Upgrades, Epic Beginnings.
+- Optional `Zone N Access` items (zone gating). Difficulties are never gated; each is just a separate check. Logic also follows the game's own mission prerequisites.
+- If there are more items than checks, the lowest-priority items are left out (they stay as in the base game):
+  synergies, then packs, unlocks, augments, weapons, perks.
+
+**Goal:** complete "Getting Answers" (or "Get Out of My Head" with `goal: zone_3`) on any difficulty.
+
+**DeathLink:** `death_link_mode` = lose_perk (default) / lose_item / lose_scrap / take_damage / push_back_room / kill.
+
+### Rebuilding
+
+1. Clone https://github.com/ArchipelagoMW/Archipelago and copy `deadzone_rogue/` into `worlds/`.
+2. `pip install -r requirements.txt`
+3. If the game updates: rerun the APCatalog mod, copy the new `APCatalog.tsv` into `dumps/`, then run `python tools/gen_data.py`.
+   **Check the item ids it prints. Ids must never change once seeds exist.**
+4. Tests: `python -m pytest worlds/deadzone_rogue test/general`
+5. Build: `python Launcher.py "Build APWorlds" -- "Deadzone Rogue"`
+
+## The client
+
+- **Deadzone Rogue Client** (`deadzone_rogue/client.py`) shows up in the Archipelago Launcher. It connects to the
+  server and exchanges plain-text files with the game in `Win64/APBridge/` (format in `deadzone_rogue/bridge.py`).
+- **APClient** (`ue4ss_setup/Mods/APClient`) is the in-game half: hooks for checks, `AddInventoryCount` grants,
+  `bRequireOwnership` locks, and per-session/per-save-slot state.
+- Install steps for players: `deadzone_rogue/docs/setup_en.md`. What's done and what's left:
+  [HOOKS.md](HOOKS.md#client-to-do).

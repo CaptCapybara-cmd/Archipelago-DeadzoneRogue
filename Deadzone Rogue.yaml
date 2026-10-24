@@ -1,0 +1,263 @@
+﻿# Q. What is this file?
+# A. This file contains options which allow you to configure your multiworld experience while allowing
+#    others to play how they want as well.
+#
+# Q. How do I use it?
+# A. The options in this file are weighted. This means the higher number you assign to a value, the
+#    more chances you have for that option to be chosen. For example, an option like this:
+#
+#    map_shuffle:
+#      on: 5
+#      off: 15
+#
+#    Means you have 5 chances for map shuffle to occur, and 15 chances for map shuffle to be turned
+#    off.
+#
+# Q. I've never seen a file like this before. What characters am I allowed to use?
+# A. This is a .yaml file. You are allowed to use most characters.
+#    To test if your yaml is valid or not, you can use this website:
+#        http://www.yamllint.com/
+#    You can also verify that your Archipelago options are valid at this site:
+#        https://archipelago.gg/check
+
+# Your name in-game, limited to 16 characters.
+#     {player} will be replaced with the player's slot number.
+#     {PLAYER} will be replaced with the player's slot number, if that slot number is greater than 1.
+#     {number} will be replaced with the counter value of the name.
+#     {NUMBER} will be replaced with the counter value of the name, if the counter value is greater than 1.
+name: Player{number}
+
+# Used to describe your yaml. Useful if you have multiple files.
+description: Default Deadzone Rogue Template
+
+game: Deadzone Rogue
+requires:
+  version: 0.6.9 # Version of Archipelago required for this yaml to work as expected.
+  game:
+    Deadzone Rogue: 0.4.0 # Version of the world required for this yaml to work as expected.
+
+Deadzone Rogue:
+  ################
+  # Game Options #
+  ################
+  progression_balancing:
+    # A system that can move progression earlier, to try and prevent the player from getting stuck and bored early.
+    # 
+    # A lower setting means more getting stuck. A higher setting means less getting stuck.
+    #
+    # You can define additional values between the minimum and maximum values.
+    # Minimum value is 0
+    # Maximum value is 99
+    random: 0
+    random-low: 0 # random value weighted towards lower values
+    random-high: 0 # random value weighted towards higher values
+    random-range-0-99: 0 # random value between 0 and 99
+    disabled: 0 # equivalent to 0
+    normal: 50 # equivalent to 50
+    extreme: 0 # equivalent to 99
+
+  accessibility:
+    # Set rules for reachability of your items/locations.
+    # 
+    # **Full:** ensure everything can be reached and acquired.
+    # 
+    # **Minimal:** ensure what is needed to reach your goal can be acquired.
+    full: 50
+    minimal: 0
+
+  death_link:
+    # When you die, everyone who enabled death link dies. Of course, the reverse is true too.
+    'false': 50
+    'true': 0
+
+  ##########
+  # Checks #
+  ##########
+  mission_difficulties:
+    # Which difficulties give a check for completing each mission. Every mission completed on each listed
+    # difficulty is a separate check (e.g. "Who am I? (Normal)").
+    ['Adventure', 'Hard', 'Normal']
+
+  include_challenge_missions:
+    # Challenge missions (Close Quarters, Headhunter, Ultra Nightmare, ...) have checks.
+    'false': 0
+    'true': 50
+
+  room_clear_checks:
+    # Total rooms cleared across all runs that give checks, one check every 5 rooms. 0 disables them.
+    #
+    # You can define additional values between the minimum and maximum values.
+    # Minimum value is 0
+    # Maximum value is 200
+    100: 50
+    random: 0
+    random-low: 0 # random value weighted towards lower values
+    random-high: 0 # random value weighted towards higher values
+    random-range-0-200: 0 # random value between 0 and 200
+
+  vanilla_mission_rewards:
+    # Keep the game's own mission rewards (first-time and milestone unlocks). Off: those unlocks only come from
+    # the multiworld.
+    'false': 50
+    'true': 0
+
+  ###############
+  # Progression #
+  ###############
+  goal:
+    # Which story mission you must complete (on any difficulty) to finish.
+    # zone_3: Get Out of My Head. zone_4: Getting Answers (the final story mission).
+    zone_3: 0
+    zone_4: 50
+
+  zone_gating:
+    # Zones 2-4 are locked behind Zone Access items. Off: zones open as in the base game (story order only).
+    'false': 0
+    'true': 50
+
+  ###########
+  # Unlocks #
+  ###########
+  weapon_shuffle:
+    # Weapons are individual items. none: not shuffled. locked_only: only the ones the base game makes you unlock.
+    # all: also the ones available from the start; the client locks them until received (see Starting Kit).
+    none: 0
+    locked_only: 0
+    all: 50
+
+  perk_shuffle:
+    # Perk families (Fire, Plasma, Ghost Blade, ...) are individual items. none: not shuffled. locked_only: only the ones the base game makes you unlock.
+    # all: also the ones available from the start; the client locks them until received (see Starting Kit).
+    none: 0
+    locked_only: 0
+    all: 50
+
+  augment_shuffle:
+    # Augments (Aiming: Crit, Long Range: Weakpoint, ...) are individual items. none: not shuffled. locked_only: only the ones the base game makes you unlock.
+    # all: also the ones available from the start; the client locks them until received (see Starting Kit).
+    none: 0
+    locked_only: 0
+    all: 50
+
+  starting_kit_weapons:
+    # With Weapon Shuffle 'all': how many primary weapons you start with. One secondary and one melee weapon
+    # are always added.
+    #
+    # You can define additional values between the minimum and maximum values.
+    # Minimum value is 1
+    # Maximum value is 4
+    1: 50
+    random: 0
+    random-low: 0 # random value weighted towards lower values
+    random-high: 0 # random value weighted towards higher values
+    random-range-1-4: 0 # random value between 1 and 4
+
+  starting_kit_perks:
+    # With Perk/Augment Shuffle 'all': how many perk families and augments you start with. Each offer shows
+    # 3 choices, so 3 keeps every offer full.
+    #
+    # You can define additional values between the minimum and maximum values.
+    # Minimum value is 3
+    # Maximum value is 6
+    3: 50
+    random: 0
+    random-low: 0 # random value weighted towards lower values
+    random-high: 0 # random value weighted towards higher values
+    random-range-3-6: 0 # random value between 3 and 6
+
+  item_pack_size:
+    # Items (Monocle, Mag Clip, ...) are shuffled in random packs of this size. 0: not shuffled.
+    #
+    # You can define additional values between the minimum and maximum values.
+    # Minimum value is 0
+    # Maximum value is 10
+    5: 50
+    random: 0
+    random-low: 0 # random value weighted towards lower values
+    random-high: 0 # random value weighted towards higher values
+    random-range-0-10: 0 # random value between 0 and 10
+
+  mastery_pack_size:
+    # Masteries (Tech upgrades: Maximum Health, Weapon Damage, ...) are shuffled in random packs of this size.
+    # 0: not shuffled.
+    #
+    # You can define additional values between the minimum and maximum values.
+    # Minimum value is 0
+    # Maximum value is 10
+    4: 50
+    random: 0
+    random-low: 0 # random value weighted towards lower values
+    random-high: 0 # random value weighted towards higher values
+    random-range-0-10: 0 # random value between 0 and 10
+
+  superior_item_pack_size:
+    # Superior items (SuperItem upgrades: Heat Coil, Rabbit Foot, ...) are shuffled in random packs of this size.
+    # 0: not shuffled.
+    #
+    # You can define additional values between the minimum and maximum values.
+    # Minimum value is 0
+    # Maximum value is 10
+    4: 50
+    random: 0
+    random-low: 0 # random value weighted towards lower values
+    random-high: 0 # random value weighted towards higher values
+    random-range-0-10: 0 # random value between 0 and 10
+
+  include_synergy_components:
+    # Synergy Components are individual items.
+    'false': 50
+    'true': 0
+
+  #############
+  # DeathLink #
+  #############
+  death_link_mode:
+    # What happens when you receive a DeathLink. Your own run ends normally when you die.
+    # lose_perk: lose a random perk from the current run. lose_item: lose a random item from the current run.
+    # lose_scrap: lose half your Scrap. take_damage: take heavy damage (can't kill you).
+    # push_back_room: sent back to the previous room (experimental). kill: the run ends.
+    lose_perk: 50
+    lose_item: 0
+    lose_scrap: 0
+    take_damage: 0
+    push_back_room: 0
+    kill: 0
+
+  ###########################
+  # Item & Location Options #
+  ###########################
+  local_items:
+    # Forces these items to be in their native world.
+    []
+
+  non_local_items:
+    # Forces these items to be outside their native world.
+    []
+
+  start_inventory:
+    # Start with the specified amount of these items. Example: {Bomb: 1, Arrow: 3}
+    {}
+
+  start_hints:
+    # Start with these item's locations prefilled into the ``!hint`` command.
+    []
+
+  start_location_hints:
+    # Start with these locations and their item prefilled into the ``!hint`` command.
+    []
+
+  exclude_locations:
+    # Prevent these locations from having an important item.
+    []
+
+  priority_locations:
+    # Prevent these locations from having an unimportant item.
+    []
+
+  item_links:
+    # Share part of your item pool with other players.
+    []
+
+  plando_items:
+    # Generic items plando.
+    []

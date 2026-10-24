@@ -1,0 +1,11 @@
+# Raw dumps generated from the game's files stay local; only the asset catalog (needed by tools/gen_data.py) is kept.
+dumps/*
+!dumps/APCatalog.tsv
+
+# Build output (published as release downloads instead)
+*.apworld
+build/
+
+__pycache__/
+*.pyc
+*.tmp

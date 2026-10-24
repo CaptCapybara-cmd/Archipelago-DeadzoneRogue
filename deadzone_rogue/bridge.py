@@ -1,0 +1,144 @@
+"""File bridge between the Python client and the APClient Lua mod (UE4SS Lua has no sockets).
+
+Folder: <game>/Valhalla/Binaries/Win64/APBridge/
+  inbox.txt      written by the client (atomically replaced), read by the mod. Line-based so Lua can parse it:
+                   version 1
+                   rev <n>
+                   session <id>
+                   goal <mission key>
+                   lock <asset object path>                       (one per asset the mod must lock)
+                   grant <index> <once|add> <amount> <asset path>  (index = position in ReceivedItems)
+  outbox.txt     appended by the mod, tailed by the client:
+                   mission <mission key> <difficulty>
+                   rooms <total rooms cleared this session>
+                   death <unix time>
+  heartbeat.txt  unix time, rewritten by the mod every few seconds.
+
+Kept free of client/network imports so it can be unit tested.
+"""
+import json
+import os
+import pkgutil
+import re
+from typing import Dict, Iterable, List, Optional, Sequence, Set, Tuple
+
+BRIDGE_DIR = "APBridge"
+DEFAULT_GAME_DIR = r"C:\Program Files (x86)\Steam\steamapps\common\Deadzone Rogue\Valhalla\Binaries\Win64"
+
+
+def load_data() -> dict:
+    return json.loads(pkgutil.get_data(__name__, "ap_data.json").decode("utf-8"))
+
+
+def session_id(seed_name: str, slot_name: str) -> str:
+    return re.sub(r"[^A-Za-z0-9_-]", "_", f"{seed_name}-{slot_name}")
+
+
+def mission_location(data: dict, key: str, difficulty: int) -> Optional[int]:
+    for index, mission in enumerate(data["missions"]):
+        if mission["key"] == key:
+            return data["location_base"] + index * 10 + difficulty
+    return None
+
+
+def room_locations(data: dict, total_rooms: int, step: int, max_rooms: int) -> List[int]:
+    """Room checks are 'Rooms Cleared: 5, 10, ...' up to the seed's room_clear_checks."""
+    return [data["location_base"] + 1000 + n for n in range(1, min(total_rooms, max_rooms) // step + 1)]
+
+
+def lock_paths(data: dict, slot_data: dict) -> List[str]:
+    """Normally-free assets the mod must lock: every category whose free entries are shuffled, and the run items
+    dealt out in packs. Owned assets stay usable while locked, so received ones need no special case."""
+    paths = []
+    lock_free = set(slot_data.get("lock_free", []))
+    for item in data["items"].values():
+        if item["category"] in lock_free and not item["default_locked"]:
+            paths += item["lock"]
+    if any(item_id in slot_data.get("packs", {}) for item_id, item in data["items"].items()
+           if item["category"] == "item_group"):
+        paths += list(data["group_pools"]["items"].values())
+    return sorted(set(paths))
+
+
+def grant_lines(data: dict, slot_data: dict, received_ids: Sequence[int]) -> List[Tuple[int, str, int, str]]:
+    """(index, mode, amount, asset path) for every received item, in ReceivedItems order."""
+    lines = []
+    progressive_seen: Dict[int, int] = {}
+    pool_paths = {key: path for pool in data["group_pools"].values() for key, path in pool.items()}
+    for index, item_id in enumerate(received_ids):
+        item = data["items"].get(str(item_id))
+        if item is None:
+            continue
+        if item["mode"] == "progressive":
+            k = progressive_seen.get(item_id, 0)
+            progressive_seen[item_id] = k + 1
+            if k < len(item["grants"]):
+                lines.append((index, "once", 1, item["grants"][k]))
+        elif str(item_id) in slot_data.get("packs", {}):
+            for key in slot_data["packs"][str(item_id)]:
+                if key in pool_paths:
+                    lines.append((index, "once", 1, pool_paths[key]))
+        else:
+            for path in item["grants"]:
+                lines.append((index, item["mode"], item["amount"], path))
+    return lines
+
+
+def gating_lines(data: dict, slot_data: dict, received_ids: Sequence[int]) -> List[str]:
+    """Which zones are open, from the Zone Access items received. No zones line means zone gating is off."""
+    names = [data["items"].get(str(i), {}).get("name") for i in received_ids]
+    # keyed by MissionId GUID: the mod reads it inline from the mission option (MissionData may not be loaded yet)
+    lines = [f"missionzone {m['guid']} {m['zone']}" for m in data["missions"]]
+    if slot_data.get("zone_gating"):
+        goal_zone = next((m["zone"] for m in data["missions"] if m["key"] == slot_data.get("goal_mission")), 4)
+        zones = [z for z in (1, 2, 3, 4) if z == 1 or z > goal_zone or f"Zone {z} Access" in names]
+        lines.append("zones " + " ".join(map(str, zones)))
+    return lines
+
+
+def render_inbox(rev: int, session: str, slot_data: dict, locks: Iterable[str],
+                 grants: Iterable[Tuple[int, str, int, str]], gating: Iterable[str] = ()) -> str:
+    out = ["version 1", f"rev {rev}", f"session {session}", f"goal {slot_data.get('goal_mission', '')}"]
+    out += list(gating)
+    out += [f"lock {path}" for path in locks]
+    out += [f"grant {index} {mode} {amount} {path}" for index, mode, amount, path in grants]
+    return "\n".join(out) + "\n"
+
+
+def write_atomic(path: str, text: str) -> None:
+    tmp = path + ".tmp"
+    with open(tmp, "w", encoding="utf-8", newline="\n") as f:
+        f.write(text)
+    os.replace(tmp, path)
+
+
+def parse_outbox(text: str) -> List[Tuple[str, List[str]]]:
+    events = []
+    for line in text.splitlines():
+        parts = line.split()
+        if parts:
+            events.append((parts[0], parts[1:]))
+    return events
+
+
+def checks_from_events(data: dict, slot_data: dict, events: Iterable[Tuple[str, List[str]]],
+                       since: float) -> Tuple[Set[int], bool, int]:
+    """Location ids to send, whether the goal was completed, and how many new deaths (after `since`) occurred."""
+    locations: Set[int] = set()
+    goal = False
+    deaths = 0
+    for kind, args in events:
+        if kind == "mission" and len(args) == 2:
+            key, difficulty = args[0], int(args[1])
+            if difficulty in slot_data.get("difficulties", []):
+                loc = mission_location(data, key, difficulty)
+                if loc is not None:
+                    locations.add(loc)
+            if key == slot_data.get("goal_mission"):
+                goal = True
+        elif kind == "rooms" and args:
+            locations.update(room_locations(data, int(args[0]), slot_data.get("room_check_step", 5),
+                                            slot_data.get("room_clear_checks", 0)))
+        elif kind == "death" and args and float(args[0]) > since:
+            deaths += 1
+    return locations, goal, deaths
