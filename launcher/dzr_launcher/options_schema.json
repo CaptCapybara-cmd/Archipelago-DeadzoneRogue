@@ -1,0 +1,272 @@
+{
+ "game": "Deadzone Rogue",
+ "requires_version": "0.6.6",
+ "options": [
+  {
+   "name": "mission_difficulties",
+   "label": "Mission Difficulties",
+   "help": "Which difficulties give a check for completing each mission. Every mission completed on each listed\ndifficulty is a separate check (e.g. \"Who am I? (Normal)\").",
+   "kind": "set",
+   "choices": [
+    "Adventure",
+    "Normal",
+    "Hard",
+    "Difficulty 4",
+    "Difficulty 5"
+   ],
+   "default": [
+    "Adventure",
+    "Normal",
+    "Hard"
+   ],
+   "group": "Checks"
+  },
+  {
+   "name": "include_challenge_missions",
+   "label": "Include Challenge Missions",
+   "help": "Challenge missions (Close Quarters, Headhunter, Ultra Nightmare, ...) have checks.",
+   "kind": "toggle",
+   "default": true,
+   "group": "Checks"
+  },
+  {
+   "name": "include_endless_missions",
+   "label": "Include Endless Missions",
+   "help": "The endless-wave missions (Gauntlet, Crossfire, Last Stand) have checks too. Off by default: an endless run\nmay never register as \"completed\". They never count towards the goal.",
+   "kind": "toggle",
+   "default": false,
+   "group": "Checks"
+  },
+  {
+   "name": "vanilla_mission_rewards",
+   "label": "Vanilla Mission Rewards",
+   "help": "Keep the game's own mission rewards (first-time and milestone unlocks). Off: those unlocks only come from\nthe multiworld.",
+   "kind": "toggle",
+   "default": false,
+   "group": "Checks"
+  },
+  {
+   "name": "sectors_cleared_total",
+   "label": "Sectors Cleared Total",
+   "help": "Sectors cleared (across all runs) at which the last Sectors Cleared check is reached. 0: no sector checks.",
+   "kind": "range",
+   "min": 0,
+   "max": 500,
+   "default": 150,
+   "group": "Save-wide Objectives"
+  },
+  {
+   "name": "sectors_cleared_interval",
+   "label": "Sectors Cleared Interval",
+   "help": "A Sectors Cleared check every this many sectors (rounded down to a multiple of 5).",
+   "kind": "range",
+   "min": 5,
+   "max": 50,
+   "default": 10,
+   "group": "Save-wide Objectives"
+  },
+  {
+   "name": "enemies_killed_total",
+   "label": "Enemies Killed Total",
+   "help": "Enemies you've killed (across all runs) at which the last Enemies Killed check is reached. 0: no kill checks.",
+   "kind": "range",
+   "min": 0,
+   "max": 10000,
+   "default": 3000,
+   "group": "Save-wide Objectives"
+  },
+  {
+   "name": "enemies_killed_interval",
+   "label": "Enemies Killed Interval",
+   "help": "An Enemies Killed check every this many kills (rounded down to a multiple of 100).",
+   "kind": "range",
+   "min": 100,
+   "max": 2000,
+   "default": 300,
+   "group": "Save-wide Objectives"
+  },
+  {
+   "name": "scrap_gathered_total",
+   "label": "Scrap Gathered Total",
+   "help": "Scrap picked up (across all runs; spending doesn't count against it) at which the last Scrap Gathered check\nis reached. 0: no Scrap checks.",
+   "kind": "range",
+   "min": 0,
+   "max": 100000,
+   "default": 20000,
+   "group": "Save-wide Objectives"
+  },
+  {
+   "name": "scrap_gathered_interval",
+   "label": "Scrap Gathered Interval",
+   "help": "A Scrap Gathered check every this much Scrap (rounded down to a multiple of 1000).",
+   "kind": "range",
+   "min": 1000,
+   "max": 10000,
+   "default": 2000,
+   "group": "Save-wide Objectives"
+  },
+  {
+   "name": "goal",
+   "label": "Goal",
+   "help": "Complete every story and challenge mission in zones 1 up to this zone (on any difficulty) to finish.\nEndless-wave missions (Gauntlet, Crossfire, Last Stand) never count, and a challenge that only exists on one\ndifficulty counts only if that difficulty is in mission_difficulties.",
+   "kind": "choice",
+   "choices": [
+    "zone_3",
+    "zone_4"
+   ],
+   "default": "zone_4",
+   "group": "Progression"
+  },
+  {
+   "name": "zone_gating",
+   "label": "Zone Gating",
+   "help": "Zones 2-4 are locked behind Zone Access items. Off: zones open as in the base game (story order only).",
+   "kind": "toggle",
+   "default": true,
+   "group": "Progression"
+  },
+  {
+   "name": "weapon_shuffle",
+   "label": "Weapon Shuffle",
+   "help": "Weapons are individual items. none: not shuffled. locked_only: only the ones the base game makes you unlock.\nall: also the ones available from the start; the client locks them until received (see Starting Kit).",
+   "kind": "choice",
+   "choices": [
+    "none",
+    "locked_only",
+    "all"
+   ],
+   "default": "all",
+   "group": "Unlocks"
+  },
+  {
+   "name": "perk_shuffle",
+   "label": "Perk Shuffle",
+   "help": "Perk families (Fire, Plasma, Ghost Blade, ...) are individual items. none: not shuffled. locked_only: only the ones the base game makes you unlock.\nall: also the ones available from the start; the client locks them until received (see Starting Kit).",
+   "kind": "choice",
+   "choices": [
+    "none",
+    "locked_only",
+    "all"
+   ],
+   "default": "all",
+   "group": "Unlocks"
+  },
+  {
+   "name": "augment_shuffle",
+   "label": "Augment Shuffle",
+   "help": "Augments (Aiming: Crit, Long Range: Weakpoint, ...) are individual items. none: not shuffled. locked_only: only the ones the base game makes you unlock.\nall: also the ones available from the start; the client locks them until received (see Starting Kit).",
+   "kind": "choice",
+   "choices": [
+    "none",
+    "locked_only",
+    "all"
+   ],
+   "default": "all",
+   "group": "Unlocks"
+  },
+  {
+   "name": "starting_kit_weapons",
+   "label": "Starting Kit Weapons",
+   "help": "With Weapon Shuffle 'all': how many primary weapons you start with. One secondary and one melee weapon\nare always added.",
+   "kind": "range",
+   "min": 1,
+   "max": 4,
+   "default": 1,
+   "group": "Unlocks"
+  },
+  {
+   "name": "starting_kit_perks",
+   "label": "Starting Kit Perks",
+   "help": "With Perk/Augment Shuffle 'all': how many perk families and augments you start with. Each offer shows\n3 choices, so 3 keeps every offer full.",
+   "kind": "range",
+   "min": 3,
+   "max": 6,
+   "default": 3,
+   "group": "Unlocks"
+  },
+  {
+   "name": "item_pack_size",
+   "label": "Item Pack Size",
+   "help": "Items (Monocle, Mag Clip, ...) are shuffled in random packs of this size. 0: not shuffled.",
+   "kind": "range",
+   "min": 0,
+   "max": 10,
+   "default": 5,
+   "group": "Unlocks"
+  },
+  {
+   "name": "mastery_pack_size",
+   "label": "Mastery Pack Size",
+   "help": "Masteries (Tech upgrades: Maximum Health, Weapon Damage, ...) are shuffled in random packs of this size.\n0: not shuffled.",
+   "kind": "range",
+   "min": 0,
+   "max": 10,
+   "default": 4,
+   "group": "Unlocks"
+  },
+  {
+   "name": "superior_item_pack_size",
+   "label": "Superior Item Pack Size",
+   "help": "Superior items (SuperItem upgrades: Heat Coil, Rabbit Foot, ...) are shuffled in random packs of this size.\n0: not shuffled.",
+   "kind": "range",
+   "min": 0,
+   "max": 10,
+   "default": 4,
+   "group": "Unlocks"
+  },
+  {
+   "name": "include_synergy_components",
+   "label": "Include Synergy Components",
+   "help": "Synergy Components are individual items.",
+   "kind": "toggle",
+   "default": false,
+   "group": "Unlocks"
+  },
+  {
+   "name": "death_link",
+   "label": "Death Link",
+   "help": "When you die, everyone who enabled death link dies. Of course, the reverse is true too.",
+   "kind": "toggle",
+   "default": false,
+   "group": "DeathLink"
+  },
+  {
+   "name": "death_link_mode",
+   "label": "DeathLink Mode",
+   "help": "What happens when you receive a DeathLink. Your own run ends normally when you die.\nlose_perk: lose a random perk from the current run. lose_item: lose a random item from the current run.\nlose_scrap: lose half your Scrap. take_damage: take heavy damage (can't kill you).\npush_back_room: sent back to the previous room (experimental). kill: the run ends.",
+   "kind": "choice",
+   "choices": [
+    "lose_perk",
+    "lose_item",
+    "lose_scrap",
+    "take_damage",
+    "push_back_room",
+    "kill"
+   ],
+   "default": "lose_perk",
+   "group": "DeathLink"
+  },
+  {
+   "name": "progression_balancing",
+   "label": "Progression Balancing",
+   "help": "A system that can move progression earlier, to try and prevent the player from getting stuck and bored early.\n\nA lower setting means more getting stuck. A higher setting means less getting stuck.",
+   "kind": "range",
+   "min": 0,
+   "max": 99,
+   "default": 50,
+   "group": "Archipelago"
+  },
+  {
+   "name": "accessibility",
+   "label": "Accessibility",
+   "help": "Set rules for reachability of your items/locations.\n\n**Full:** ensure everything can be reached and acquired.\n\n**Minimal:** ensure what is needed to reach your goal can be acquired.",
+   "kind": "choice",
+   "choices": [
+    "full",
+    "minimal"
+   ],
+   "default": "full",
+   "group": "Archipelago"
+  }
+ ]
+}

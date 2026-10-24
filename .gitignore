@@ -9,3 +9,6 @@ build/
 __pycache__/
 *.pyc
 *.tmp
+
+# Launcher build inputs (copied in by tools/build_launcher.py)
+launcher/dzr_launcher/resources/

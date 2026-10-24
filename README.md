@@ -11,11 +11,12 @@ An Archipelago integration has two halves:
 
 | Path | What it is |
 |---|---|
-| [Releases](https://github.com/CaptCapybara-cmd/Archipelago-DeadzoneRogue/releases) | `deadzone_rogue.apworld` (world + client), `APClient-<version>.zip` (in-game mod + UE4SS crash fix) and the template YAML. Install steps: [setup guide](deadzone_rogue/docs/setup_en.md) |
+| [Releases](https://github.com/CaptCapybara-cmd/Archipelago-DeadzoneRogue/releases) | **`DeadzoneRogueLauncher.exe`** (installs everything and builds your YAML), `deadzone_rogue.apworld` (world + client), `APClient-<version>.zip` (in-game mod + UE4SS crash fix) and the template YAML. Install steps: [setup guide](deadzone_rogue/docs/setup_en.md) |
 | [Deadzone Rogue.yaml](Deadzone%20Rogue.yaml) | Template player options, to fill in and give to the host |
 | `deadzone_rogue/` | World source. `game_data.py` is generated; don't edit it by hand |
 | `tools/gen_data.py` | Rebuilds `game_data.py` and `client/ap_data.json` from `dumps/APCatalog.tsv` |
 | `client/ap_data.json` | For the client mod: AP id → asset paths to grant or lock, mission GUIDs, pack pools |
+| `launcher/` | The launcher (Python + tkinter). `tools/build_launcher.py` packages it with PyInstaller; `tools/export_options.py` regenerates its options form from the world |
 | `ue4ss_setup/` | UE4SS crash fix (`VTableLayout.ini`), the catalog/dump/test Lua mods, and the windowed launch script |
 | `dumps/` | Header dump, object dump, `.usmap`, asset catalog, hook test log |
 | [HOOKS.md](HOOKS.md) | What's verified in-game and how |
@@ -73,8 +74,6 @@ that difficulty has checks. `/goal` in the client lists what's left.
 
 ## Roadmap
 
-- **Launcher**: one app that sets up the mod (finds the game, installs UE4SS, the crash fix and APClient) and
-  generates the player YAML from a GUI instead of editing the template by hand.
 - **Vanilla mission rewards**: stop the game's own first-time and milestone rewards unless `vanilla_mission_rewards`
   is on.
 - **DeathLink effects**: apply received deaths in-game per `death_link_mode` (lose a perk or an item, lose Scrap,

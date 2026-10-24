@@ -9,7 +9,18 @@
 - From this project's [releases](https://github.com/CaptCapybara-cmd/Archipelago-DeadzoneRogue/releases):
   `deadzone_rogue.apworld` and `APClient-<version>.zip`
 
-## Installing
+## Installing with the launcher (easiest)
+
+Download `DeadzoneRogueLauncher.exe` from the releases and run it. Windows may warn that it's from an unknown
+publisher, because the launcher isn't code-signed; choose "More info", then "Run anyway".
+
+- **Setup tab:** it finds the game through Steam. **Install / update mod** downloads UE4SS from its official GitHub
+  release (checking the file's SHA-256), then adds the crash fix and the APClient mod. **Install world into
+  Archipelago** adds the world to your Archipelago install.
+- **Options tab:** pick your options and save your YAML.
+- **Play tab:** start the client and the game, and check that everything is ready.
+
+## Installing by hand
 
 1. **UE4SS:** extract the UE4SS zip into `Steam\steamapps\common\Deadzone Rogue\Valhalla\Binaries\Win64`, so that
    `dwmapi.dll` and the `ue4ss` folder sit next to `DeadzoneSteam-Win64-Shipping.exe`.
@@ -28,8 +39,8 @@ the mod does nothing: no items, no locks, no checks. That keeps your normal save
 
 ## Creating a YAML
 
-Use "Generate Template Options" in the Archipelago Launcher, or start from `Deadzone Rogue.yaml` in this
-project, and send the result to your host.
+Use the launcher's Options tab, Archipelago's "Options Creator", or start from `Deadzone Rogue.yaml`, and send the
+result to your host.
 
 ## Connecting
 
