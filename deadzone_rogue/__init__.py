@@ -240,6 +240,10 @@ class DeadzoneRogueWorld(World):
             # objective -> [interval, total]: a check at every interval up to total
             "objectives": {key: list(value) for key, value in self.milestones.items()},
             "vanilla_mission_rewards": bool(opts.vanilla_mission_rewards),
+            # every item this seed hands out (pool + starting kit): the game's own mission rewards for these are
+            # taken back unless vanilla_mission_rewards is on
+            "pool_items": sorted({item.code for item in self.multiworld.itempool + self.multiworld.precollected_items[
+                self.player] if item.player == self.player and item.code is not None}),
             # categories the client must lock at start (their normally-free entries are shuffled)
             "lock_free": [c for c in ("weapon", "perk", "augment") if self.shuffled(c)],
             "packs": {str(item_name_to_id[name]): keys for name, keys in self.packs.items()},

@@ -58,4 +58,5 @@ result to your host.
 
 Press **Ctrl+Shift+D** in the launcher to show the DEV tab. With the game running it can show the mod's status,
 apply any DeathLink effect, send fake mission completions or save-wide totals (these count for real in the
-multiworld), grant or revoke unlocks, open or close zones, and spawn a perk bundle. Use it on a test save.
+multiworld), grant or revoke unlocks, open or close zones, spawn a perk bundle, and finish the current mission
+(also **Ctrl+F7** in game). Use it on a test save.

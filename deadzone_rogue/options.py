@@ -92,8 +92,9 @@ class ScrapGatheredInterval(Range):
 
 
 class VanillaMissionRewards(Toggle):
-    """Keep the game's own mission rewards (first-time and milestone unlocks). Off: those unlocks only come from
-    the multiworld."""
+    """Keep the game's own mission rewards. Off: when a mission would reward an unlock this seed hands out
+    (an augment, perk, weapon, pack content, ...), it's taken back, so it only comes from the multiworld. Currency,
+    cosmetics and the missions a completion unlocks are always kept, as are unlocks this seed doesn't shuffle."""
     display_name = "Vanilla Mission Rewards"
 
 

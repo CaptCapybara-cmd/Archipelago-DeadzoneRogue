@@ -12,6 +12,7 @@ Folder: <game>/Valhalla/Binaries/Win64/APBridge/
                    grant <index> <once|add|level> <amount> <asset path>  (index = position in ReceivedItems;
                                                                    level: raise the count to at least amount)
                    noupgradebuy <tech|superior...>                (those upgrades can't be bought in the hub)
+                   noreward <asset path>                          (take this back when a mission rewards it)
                    note <id> <text>                               (in-game chat message; ids only ever increase)
                    deathlink <id> <mode> <source>                 (a received DeathLink, applied once per id)
   outbox_<session>.txt   appended by the mod, tailed by the client (one file per AP session):
@@ -126,12 +127,32 @@ def upgrade_purchase_blocks(slot_data: dict) -> List[str]:
     return sorted(k for k in kinds if k)
 
 
+def reward_block_paths(data: dict, slot_data: dict) -> List[str]:
+    """Unlocks the game's own mission rewards mustn't give, because this seed hands them out through the
+    multiworld: every one-time grant of the seed's items, including pack contents. Currency is left alone, and
+    anything the seed doesn't shuffle stays a normal reward (otherwise it couldn't be had at all)."""
+    if slot_data.get("vanilla_mission_rewards", True):
+        return []
+    pool_paths = {key: path for pool in data["group_pools"].values() for key, path in pool.items()}
+    paths = set()
+    for item_id in slot_data.get("pool_items", []):
+        item = data["items"].get(str(item_id))
+        if item is None or item["mode"] == "add":
+            continue
+        paths.update(item["grants"])
+        for key in slot_data.get("packs", {}).get(str(item_id), []):
+            if key in pool_paths:
+                paths.add(pool_paths[key])
+    return sorted(paths)
+
+
 def render_inbox(rev: int, session: str, slot_data: dict, locks: Iterable[str],
                  grants: Iterable[Tuple[int, str, int, str]], gating: Iterable[str] = (),
                  notes: Iterable[Tuple[int, str]] = (),
                  deathlinks: Iterable[Tuple[int, str, str]] = ()) -> str:
     out = ["version 1", f"rev {rev}", f"session {session}", f"goal {slot_data.get('goal_zone', '')}"]
     out += list(gating)
+    out += [f"noreward {path}" for path in reward_block_paths(load_data(), slot_data)]
     blocked = upgrade_purchase_blocks(slot_data)
     if blocked:
         out.append("noupgradebuy " + " ".join(blocked))

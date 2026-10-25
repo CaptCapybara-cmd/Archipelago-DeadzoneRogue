@@ -1,10 +1,10 @@
--- APClient v0.7.0: the in-game half of the Deadzone Rogue Archipelago client.
+-- APClient v0.8.0: the in-game half of the Deadzone Rogue Archipelago client.
 -- Talks to the Python client through files in Win64/APBridge (format: deadzone_rogue/bridge.py):
 --   inbox.txt -> what to lock and grant     outbox_<session>.txt <- missions completed, save-wide totals, deaths
 -- Received items and save-wide totals (sectors, kills, Scrap) are tracked per AP session and per game save slot in
 -- APBridge/state_<session>_slot<n>.txt.
 local BRIDGE = "APBridge/"
-local MOD_VERSION = "0.7.0"
+local MOD_VERSION = "0.8.0"
 local POLL_MS = 1000
 local ENSURE_EVERY_S = 30       -- re-check one-time unlocks against the save this often
 local GRANTS_PER_TICK = 25      -- spread big batches over a few ticks to avoid hitches
@@ -87,11 +87,12 @@ end
 -- Inbox ---------------------------------------------------------------------------------------------------------
 
 local inbox = { rev = nil, session = nil, goal = nil, locks = {}, byIndex = {}, maxIndex = -1,
-                zones = nil, missionZones = {}, zoneEntries = {}, notes = {}, deathlinks = {}, noBuy = {} }
+                zones = nil, missionZones = {}, zoneEntries = {}, notes = {}, deathlinks = {}, noBuy = {},
+                noReward = {} }
 
 local function parseInbox(text)
     local new = { locks = {}, byIndex = {}, maxIndex = -1, zones = nil, missionZones = {}, zoneEntries = {}, notes = {},
-                  deathlinks = {}, noBuy = {} }
+                  deathlinks = {}, noBuy = {}, noReward = {} }
     for line in text:gmatch("[^\n]+") do
         local kind, rest = line:match("^(%S+)%s*(.*)$")
         if kind == "rev" then new.rev = rest
@@ -102,6 +103,7 @@ local function parseInbox(text)
             local key, z = rest:match("^(%S+) (%d+)$")
             if key then new.missionZones[key] = tonumber(z) end
         elseif kind == "zoneentry" then new.zoneEntries[rest] = true
+        elseif kind == "noreward" then new.noReward[#new.noReward + 1] = rest
         elseif kind == "noupgradebuy" then
             for k in rest:gmatch("%a+") do new.noBuy[k] = true end
         elseif kind == "session" then new.session = rest
@@ -1142,6 +1144,65 @@ function commands.upgradegroups()
     return #lines .. " groups\n" .. table.concat(lines, "\n")
 end
 
+-- Vanilla mission rewards: the game's own first-time and milestone rewards that this seed hands out through the
+-- multiworld are taken back as soon as the game reports them (ClientReceivedMissionRewards lists what was given).
+-- Currency, cosmetics and mission unlocks stay. Off when the seed keeps vanilla rewards (no noreward lines).
+local rewardIndex, rewardIndexRev = nil, nil -- item guid -> { asset, path } for the noreward paths
+
+local function rewardLookup()
+    if rewardIndexRev ~= inbox.rev then
+        rewardIndex, rewardIndexRev = {}, inbox.rev
+        for _, path in ipairs(inbox.noReward) do
+            local a = asset(path)
+            if a then rewardIndex[guidKey(a.ItemId)] = { asset = a, path = path } end
+        end
+    end
+    return rewardIndex
+end
+
+local function takeBackRewards(entries)
+    local inv = inventory()
+    if inv == nil then return end
+    local lookup = rewardLookup()
+    local taken = {}
+    for _, e in ipairs(entries) do
+        local hit = lookup[e.key]
+        if hit then
+            inv:RemoveInventoryCount(hit.asset.AssetId, e.count)
+            taken[#taken + 1] = str(hit.asset.DisplayName)
+            log(string.format("took back mission reward %s x%d (it comes from Archipelago)",
+                str(hit.asset:GetFName()), e.count))
+        end
+    end
+    if #taken > 0 then notify("mission rewards held back for Archipelago: " .. table.concat(taken, ", ")) end
+end
+
+hook("/Script/Valhalla.ValPlayerController:ClientReceivedMissionRewards", function(self, params, entries, firstTime)
+    if not onBoundSlot or #inbox.noReward == 0 then return end
+    local list = {}
+    entries:get():ForEach(function(_, e)
+        local v = e:get()
+        list[#list + 1] = { key = guidKey(v.ID), count = v.Value }
+    end)
+    -- after the RPC has finished: the rewards are in the inventory by then
+    ExecuteWithDelay(500, function() ExecuteInGameThread(function()
+        local ok, err = pcall(takeBackRewards, list)
+        if not ok then log("taking back mission rewards failed: " .. tostring(err)) end
+    end) end)
+end)
+
+-- Finishes the mission in progress the game's own way (AValMission:ForceComplete), so its rewards and the
+-- Archipelago check happen as if it had been played. Also on Ctrl+F7 in game.
+function commands.complete()
+    for _, m in ipairs(FindAllOf("ValMission") or {}) do
+        if m:IsValid() and not str(m:GetFName()):find("Default__") and m:IsInProgress() then
+            m:ForceComplete()
+            return "completed " .. str(m:GetFName())
+        end
+    end
+    return "no mission in progress"
+end
+
 function commands.regate() rebuildMissions = true; return "rebuilding mission options" end
 function commands.relock() applyLocks(); return "locks reapplied" end
 function commands.unlock() restoreLocks(); return "locks lifted until the next relock, mission start or reload" end
@@ -1168,6 +1229,12 @@ end
 
 RegisterKeyBind(Key.F10, function() ExecuteInGameThread(function()
     for _, line in ipairs(statusLines()) do notify(line) end
+end) end)
+
+-- Ctrl+F7: finish the current mission (testing). Needs Ctrl so a stray key can't send a real check.
+RegisterKeyBind(Key.F7, { ModifierKey.CONTROL }, function() ExecuteInGameThread(function()
+    local ok, result = pcall(commands.complete)
+    notify("[dev] " .. (ok and result or ("complete failed: " .. tostring(result))))
 end) end)
 
 log("loaded (bridge folder: " .. BRIDGE .. ")")

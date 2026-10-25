@@ -78,6 +78,21 @@ class TestBridge(unittest.TestCase):
         self.assertIn("noupgradebuy tech\n", bridge.render_inbox(1, "s", only_tech, [], []))
         self.assertNotIn("noupgradebuy", bridge.render_inbox(1, "s", self.slot_data, [], []))
 
+    def test_reward_blocks_cover_only_the_seeds_unlocks(self) -> None:
+        crit = [k for k, v in self.data["items"].items() if v["name"] == "Augment: Short Range: Crit"]
+        pack_id = str(item_name_to_id["Item Pack 1"])
+        slot_data = dict(self.slot_data, vanilla_mission_rewards=False, packs={pack_id: ["Item_ADSSpeed"]},
+                         pool_items=[int(crit[0]) if crit else item_name_to_id["Perk: Plasma"],
+                                     item_name_to_id["Tech Cache"], int(pack_id)])
+        paths = bridge.reward_block_paths(self.data, slot_data)
+        self.assertFalse([p for p in paths if "Currency" in p])  # currency rewards stay
+        self.assertTrue(any(p.endswith("Item_ADSSpeed") for p in paths))  # pack contents
+        self.assertFalse(any(p.endswith("Perk_Fire_Parent") for p in paths))  # not in this seed: stays a reward
+        self.assertEqual(bridge.reward_block_paths(self.data, dict(slot_data, vanilla_mission_rewards=True)), [])
+        self.assertEqual(bridge.reward_block_paths(self.data, self.slot_data), [])  # older seeds: unchanged
+        text = bridge.render_inbox(1, "s", slot_data, [], [])
+        self.assertIn("noreward " + paths[0] + "\n", text)
+
     def test_gating(self) -> None:
         gated = dict(self.slot_data, zone_gating=True)
         lines = bridge.gating_lines(self.data, gated, [])

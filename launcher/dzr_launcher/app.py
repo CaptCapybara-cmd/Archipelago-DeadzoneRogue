@@ -592,6 +592,10 @@ class LauncherApp:
             self.dev_send(f"mission {key} {devtools.DIFFICULTIES[difficulty_var.get()]}")
         ttk.Button(r, text="Complete", command=send_mission).pack(side="left")
         r = row(checks)
+        button(r, "Complete current mission", "complete")
+        ttk.Label(r, text="Finishes the mission you're in, rewards and all (also Ctrl+F7 in game).",
+                  style="Muted.TLabel").pack(side="left")
+        r = row(checks)
         total_var, amount_var = tk.StringVar(value="sectors"), tk.StringVar(value="5")
         ttk.Combobox(r, textvariable=total_var, values=devtools.TOTALS, state="readonly", width=10).pack(side="left")
         ttk.Spinbox(r, from_=-100000, to=1000000, textvariable=amount_var, width=10).pack(side="left", padx=8)

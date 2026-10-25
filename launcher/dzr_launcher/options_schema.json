@@ -40,7 +40,7 @@
   {
    "name": "vanilla_mission_rewards",
    "label": "Vanilla Mission Rewards",
-   "help": "Keep the game's own mission rewards (first-time and milestone unlocks). Off: those unlocks only come from\nthe multiworld.",
+   "help": "Keep the game's own mission rewards. Off: when a mission would reward an unlock this seed hands out\n(an augment, perk, weapon, pack content, ...), it's taken back, so it only comes from the multiworld. Currency,\ncosmetics and the missions a completion unlocks are always kept, as are unlocks this seed doesn't shuffle.",
    "kind": "toggle",
    "default": false,
    "group": "Checks"
