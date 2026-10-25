@@ -553,8 +553,12 @@ end)
 
 hook("/Script/Valhalla.ValPlayerUpgradeComponent:OnBotKilled", function(self, victim, killer)
     if not onBoundSlot or state.key == nil or localPawn == nil then return end
+    -- An enemy killed by a hazard, an explosion or another bot has no killer: reading a name from that null
+    -- object crashed the game natively (pcall can't catch it), so check it exists first.
+    local who = killer:get()
+    if who == nil or not who:IsValid() then return end
     local k = nil
-    pcall(function() k = str(killer:get():GetFName()) end)
+    pcall(function() k = str(who:GetFName()) end)
     if k == localPawn then
         state.kills = state.kills + 1
         totalsDirty = true
