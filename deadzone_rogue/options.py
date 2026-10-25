@@ -196,14 +196,13 @@ class DeathLinkMode(Choice):
     lose_perk: lose a random element perk from the current run. lose_item: lose a random item from the current run.
     Unlocks are never touched, only what you picked up this run.
     lose_scrap: lose half your Scrap. take_damage: drop to a quarter of your health (can't kill you).
-    push_back_room: not possible yet, so it costs half your Scrap instead. kill: the run ends."""
+    kill: the run ends."""
     display_name = "DeathLink Mode"
     option_lose_perk = 0
     option_lose_item = 1
     option_lose_scrap = 2
     option_take_damage = 3
-    option_push_back_room = 4
-    option_kill = 5
+    option_kill = 5  # 4 was push_back_room (dropped: the game has no safe way to move the player back)
     default = option_lose_perk
 
 

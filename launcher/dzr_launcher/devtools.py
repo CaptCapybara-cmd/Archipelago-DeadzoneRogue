@@ -12,7 +12,7 @@ from . import installer
 
 COMMANDS_FILE, REPLIES_FILE = "debug.txt", "debug_log.txt"
 KEEP_COMMANDS = 50
-DEATHLINK_MODES = ["lose_perk", "lose_item", "lose_scrap", "take_damage", "push_back_room", "kill"]
+DEATHLINK_MODES = ["lose_perk", "lose_item", "lose_scrap", "take_damage", "kill"]
 DIFFICULTIES = {"Adventure": 1, "Normal": 2, "Hard": 3, "Difficulty 4": 4, "Difficulty 5": 5}
 TOTALS = ["sectors", "kills", "scrap"]
 

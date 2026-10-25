@@ -34,7 +34,7 @@ game: Deadzone Rogue
 requires:
   version: 0.6.9 # Version of Archipelago required for this yaml to work as expected.
   game:
-    Deadzone Rogue: 0.8.0 # Version of the world required for this yaml to work as expected.
+    Deadzone Rogue: 0.8.1 # Version of the world required for this yaml to work as expected.
 
 Deadzone Rogue:
   ################
@@ -76,7 +76,7 @@ Deadzone Rogue:
   mission_difficulties:
     # Which difficulties give a check for completing each mission. Every mission completed on each listed
     # difficulty is a separate check (e.g. "Who am I? (Normal)").
-    ['Normal', 'Hard', 'Adventure']
+    ['Adventure', 'Hard', 'Normal']
 
   include_challenge_missions:
     # Challenge missions (Close Quarters, Headhunter, Ultra Nightmare, ...) have checks.
@@ -316,12 +316,11 @@ Deadzone Rogue:
     # lose_perk: lose a random element perk from the current run. lose_item: lose a random item from the current run.
     # Unlocks are never touched, only what you picked up this run.
     # lose_scrap: lose half your Scrap. take_damage: drop to a quarter of your health (can't kill you).
-    # push_back_room: not possible yet, so it costs half your Scrap instead. kill: the run ends.
+    # kill: the run ends.
     lose_perk: 50
     lose_item: 0
     lose_scrap: 0
     take_damage: 0
-    push_back_room: 0
     kill: 0
 
   ###########################
