@@ -80,6 +80,20 @@ that difficulty has checks. `/goal` in the client lists what's left.
 - **DeathLink with another player**: every effect is verified in game; a death arriving from (and sent to)
   another game hasn't been tried yet.
 
+## AI use
+
+Much of this project's code and documentation was written with Claude, an AI assistant made by Anthropic. The
+maintainer directed the work, decided how it should behave, and tested it in the game. Commits made with AI help
+carry a `Co-Authored-By: Claude` line.
+
+## Credits
+
+- [Archipelago](https://github.com/ArchipelagoMW/Archipelago) (MIT): the multiworld framework this world and client
+  are built on.
+- [RE-UE4SS](https://github.com/UE4SS-RE/RE-UE4SS) (MIT): the Lua modding framework the APClient mod runs on. The
+  launcher downloads the official release from its GitHub page; it isn't bundled here.
+- [PyInstaller](https://pyinstaller.org) packages the launcher as a single exe.
+
 ## License
 
 MIT, see [LICENSE](LICENSE). Deadzone: Rogue belongs to Prophecy Games; this project ships no game files.
