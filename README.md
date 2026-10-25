@@ -77,7 +77,8 @@ that difficulty has checks. `/goal` in the client lists what's left.
 
 ## Roadmap
 
-- **Goal**: verify in a full real run.
+- **DeathLink with another player**: every effect is verified from the dev menu; a death arriving from (and sent to)
+  another game hasn't been tried yet.
 
 ## License
 
