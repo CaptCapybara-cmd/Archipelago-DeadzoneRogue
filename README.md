@@ -4,8 +4,8 @@ An Archipelago integration has two halves:
 
 | Half | What it does | Status |
 |---|---|---|
-| **APWorld** (`deadzone_rogue/`, Python) | Tells the generator what items and locations exist and what the logic is | v0.8.1: built from the game's real data, passes AP's tests, generates seeds |
-| **Client** (Python, in the apworld) + **APClient** (Lua mod) | Talks to the AP server: sends checks, grants received items, locks unreceived content, reports the goal | v0.8.1: mission and save-wide objective checks, grants, locking and zone gating work live, protected by save-slot binding. DeathLink effects work in a run; the game's own mission rewards for shuffled unlocks are taken back |
+| **APWorld** (`deadzone_rogue/`, Python) | Tells the generator what items and locations exist and what the logic is | v0.8.2: built from the game's real data, passes AP's tests, generates seeds |
+| **Client** (Python, in the apworld) + **APClient** (Lua mod) | Talks to the AP server: sends checks, grants received items, locks unreceived content, reports the goal | v0.8.2: mission and save-wide objective checks, grants, locking and zone gating work live, protected by save-slot binding. DeathLink effects work in a run; the game's own mission rewards for shuffled unlocks are taken back |
 
 ## Files
 

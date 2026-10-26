@@ -1,10 +1,10 @@
--- APClient v0.8.1: the in-game half of the Deadzone Rogue Archipelago client.
+-- APClient v0.8.2: the in-game half of the Deadzone Rogue Archipelago client.
 -- Talks to the Python client through files in Win64/APBridge (format: deadzone_rogue/bridge.py):
 --   inbox.txt -> what to lock and grant     outbox_<session>.txt <- missions completed, save-wide totals, deaths
 -- Received items and save-wide totals (sectors, kills, Scrap) are tracked per AP session and per game save slot in
 -- APBridge/state_<session>_slot<n>.txt.
 local BRIDGE = "APBridge/"
-local MOD_VERSION = "0.8.1"
+local MOD_VERSION = "0.8.2"
 local POLL_MS = 1000
 local ENSURE_EVERY_S = 30       -- re-check one-time unlocks against the save this often
 local GRANTS_PER_TICK = 25      -- spread big batches over a few ticks to avoid hitches

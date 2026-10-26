@@ -27,6 +27,7 @@ import json
 import os
 import pkgutil
 import re
+import time
 from typing import Dict, Iterable, List, Optional, Sequence, Set, Tuple
 
 from .locations import MISSIONS_BY_KEY, is_zone_entry, objective_location_id
@@ -163,11 +164,20 @@ def render_inbox(rev: int, session: str, slot_data: dict, locks: Iterable[str],
     return "\n".join(out) + "\n"
 
 
-def write_atomic(path: str, text: str) -> None:
+def write_atomic(path: str, text: str, attempts: int = 10, wait: float = 0.02) -> None:
+    """Replaces the file in one step, so the mod never reads half of it. Windows refuses the replace while the mod
+    has the file open for its once-a-second read, so a refused replace is retried for a moment."""
     tmp = path + ".tmp"
     with open(tmp, "w", encoding="utf-8", newline="\n") as f:
         f.write(text)
-    os.replace(tmp, path)
+    for attempt in range(attempts):
+        try:
+            os.replace(tmp, path)
+            return
+        except PermissionError:
+            if attempt == attempts - 1:
+                raise
+            time.sleep(wait)
 
 
 def parse_outbox(text: str) -> List[Tuple[str, List[str]]]:

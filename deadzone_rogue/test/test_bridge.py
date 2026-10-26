@@ -1,3 +1,7 @@
+import os
+import shutil
+import tempfile
+import threading
 import unittest
 
 from .. import bridge
@@ -115,6 +119,21 @@ class TestBridge(unittest.TestCase):
         self.assertIn("note 5 Alice sent Plasma to Ethan\n", text)
         text = bridge.render_inbox(1, "s", self.slot_data, [], [], deathlinks=[(7, "lose_scrap", "Alice  B")])
         self.assertIn("deathlink 7 lose_scrap Alice B\n", text)
+
+    @unittest.skipUnless(os.name == "nt", "Windows refuses to replace an open file; other systems don't")
+    def test_write_atomic_waits_out_a_reader(self) -> None:
+        folder = tempfile.mkdtemp()
+        self.addCleanup(shutil.rmtree, folder, True)
+        path = os.path.join(folder, "inbox.txt")
+        bridge.write_atomic(path, "rev 1\n")
+        reader = open(path, encoding="utf-8")  # the mod's once-a-second read holds the file like this
+        threading.Timer(0.05, reader.close).start()
+        bridge.write_atomic(path, "rev 2\n")  # refused at first, succeeds once the reader lets go
+        with open(path, encoding="utf-8") as f:
+            self.assertEqual(f.read(), "rev 2\n")
+        with open(path, encoding="utf-8"):
+            with self.assertRaises(PermissionError):
+                bridge.write_atomic(path, "rev 3\n", attempts=3, wait=0.01)  # held the whole time: gives up
 
     def test_inbox_format(self) -> None:
         text = bridge.render_inbox(3, "seed-Ethan", self.slot_data, ["/Game/A.A"], [(0, "once", 1, "/Game/B.B")])

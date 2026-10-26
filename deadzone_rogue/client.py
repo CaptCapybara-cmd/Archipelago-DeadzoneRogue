@@ -58,6 +58,7 @@ class DeadzoneRogueContext(CommonContext):
         self.notes: List[Tuple[int, str]] = []  # (id, text) for in-game chat; ids are millisecond timestamps
         self.deathlinks: List[Tuple[int, str, str]] = []  # (id, mode, source) received, for the mod to apply
         self.last_deathlink_received = 0.0
+        self.inbox_pending = False  # the last inbox write failed; retried by the game loop
         self.completed_missions: Set[str] = set()  # rebuilt from this session's outbox, which is read from the start
         self.set_game_dir(game_dir)
 
@@ -137,7 +138,12 @@ class DeadzoneRogueContext(CommonContext):
                                    bridge.lock_paths(self.data, self.slot_data), grants,
                                    bridge.gating_lines(self.data, self.slot_data, received), self.notes,
                                    self.deathlinks)
-        bridge.write_atomic(os.path.join(self.bridge_dir, "inbox.txt"), text)
+        try:
+            bridge.write_atomic(os.path.join(self.bridge_dir, "inbox.txt"), text)
+            self.inbox_pending = False
+        except OSError as e:  # never let a locked file take the server connection down with it
+            self.inbox_pending = True
+            logger.debug(f"inbox write failed, retrying shortly: {e}")
 
     async def poll_game(self) -> None:
         path = os.path.join(self.bridge_dir, f"outbox_{self.session}.txt")
@@ -168,6 +174,8 @@ class DeadzoneRogueContext(CommonContext):
     async def game_loop(self) -> None:
         while not self.exit_event.is_set():
             try:
+                if self.inbox_pending:
+                    self.write_inbox()
                 await self.poll_game()
             except Exception as e:  # keep the loop alive; a half-written line is retried next tick
                 logger.debug(f"poll_game: {e}")
